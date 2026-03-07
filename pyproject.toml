@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-shazam"
+version = "1.0.0"
+description = "Local audio fingerprinting and matching — like Shazam for your music collection"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["audio", "fingerprinting", "shazam", "music", "matching"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+dependencies = [
+    "click>=8.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "tqdm>=4.60",
+]
+
+[project.scripts]
+shazam = "shazam.cli:cli"
+
+[tool.setuptools.packages.find]
+include = ["shazam*"]
