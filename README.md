@@ -2,6 +2,9 @@
 
 Identify songs from audio snippets — like Shazam, but for your local music collection.
 
+See the [latest release](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/latest)
+and [changelog](CHANGELOG.md) for updates.
+
 ## Setup
 
 1. Install [Python 3.10+](https://python.org)
