@@ -6,3 +6,4 @@ build/
 *.db-wal
 *.db-shm
 .venv/
+/test snippets/

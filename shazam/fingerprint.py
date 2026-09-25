@@ -24,21 +24,17 @@ def _spectrogram(samples: np.ndarray) -> np.ndarray:
     return Sxx
 
 
-def _find_peaks(Sxx: np.ndarray) -> list[tuple[int, int]]:
-    """Find local maxima in the spectrogram. Returns (freq_bin, time_bin) pairs."""
+def _find_peaks(Sxx: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Find local maxima in the spectrogram. Returns (freq_bins, time_bins) arrays."""
     size = PEAK_NEIGHBORHOOD * 2 + 1
     local_max = maximum_filter(Sxx, size=size)
     local_min = minimum_filter(Sxx, size=size)
     detected = (Sxx == local_max) & ((Sxx - local_min) > MIN_PEAK_AMPLITUDE)
-    freq_idx, time_idx = np.where(detected)
-    return list(zip(freq_idx.tolist(), time_idx.tolist()))
+    return np.where(detected)
 
 
 def _hash_pair(f1: int, f2: int, dt: int) -> int:
-    """Create a 32-bit hash from an anchor-target peak pair.
-
-    Layout: freq1 (10 bits) | freq2 (10 bits) | delta_t (12 bits)
-    """
+    """Create a 32-bit hash from an anchor-target peak pair."""
     return ((f1 & 0x3FF) << 22) | ((f2 & 0x3FF) << 12) | (dt & 0xFFF)
 
 
@@ -51,24 +47,32 @@ def fingerprint(samples: np.ndarray, fan_value: int = FAN_VALUE) -> list[tuple[i
         return []
 
     Sxx = _spectrogram(samples)
-    peaks = _find_peaks(Sxx)
+    freq_idx, time_idx = _find_peaks(Sxx)
 
-    if len(peaks) < 2:
+    if len(freq_idx) < 2:
         return []
 
-    peaks.sort(key=lambda p: (p[1], p[0]))
+    # Sort by (time, freq) using numpy argsort
+    sort_order = np.lexsort((freq_idx, time_idx))
+    freqs = freq_idx[sort_order]
+    times = time_idx[sort_order]
+    n_peaks = len(freqs)
 
     hashes = []
-    for i, (f1, t1) in enumerate(peaks):
+    for i in range(n_peaks):
+        f1 = int(freqs[i])
+        t1 = int(times[i])
         targets_found = 0
-        for j in range(i + 1, len(peaks)):
-            f2, t2 = peaks[j]
+        for j in range(i + 1, n_peaks):
+            t2 = int(times[j])
             dt = t2 - t1
 
             if dt < TARGET_T_MIN:
                 continue
             if dt > TARGET_T_MAX:
                 break
+
+            f2 = int(freqs[j])
             if abs(f2 - f1) > TARGET_F_RANGE:
                 continue
 
