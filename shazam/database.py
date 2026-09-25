@@ -62,12 +62,53 @@ class Database:
             )
         self.conn.commit()
 
+    def insert_chunk(self, songs_data: list[dict]) -> int:
+        """Bulk insert a chunk of songs + their fingerprints in a single transaction.
+
+        songs_data: list of dicts with keys: filepath, filename, duration, file_hash, hashes
+        Returns number of songs successfully inserted.
+        """
+        inserted = 0
+        self.conn.execute("BEGIN")
+        try:
+            for song in songs_data:
+                existing = self.conn.execute(
+                    "SELECT id FROM songs WHERE filepath = ?", (song["filepath"],)
+                ).fetchone()
+                if existing:
+                    song_id = existing[0]
+                    self.conn.execute("DELETE FROM fingerprints WHERE song_id = ?", (song_id,))
+                    self.conn.execute(
+                        "UPDATE songs SET filename = ?, duration = ?, file_hash = ?, status = 'indexed' WHERE id = ?",
+                        (song["filename"], song["duration"], song["file_hash"], song_id),
+                    )
+                else:
+                    cur = self.conn.execute(
+                        "INSERT INTO songs (filepath, filename, duration, file_hash) VALUES (?, ?, ?, ?)",
+                        (song["filepath"], song["filename"], song["duration"], song["file_hash"]),
+                    )
+                    song_id = cur.lastrowid
+                hashes = song["hashes"]
+                if hashes:
+                    rows = [(h, song_id, off) for h, off in hashes]
+                    for i in range(0, len(rows), BATCH_INSERT_SIZE):
+                        batch = rows[i:i + BATCH_INSERT_SIZE]
+                        self.conn.executemany(
+                            "INSERT INTO fingerprints (hash, song_id, offset) VALUES (?, ?, ?)",
+                            batch,
+                        )
+                inserted += 1
+            self.conn.commit()
+        except Exception:
+            self.conn.rollback()
+            raise
+        return inserted
+
     def query_hashes(self, hashes: list[int]) -> list[tuple[int, int, int]]:
         """Look up hashes. Returns list of (hash, song_id, offset)."""
         if not hashes:
             return []
         results = []
-        # Query in batches to avoid SQLite variable limit
         batch_size = 900
         for i in range(0, len(hashes), batch_size):
             batch = hashes[i:i + batch_size]
@@ -110,16 +151,16 @@ class Database:
         self.conn.commit()
 
     def remove_songs_by_path_prefix(self, prefix: str) -> int:
-        """Remove all songs whose filepath starts with prefix. Returns count removed."""
-        cur = self.conn.execute("SELECT id FROM songs WHERE filepath LIKE ?", (prefix + "%",))
-        ids = [row[0] for row in cur.fetchall()]
-        if not ids:
-            return 0
-        placeholders = ",".join("?" * len(ids))
-        self.conn.execute(f"DELETE FROM fingerprints WHERE song_id IN ({placeholders})", ids)
-        self.conn.execute(f"DELETE FROM songs WHERE id IN ({placeholders})", ids)
+        """Remove songs under a directory, without matching sibling path prefixes."""
+        from os import sep
+
+        directory = prefix.rstrip("/\\") + sep
+        escaped = directory.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        cur = self.conn.execute(
+            "DELETE FROM songs WHERE filepath LIKE ? ESCAPE '\\'", (escaped + "%",)
+        )
         self.conn.commit()
-        return len(ids)
+        return cur.rowcount
 
     def get_stats(self) -> dict:
         song_count = self.conn.execute("SELECT COUNT(*) FROM songs").fetchone()[0]

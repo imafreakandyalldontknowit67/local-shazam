@@ -22,9 +22,21 @@ The script auto-installs missing dependencies and walks you through everything w
 
 ## Performance
 
-- **Indexing**: ~4 songs/second with 4 workers
-- **Matching**: Under 1 second for most snippets
-- **Storage**: ~0.6 MB per song in the database
+Performance depends on audio length, CPU, storage, and database size. Indexing runs in
+parallel with a bounded number of queued files; fingerprints are committed in batches.
+Large databases can take substantially longer to match on a cold disk cache; do not
+assume sub-second lookups at multi-gigabyte scale.
+
+## Current limitations
+
+- Only the first 120 seconds of each file are decoded. Snippets from later in a song
+  will not match that song unless the indexed file contains that section near its start.
+- Incremental identity checks use the file size and first 8 KiB. Same-sized edits
+  outside that region may require removing and re-indexing the file manually.
+- `ffmpeg` is required. A decoder that takes longer than 30 seconds for one file
+  is treated as a failed file.
+
+Run regression tests with `python -m unittest discover -s tests -v`.
 
 ## Advanced
 

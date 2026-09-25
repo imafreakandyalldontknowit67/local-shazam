@@ -83,7 +83,7 @@ def do_index():
 
     db = Database(DB_PATH)
     try:
-        stats = bootstrap_directory([folder], db, workers=4)
+        stats = bootstrap_directory([folder], db, workers=min(os.cpu_count() or 4, 6))
         print()
         if stats["indexed"] > 0:
             print(f"  {GREEN}Indexed:  {stats['indexed']}{RESET}")
