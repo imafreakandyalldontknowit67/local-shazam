@@ -34,7 +34,7 @@ olaf-runtime/
 
 For setup and packaging, see [Building](docs/BUILDING.md),
 [Releasing](docs/RELEASING.md) and [Third-party notices](THIRD_PARTY_NOTICES.md).
-These are planned cross-branch additions, not verified release evidence.
+Builds remain unverified until the corresponding CI checks pass.
 
 ## Choose a folder, then a clip
 

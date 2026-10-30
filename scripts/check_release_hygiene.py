@@ -122,6 +122,14 @@ def placeholder(value: str) -> bool:
     ))
 
 
+
+def public_upstream_fixture(name: str, line: str) -> bool:
+    # Exact removed fixture line verified in public JorenSix/Olaf at
+    # f6f7cbefb50485953f71100c9d08c625f01780ba, tests/olaf_tests.c line 106.
+    # Preserve replayable patch provenance; no general vendor/path exemption.
+    return (name == "patches/olaf/0003-release-local-source-build.patch"
+            and hashlib.sha256(line.encode("utf-8")).hexdigest() == "0b007ce062fe1f8f5acbff66c03c6570add2110cd80d1f9c2713b304aaabb1a5")
+
 def personal_path(line: str) -> bool:
     # URLs, including attribution URLs with /home/ segments, are not local paths.
     local = re.sub(r"\b(?:https?|ftp)://[^\s<>\"']+", "", line, flags=re.I)
@@ -241,7 +249,7 @@ def check_bytes(name: str, data: bytes, findings: Findings) -> None:
     for number, line in enumerate(text.splitlines(), 1):
         if likely_secret(line):
             findings.add(name, 'likely-credential', 'Remove the literal; use an environment reference. Rotate real exposed credentials.', number)
-        if personal_path(line):
+        if personal_path(line) and not public_upstream_fixture(name, line):
             findings.add(name, 'personal-absolute-path', 'Replace the local path with a generic example or explicit <user> placeholder.', number)
 
 
