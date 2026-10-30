@@ -68,17 +68,18 @@ run above supersedes only their build-status uncertainty, not their legal limits
   details, retaining original public attribution. See the license review for
   static-check scope; no new history/private-blob audit is claimed.
 
-## Outstanding gates — parent and maintainers
+## Outstanding gates â€” parent and maintainers
 
 ### Parent-owned post-integration validation (pending)
 
-- [ ] Integrate separately owned compiler-privacy work and inspect its
-  `docs/BUILD_PRIVACY.md` implementation notes. This review did **not** inspect
-  or approve that implementation. Verify the final source inventory and source
-  snapshot/provider behavior after integration, including required docs/assets.
-- [ ] Verify the repository-only Python relocation to `legacy/python/README.md`
-  and all owned links after integration. Preserve historical Python tags and
-  changelog entries. Native packages must not acquire Python app/runtime inputs.
+- [x] Integrated and reviewed compiler path-remapping/privacy gates, including
+  regressions for binary-string false positives; see `docs/BUILD_PRIVACY.md`.
+  Local checkout: 108 lightweight
+  tests passed with three Windows symlink skips; no local native compilation.
+- [x] Verified Python relocation and native source exclusion. Combined exported
+  native source: 96 lightweight tests passed with four skips (including the
+  intentionally absent legacy archive). Source includes required docs/assets and
+  Git text/ignore policy files. Both native engines are unchanged.
 - [ ] With explicit parent authorization, perform **fresh hosted native rebuilds**
   for all four targets at the exact integrated commit. Re-run the explicit
   dataset-free gates; do not reuse the historical run as current approval.
@@ -125,8 +126,11 @@ validation; dataset-free gates do not establish them.
 
 ## Existing workflow boundaries (not authorization to run them)
 
-`portable-build.yml` uses `contents: read`; private branch pushes, pull requests,
+`portable-build.yml` uses `contents: read`; branch pushes, pull requests,
 manual dispatch and reusable calls can build, but cannot create a release/tag.
+The read-only build workflow also works after an eventual owner visibility change;
+it does not change visibility itself. New builds supersede older runs on the same
+workflow/ref. The separate draft-publication workflow still requires a private repo.
 Native jobs use pinned actions, verified tool downloads and locked single-job
 Cargo builds. Only three archives plus checksums per target are uploaded, with
 seven-day artifact retention. No toolchains/caches/raw logs are release assets.

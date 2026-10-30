@@ -317,6 +317,8 @@ class PackagingTests(unittest.TestCase):
         for action in re.findall(r"uses:\s+([^\s#]+)", build + draft):
             self.assertTrue(action.startswith("./") or re.fullmatch(r"[\w-]+/[\w-]+@[0-9a-f]{40}", action), action)
         self.assertNotIn("contents: write", build)
+        self.assertNotIn("github.event.repository.private == true", build)
+        self.assertIn("if (!repo.private)", draft)
         self.assertEqual(draft.count("contents: write"), 1)
         self.assertIn("default: false", draft)
         self.assertIn("draft: true, prerelease: true", draft)

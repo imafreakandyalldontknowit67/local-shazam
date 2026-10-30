@@ -64,7 +64,9 @@
       "scripts/check_release_hygiene.py",
       "tests/release/test_olaf_source.py",
       "docs/BUILD_PRIVACY.md",
-      "tests/release/test_build_privacy.py"
+      "tests/release/test_build_privacy.py",
+      ".gitignore",
+      ".gitattributes"
     ],
     "app": [
       "rust-app/Cargo.toml",

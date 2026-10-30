@@ -1,4 +1,4 @@
-name: Private portable build gates
+name: Portable build gates
 
 on:
   workflow_dispatch:
@@ -10,9 +10,12 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: portable-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   native:
-    if: github.event.repository.private == true
     name: Native ${{ matrix.target }} (unverified until successful)
     strategy:
       fail-fast: false
@@ -65,7 +68,7 @@ jobs:
         run: |
           python scripts/release.py package --target '${{ matrix.target }}' --out-dir 'build/release/${{ matrix.target }}'
           python scripts/release.py verify --out-dir 'build/release/${{ matrix.target }}'
-      - name: Retain only verified archives and checksums (private repository)
+      - name: Retain only verified archives and checksums
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: portable-${{ matrix.target }}

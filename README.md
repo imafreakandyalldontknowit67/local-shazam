@@ -26,6 +26,9 @@
 > guarantees. Packages are unsigned and remain in a private draft release;
 > distribution and license review is still open before public release.
 
+The existing draft still contains the baseline build. Replacement packages with
+compiler path remapping are awaiting fresh native CI and artifact verification.
+
 ## About
 
 Local Shazam recognizes audio snippets against a library you choose. Index a music
@@ -194,9 +197,9 @@ metadata before sharing logs; do not upload private audio or your index database
 
 ## Legacy Python reference
 
-The agreed archive location is [legacy/python/README.md](legacy/python/README.md)
-for the Python `1.0.1` reference (relocation verification remains a parent-owned
-integration gate). It requires Python 3.10+ and its dependencies and is
+The Python `1.0.1` reference is archived in
+[legacy/python/README.md](https://github.com/imafreakandyalldontknowit67/local-shazam/tree/main/legacy/python).
+It requires Python 3.10+ and its dependencies and is
 repository-only historical source, not included in native packages. It is not
 the native release path: its first-120-second decoding, 30-second decode timeout
 and size/first-8-KiB identity checks still apply, unlike complete-track native indexing.

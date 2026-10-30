@@ -1,4 +1,4 @@
-# Required release review — not a readiness certification
+# Required release review â€” not a readiness certification
 
 ## Scope and factual closures (2026-10-30)
 
@@ -43,7 +43,7 @@ MIT template as though it were an attributed grant.
 
 ## Unresolved license decisions and scoped applicability
 
-### 1. Seven Apple-family crates — maintainer/legal review remains open
+### 1. Seven Apple-family crates â€” maintainer/legal review remains open
 
 `block2 0.6.2`, `dispatch2 0.3.1`, `objc2 0.6.5`, `objc2-app-kit 0.3.2`,
 `objc2-core-foundation 0.3.2`, `objc2-encode 4.1.0`, `objc2-foundation 0.3.2`:
@@ -68,7 +68,7 @@ The current Apple publication is context, not proof of the exact SDK agreement
 used by historical runners or permission for these crates. Obtain maintainer/
 legal resolution; do not silently declare the SDK issue either permitted or illegal.
 
-### 2. sqlite-wasm-rs 0.6.2 — unresolved source/wasm concern, scoped out by native predicate
+### 2. sqlite-wasm-rs 0.6.2 â€” unresolved source/wasm concern, scoped out by native predicate
 
 Its exact archive and [build.rs](review/crates/sqlite-wasm-rs-0.6.2/build.rs)
 include 36 musl C compile inputs plus shim headers and printf. Existing root MIT,
@@ -92,7 +92,7 @@ or different target/features, obtain exact import provenance and complete notice
 The small metadata/build-script evidence copies here do not ship the shim
 implementation or constitute its corresponding source.
 
-### 3. AGPL corresponding source and integration — owner/legal approval open
+### 3. AGPL corresponding source and integration â€” owner/legal approval open
 
 Historical artifact checks establish byte/hash correspondence, not legal
 sufficiency. Review each modified runtime's preferred-form source, ordered patches,
@@ -111,7 +111,7 @@ establishes AGPL compliance. Consult sections 1, 5, 6 and 13 of the supplied
 Confirm original-app rights without inventing a copyright holder, and review the
 upstream patent warning. This is an evidence checklist, not a legal conclusion.
 
-### 4. Target-specific binary/toolchain/SDK closure — incomplete
+### 4. Target-specific binary/toolchain/SDK closure â€” incomplete
 
 Cargo.lock inventories registry packages, not all Rust std/compiler runtime,
 Zig/CRT, SDK or linker contributions. Historical manifests retain limited import/
@@ -131,12 +131,12 @@ audit. Python wheels/interpreters are not in native packages; review separately
 if that changes. Minimum OS/glibc, clean-host behavior, signing/notarization and
 bit-for-bit reproducibility remain unverified.
 
-## Parent-owned and final release checklist — pending
+## Parent-owned and final release checklist â€” pending
 
-- [ ] Integrate compiler-privacy implementation and inspect `docs/BUILD_PRIVACY.md`;
-  this task has not inspected or approved the other agent's implementation.
-- [ ] Verify historical Python relocation to `legacy/python/README.md` and links;
-  preserve old tags/history; keep it repository-only, outside native packages.
+- [x] Compiler-privacy implementation integrated and locally reviewed; see
+  `docs/BUILD_PRIVACY.md`. The checkout passes 108 lightweight tests (three skips).
+- [x] Python relocation and source-package exclusion verified; exported combined
+  native sources pass 96 lightweight tests (four skips). Both engines are unchanged.
 - [ ] Fresh parent-run hosted rebuilds at the integrated commit on all four hosts;
   explicit dataset-free gates, not substitution of run 41023384988.
 - [ ] Independent rebuilt artifact/source checks: hashes, source correspondence,
