@@ -33,7 +33,7 @@ def check_ffmpeg():
 
 def auto_install_deps():
     missing = []
-    for pkg in ["numpy", "scipy", "tqdm"]:
+    for pkg in ["click", "numpy", "scipy", "tqdm"]:
         try:
             __import__(pkg)
         except ImportError:

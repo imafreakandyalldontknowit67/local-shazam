@@ -1,0 +1,4 @@
+# Standalone source distribution: retain the optional launcher and archived tests.
+# No recursive data, environment, or repository-wide inclusion.
+include LICENSE README.md requirements.txt start.py
+include tests/test_indexing.py
