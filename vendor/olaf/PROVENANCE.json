@@ -1,0 +1,1694 @@
+{
+  "schema_version": 1,
+  "captured_date": "2026-10-29",
+  "scope": "Preferred-form source for the separate desktop Olaf CLI runtime, not a copy of the development checkout.",
+  "olaf": {
+    "upstream_url": "https://github.com/JorenSix/Olaf",
+    "upstream_revision": "f6f7cbefb50485953f71100c9d08c625f01780ba",
+    "fork_revision": "1240e2552f64ea2d5727c05f859e8303f88aebca",
+    "license": "AGPL-3.0-or-later",
+    "dirty_files": [
+      "build.zig",
+      "cli/olaf_cli_config.zig",
+      "cli/olaf_cli_core.zig",
+      "cli/olaf_config.schema.json",
+      "src/olaf_config.c",
+      "src/olaf_config.h",
+      "src/olaf_db.c",
+      "src/olaf_fp_matcher.c",
+      "tests/olaf_db_concurrency_tests.c",
+      "tests/olaf_matcher_v3_tests.c"
+    ]
+  },
+  "zigzag": {
+    "upstream_url": "https://github.com/meszmate/zigzag",
+    "upstream_revision": "e16e2523972d174d7ca9783631cc90e2609fa55e",
+    "package_hash": "zigzag-0.1.2-YXwYS9_qEQDBkc3k9-gNIC3mcONlH4N_RxxgcxM7Bhxt",
+    "license": "MIT",
+    "dependencies": {},
+    "modifications": [
+      "Added distribution-only .gitattributes enforcing LF; the 93 captured upstream package files are otherwise unchanged after CRLF normalization."
+    ],
+    "package_limitation": "The upstream packaged inventory omits examples/ and tests/ despite references in build.zig. Olaf consumes only the complete zigzag module; standalone Zigzag example/test build steps are not supported by this package."
+  },
+  "normalization": "All copied files are UTF-8 text. CRLF is normalized to LF only; no code is taken from prebuilt binaries. captured_sha256 hashes exact working bytes, source_lf_sha256 hashes captured text after LF normalization, sha256 hashes final distributed bytes. Upstream/fork hashes also use LF. File modes are not preserved (no executable scripts are needed by the supported Python/Zig entry point).",
+  "excluded_tracked_files": [
+    ".claude/skills/zig-0-15/README.md",
+    ".claude/skills/zig-0-15/SKILL.md",
+    ".claude/skills/zig-0-15/VERSIONING.md",
+    ".claude/skills/zig-0-15/scripts/check-zig-version.sh",
+    ".claude/skills/zig-0-16/SKILL.md",
+    ".claude/skills/zig-0-16/scripts/check-zig-version.sh",
+    ".dockerignore",
+    ".github/workflows/docker.yml",
+    ".github/workflows/make.yml",
+    ".github/workflows/release.yml",
+    ".gitignore",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "Dockerfile",
+    "Doxyfile",
+    "ESP32/README.md",
+    "ESP32/arduino_test/arduino_test.ino",
+    "ESP32/arduino_test/hash-table.cpp",
+    "ESP32/arduino_test/hash-table.h",
+    "ESP32/arduino_test/olaf_config.cpp",
+    "ESP32/arduino_test/olaf_config.h",
+    "ESP32/arduino_test/olaf_db.h",
+    "ESP32/arduino_test/olaf_db_mem.cpp",
+    "ESP32/arduino_test/olaf_db_mem_pack.h",
+    "ESP32/arduino_test/olaf_ep_extractor.cpp",
+    "ESP32/arduino_test/olaf_ep_extractor.h",
+    "ESP32/arduino_test/olaf_fp_extractor.cpp",
+    "ESP32/arduino_test/olaf_fp_extractor.h",
+    "ESP32/arduino_test/olaf_fp_matcher.cpp",
+    "ESP32/arduino_test/olaf_fp_matcher.h",
+    "ESP32/arduino_test/olaf_fp_ref_mem.h",
+    "ESP32/arduino_test/olaf_max_filter.h",
+    "ESP32/arduino_test/olaf_max_filter_perceptual_van_herk.cpp",
+    "ESP32/arduino_test/olaf_window.h",
+    "ESP32/arduino_test/pffft.cpp",
+    "ESP32/arduino_test/pffft.h",
+    "ESP32/esp32_inmp441_olaf/esp32_inmp441_olaf.ino",
+    "ESP32/esp32_inmp441_olaf/hash-table.cpp",
+    "ESP32/esp32_inmp441_olaf/hash-table.h",
+    "ESP32/esp32_inmp441_olaf/olaf_config.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_config.h",
+    "ESP32/esp32_inmp441_olaf/olaf_db.h",
+    "ESP32/esp32_inmp441_olaf/olaf_db_mem.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_db_mem_pack.h",
+    "ESP32/esp32_inmp441_olaf/olaf_ep_extractor.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_ep_extractor.h",
+    "ESP32/esp32_inmp441_olaf/olaf_fp_extractor.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_fp_extractor.h",
+    "ESP32/esp32_inmp441_olaf/olaf_fp_matcher.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_fp_matcher.h",
+    "ESP32/esp32_inmp441_olaf/olaf_fp_ref_mem.h",
+    "ESP32/esp32_inmp441_olaf/olaf_max_filter.h",
+    "ESP32/esp32_inmp441_olaf/olaf_max_filter_perceptual_van_herk.cpp",
+    "ESP32/esp32_inmp441_olaf/olaf_window.h",
+    "ESP32/esp32_inmp441_olaf/pffft.cpp",
+    "ESP32/esp32_inmp441_olaf/pffft.h",
+    "ESP32/esp32_inmp441_wifi_mic/esp32_inmp441_wifi_mic.ino",
+    "ESP32/setup_arduino_patch.py",
+    "FORK-HANDOFF.md",
+    "README.md",
+    "compose.yml",
+    "docker/olaf_config.json",
+    "docker/smoke-test.sh",
+    "docs/cli-notes.md",
+    "docs/embedded_olaf.jpg",
+    "docs/general_acoustic_fingerprinting_schema.png",
+    "docs/olaf-architecture.svg",
+    "docs/olaf-power-spectrum.webp",
+    "docs/olaf_in_browser.png",
+    "docs/olaf_in_browser.svg",
+    "docs/olaf_interaction.svg",
+    "docs/schema-zig_wrapper.svg",
+    "docs/testing-with-zig.md",
+    "docs/update_docs.py",
+    "docs/windows-notes.md",
+    "eval/README.md",
+    "eval/olaf_benchmark/olaf_benchmark.py",
+    "eval/olaf_benchmark/olaf_benchmark.svg",
+    "eval/olaf_benchmark/olaf_benchmark_plot.R",
+    "eval/olaf_benchmark/olaf_benchmark_query.svg",
+    "eval/olaf_memory_use.rb",
+    "eval/olaf_memory_use/olaf_memory_use.data",
+    "eval/olaf_memory_use/olaf_memory_use.svg",
+    "eval/olaf_memory_use/olaf_memory_use_plot.R",
+    "eval/olaf_recognition_benchmark.py",
+    "eval/olaf_result_utils.py",
+    "eval/olaf_vs_panako.rb",
+    "eval/olaf_vs_panako/olaf_vs_panako.data",
+    "eval/olaf_vs_panako/olaf_vs_panako_plot_query.R",
+    "eval/olaf_vs_panako/olaf_vs_panako_plot_store.R",
+    "eval/olaf_vs_panako/olaf_vs_panako_query.svg",
+    "eval/olaf_vs_panako/olaf_vs_panako_store.svg",
+    "justfile",
+    "paper.bib",
+    "paper.md",
+    "python-wrapper/.python-version",
+    "python-wrapper/query_example.py",
+    "python-wrapper/spectrogram_example.py",
+    "python-wrapper/uv.lock",
+    "tests/16k_samples.raw",
+    "wasm/1051039_34s-54s.mp3",
+    "wasm/basic.html",
+    "wasm/js/libsamplerate.worklet.js",
+    "wasm/js/olaf.js",
+    "wasm/js/olaf.wasm",
+    "wasm/js/olaf_processor.js",
+    "wasm/js/olaf_spectrogram.js",
+    "wasm/js/resample_processor.js",
+    "wasm/olaf_demo.css",
+    "wasm/resample.html",
+    "wasm/spectrogram.html",
+    "wasm/test.html"
+  ],
+  "excluded_categories": [
+    "Git metadata and agent instructions/handoffs",
+    "Toolchains, caches, zig-pkg caches (except reviewed Zigzag source), zig-out and other build outputs",
+    "All audio including tests/16k_samples.raw and wasm/1051039_34s-54s.mp3; downloaded datasets",
+    "Precompiled WASM and bundled libsamplerate.worklet.js (contains precompiled third-party WASM)",
+    "Runtime databases, indexes, evidence, diagnostics, credentials and personal settings",
+    "Embedded ESP32 projects, demo-only web assets, evaluation tools/results, CI/container files and non-build documentation outside the desktop source scope"
+  ],
+  "retained_source_assets": [
+    "CLI configuration example/schema and embedded UI HTML",
+    "tests/golden/output_snapshot.txt: anonymized expected output; also a non-audio input to config safety regressions",
+    "src/olaf_fp_ref_mem.h: upstream 210-entry C fingerprint fixture required to compile the memory backend for config tests; not a user index, audio recording or desktop runtime database",
+    "WASM loader, Node test and package.json required by retained functional-test source",
+    "Python wrapper source/build metadata for the dataset-free constructor regression; not installed or used by the desktop build"
+  ],
+  "files": {
+    "patches/olaf/.gitattributes": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
+    },
+    "patches/olaf/0001-windows-lmdb-paths.patch": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "a805b680eaeba94ef47f102013407bd15e9dd0499e37bf86a26d861a32c56198"
+    },
+    "patches/olaf/0002-working-matcher-config-db.patch": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "fab6a4874828606b166378aece7d97d8671606c547033f56eea317fa1e74f6c7"
+    },
+    "patches/olaf/0003-release-local-source-build.patch": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "3e644a58817c779d87666f12946fafe9b1f96fbbb91f22215c8b52305a73a7e6"
+    },
+    "patches/olaf/README.md": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "5a48f3fb2f57d3968fab709b2e30c7bc409820a8dd21f9a51a8128bf377a2e27"
+    },
+    "patches/olaf/series": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "bafcc9622934d6a017456705f3a66127a033c2442d54092909e9352e384b642f"
+    },
+    "scripts/build_olaf.py": {
+      "origin": "release integration",
+      "sha256": "fc9ce18407897ac10cfcc90e78747ab90d63792558717c87fc4aec526449a224"
+    },
+    "tests/release/test_olaf_source.py": {
+      "origin": "release integration",
+      "sha256": "94956edcc4acf7a0600dac854f863723cbdf7d25c69b37032123d6a45a8ae028"
+    },
+    "vendor/olaf/.gitattributes": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
+    },
+    "vendor/olaf/.zigversion": {
+      "captured_sha256": "2bd0dcb3cc75b56e610252780c6fe169a322265ba1cca8e4147375c0bbbf3031",
+      "source_lf_sha256": "2bd0dcb3cc75b56e610252780c6fe169a322265ba1cca8e4147375c0bbbf3031",
+      "sha256": "2bd0dcb3cc75b56e610252780c6fe169a322265ba1cca8e4147375c0bbbf3031",
+      "upstream_sha256": "2bd0dcb3cc75b56e610252780c6fe169a322265ba1cca8e4147375c0bbbf3031",
+      "fork_head_sha256": "2bd0dcb3cc75b56e610252780c6fe169a322265ba1cca8e4147375c0bbbf3031"
+    },
+    "vendor/olaf/BUILDING.md": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "3e9a575e567e0749d85452d19f3e02774480e863efcad8cffb22d432e930acf9"
+    },
+    "vendor/olaf/LICENSE": {
+      "captured_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
+      "source_lf_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
+      "sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
+      "upstream_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
+      "fork_head_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f"
+    },
+    "vendor/olaf/Makefile": {
+      "captured_sha256": "1212dc5a1a4642ddafc54bc6d278362bc8423cbf908b3f3e98ca45d4109070d3",
+      "source_lf_sha256": "1212dc5a1a4642ddafc54bc6d278362bc8423cbf908b3f3e98ca45d4109070d3",
+      "sha256": "1212dc5a1a4642ddafc54bc6d278362bc8423cbf908b3f3e98ca45d4109070d3",
+      "upstream_sha256": "1212dc5a1a4642ddafc54bc6d278362bc8423cbf908b3f3e98ca45d4109070d3",
+      "fork_head_sha256": "1212dc5a1a4642ddafc54bc6d278362bc8423cbf908b3f3e98ca45d4109070d3"
+    },
+    "vendor/olaf/NOTICES.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "0071b5d92dba2ec80bebe6ac054881640cd57fa3223faa23a65783b0554b4052"
+    },
+    "vendor/olaf/build.zig": {
+      "captured_sha256": "9a70bc664483b4601a6035c32b5f7c09dafc5c667f6137d808b12dfceaea9e2d",
+      "source_lf_sha256": "eb90038aeee51844eabd59880dce0da0b5305d2ca0fcef0e5ced70506f4ce913",
+      "sha256": "79a29bed3325696e32d830150ffbd0af62427a30095e9c8e0ab5fd9703312397",
+      "upstream_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407",
+      "fork_head_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407"
+    },
+    "vendor/olaf/build.zig.zon": {
+      "captured_sha256": "6567b17867c9a3b7b5331e13029aa3473fe7691b0fdb7fd6e0b5ce8fad3911f5",
+      "source_lf_sha256": "6567b17867c9a3b7b5331e13029aa3473fe7691b0fdb7fd6e0b5ce8fad3911f5",
+      "sha256": "c60efad185e6c84d041bfb3af1c9d2b4677ffa1bb5964e44532620b5520087c6",
+      "upstream_sha256": "6567b17867c9a3b7b5331e13029aa3473fe7691b0fdb7fd6e0b5ce8fad3911f5",
+      "fork_head_sha256": "6567b17867c9a3b7b5331e13029aa3473fe7691b0fdb7fd6e0b5ce8fad3911f5"
+    },
+    "vendor/olaf/cli/olaf_cli.zig": {
+      "captured_sha256": "b38abb1d94ff1415073ff46e709380ff7c49b3b2dd7797f1ae2646851a37751b",
+      "source_lf_sha256": "b38abb1d94ff1415073ff46e709380ff7c49b3b2dd7797f1ae2646851a37751b",
+      "sha256": "b38abb1d94ff1415073ff46e709380ff7c49b3b2dd7797f1ae2646851a37751b",
+      "upstream_sha256": "b38abb1d94ff1415073ff46e709380ff7c49b3b2dd7797f1ae2646851a37751b",
+      "fork_head_sha256": "b38abb1d94ff1415073ff46e709380ff7c49b3b2dd7797f1ae2646851a37751b"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_cache.zig": {
+      "captured_sha256": "08cc8b7836c7da537166cb63f30a6db1aa7d44e6b3228dd7546c167905ffb049",
+      "source_lf_sha256": "08cc8b7836c7da537166cb63f30a6db1aa7d44e6b3228dd7546c167905ffb049",
+      "sha256": "08cc8b7836c7da537166cb63f30a6db1aa7d44e6b3228dd7546c167905ffb049",
+      "upstream_sha256": "08cc8b7836c7da537166cb63f30a6db1aa7d44e6b3228dd7546c167905ffb049",
+      "fork_head_sha256": "08cc8b7836c7da537166cb63f30a6db1aa7d44e6b3228dd7546c167905ffb049"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_clear.zig": {
+      "captured_sha256": "8282e3e9678632d61eadb038ec417fca197fd95cba34ba2a2797c43fd712e063",
+      "source_lf_sha256": "8282e3e9678632d61eadb038ec417fca197fd95cba34ba2a2797c43fd712e063",
+      "sha256": "8282e3e9678632d61eadb038ec417fca197fd95cba34ba2a2797c43fd712e063",
+      "upstream_sha256": "8282e3e9678632d61eadb038ec417fca197fd95cba34ba2a2797c43fd712e063",
+      "fork_head_sha256": "8282e3e9678632d61eadb038ec417fca197fd95cba34ba2a2797c43fd712e063"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_config.zig": {
+      "captured_sha256": "a079c3344c712cb0336b91514709136b626277325a6b9ec2403a1ba32ddeed91",
+      "source_lf_sha256": "a079c3344c712cb0336b91514709136b626277325a6b9ec2403a1ba32ddeed91",
+      "sha256": "a079c3344c712cb0336b91514709136b626277325a6b9ec2403a1ba32ddeed91",
+      "upstream_sha256": "a079c3344c712cb0336b91514709136b626277325a6b9ec2403a1ba32ddeed91",
+      "fork_head_sha256": "a079c3344c712cb0336b91514709136b626277325a6b9ec2403a1ba32ddeed91"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_dedup.zig": {
+      "captured_sha256": "daf2acce3912a5e618c4c7a69bb3e5487f6ed6aec3405807cd81a64d9859ba04",
+      "source_lf_sha256": "daf2acce3912a5e618c4c7a69bb3e5487f6ed6aec3405807cd81a64d9859ba04",
+      "sha256": "daf2acce3912a5e618c4c7a69bb3e5487f6ed6aec3405807cd81a64d9859ba04",
+      "upstream_sha256": "daf2acce3912a5e618c4c7a69bb3e5487f6ed6aec3405807cd81a64d9859ba04",
+      "fork_head_sha256": "daf2acce3912a5e618c4c7a69bb3e5487f6ed6aec3405807cd81a64d9859ba04"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_delete.zig": {
+      "captured_sha256": "510bd436312256074c9d075ac7b8288fcfcc34d9f3722bcea836d19238689998",
+      "source_lf_sha256": "510bd436312256074c9d075ac7b8288fcfcc34d9f3722bcea836d19238689998",
+      "sha256": "510bd436312256074c9d075ac7b8288fcfcc34d9f3722bcea836d19238689998",
+      "upstream_sha256": "510bd436312256074c9d075ac7b8288fcfcc34d9f3722bcea836d19238689998",
+      "fork_head_sha256": "510bd436312256074c9d075ac7b8288fcfcc34d9f3722bcea836d19238689998"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_has.zig": {
+      "captured_sha256": "9180ddca83640acb48155f456243cde48630f8275bbd7f8b97f2d31e1b1f4443",
+      "source_lf_sha256": "9180ddca83640acb48155f456243cde48630f8275bbd7f8b97f2d31e1b1f4443",
+      "sha256": "9180ddca83640acb48155f456243cde48630f8275bbd7f8b97f2d31e1b1f4443",
+      "upstream_sha256": "9180ddca83640acb48155f456243cde48630f8275bbd7f8b97f2d31e1b1f4443",
+      "fork_head_sha256": "9180ddca83640acb48155f456243cde48630f8275bbd7f8b97f2d31e1b1f4443"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_microphone.zig": {
+      "captured_sha256": "7821c78cd7944308cb6f05bdb6d08e89bd694d34946af95e7d28d75fff93ab82",
+      "source_lf_sha256": "7821c78cd7944308cb6f05bdb6d08e89bd694d34946af95e7d28d75fff93ab82",
+      "sha256": "7821c78cd7944308cb6f05bdb6d08e89bd694d34946af95e7d28d75fff93ab82",
+      "upstream_sha256": "7821c78cd7944308cb6f05bdb6d08e89bd694d34946af95e7d28d75fff93ab82",
+      "fork_head_sha256": "7821c78cd7944308cb6f05bdb6d08e89bd694d34946af95e7d28d75fff93ab82"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_query.zig": {
+      "captured_sha256": "3c7ac99486c99636dc568b210af13f4ffaeb2715437c41ec43029afb6ee262f7",
+      "source_lf_sha256": "3c7ac99486c99636dc568b210af13f4ffaeb2715437c41ec43029afb6ee262f7",
+      "sha256": "3c7ac99486c99636dc568b210af13f4ffaeb2715437c41ec43029afb6ee262f7",
+      "upstream_sha256": "3c7ac99486c99636dc568b210af13f4ffaeb2715437c41ec43029afb6ee262f7",
+      "fork_head_sha256": "3c7ac99486c99636dc568b210af13f4ffaeb2715437c41ec43029afb6ee262f7"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest.zig": {
+      "captured_sha256": "0b3a645650b59069bc9a291444cbaeb9d76b8b3aaca608f16ffe6a8823bd95cc",
+      "source_lf_sha256": "0b3a645650b59069bc9a291444cbaeb9d76b8b3aaca608f16ffe6a8823bd95cc",
+      "sha256": "0b3a645650b59069bc9a291444cbaeb9d76b8b3aaca608f16ffe6a8823bd95cc",
+      "upstream_sha256": "0b3a645650b59069bc9a291444cbaeb9d76b8b3aaca608f16ffe6a8823bd95cc",
+      "fork_head_sha256": "0b3a645650b59069bc9a291444cbaeb9d76b8b3aaca608f16ffe6a8823bd95cc"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest_has.zig": {
+      "captured_sha256": "a79a8be7ef2c87595424f68a1d321c7b47327f34e5a6056b535ea2f22dbc7fe0",
+      "source_lf_sha256": "a79a8be7ef2c87595424f68a1d321c7b47327f34e5a6056b535ea2f22dbc7fe0",
+      "sha256": "a79a8be7ef2c87595424f68a1d321c7b47327f34e5a6056b535ea2f22dbc7fe0",
+      "upstream_sha256": "a79a8be7ef2c87595424f68a1d321c7b47327f34e5a6056b535ea2f22dbc7fe0",
+      "fork_head_sha256": "a79a8be7ef2c87595424f68a1d321c7b47327f34e5a6056b535ea2f22dbc7fe0"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest_query.zig": {
+      "captured_sha256": "6981235e04fba151e14ed283660f3ee4eb61f9a760ce3f6904c980154ddba88a",
+      "source_lf_sha256": "6981235e04fba151e14ed283660f3ee4eb61f9a760ce3f6904c980154ddba88a",
+      "sha256": "6981235e04fba151e14ed283660f3ee4eb61f9a760ce3f6904c980154ddba88a",
+      "upstream_sha256": "6981235e04fba151e14ed283660f3ee4eb61f9a760ce3f6904c980154ddba88a",
+      "fork_head_sha256": "6981235e04fba151e14ed283660f3ee4eb61f9a760ce3f6904c980154ddba88a"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest_serve.zig": {
+      "captured_sha256": "348267e30cb9d0052e16ff3a30a6e737643504a06c898aa90e10f2efa83f4c11",
+      "source_lf_sha256": "348267e30cb9d0052e16ff3a30a6e737643504a06c898aa90e10f2efa83f4c11",
+      "sha256": "348267e30cb9d0052e16ff3a30a6e737643504a06c898aa90e10f2efa83f4c11",
+      "upstream_sha256": "348267e30cb9d0052e16ff3a30a6e737643504a06c898aa90e10f2efa83f4c11",
+      "fork_head_sha256": "348267e30cb9d0052e16ff3a30a6e737643504a06c898aa90e10f2efa83f4c11"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest_serve_lb.zig": {
+      "captured_sha256": "86fd945487e8be79a388064c5803582f35ca93b11cb70420532a7b84aff49b09",
+      "source_lf_sha256": "86fd945487e8be79a388064c5803582f35ca93b11cb70420532a7b84aff49b09",
+      "sha256": "86fd945487e8be79a388064c5803582f35ca93b11cb70420532a7b84aff49b09",
+      "upstream_sha256": "86fd945487e8be79a388064c5803582f35ca93b11cb70420532a7b84aff49b09",
+      "fork_head_sha256": "86fd945487e8be79a388064c5803582f35ca93b11cb70420532a7b84aff49b09"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_rest_store.zig": {
+      "captured_sha256": "784a96e587f0e3d08d794772a6eb3b1f51771d2f808992c5250ef18be56001cd",
+      "source_lf_sha256": "784a96e587f0e3d08d794772a6eb3b1f51771d2f808992c5250ef18be56001cd",
+      "sha256": "784a96e587f0e3d08d794772a6eb3b1f51771d2f808992c5250ef18be56001cd",
+      "upstream_sha256": "784a96e587f0e3d08d794772a6eb3b1f51771d2f808992c5250ef18be56001cd",
+      "fork_head_sha256": "784a96e587f0e3d08d794772a6eb3b1f51771d2f808992c5250ef18be56001cd"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_stats.zig": {
+      "captured_sha256": "1780d3cb12f284dc8cd210e5f75667a35522d0ee929f2a36965334b1800ac85e",
+      "source_lf_sha256": "1780d3cb12f284dc8cd210e5f75667a35522d0ee929f2a36965334b1800ac85e",
+      "sha256": "1780d3cb12f284dc8cd210e5f75667a35522d0ee929f2a36965334b1800ac85e",
+      "upstream_sha256": "1780d3cb12f284dc8cd210e5f75667a35522d0ee929f2a36965334b1800ac85e",
+      "fork_head_sha256": "1780d3cb12f284dc8cd210e5f75667a35522d0ee929f2a36965334b1800ac85e"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_store.zig": {
+      "captured_sha256": "38d3f3f13875c89200a20589791df7af6d996f97e3a63bef6854fff5cff511c4",
+      "source_lf_sha256": "38d3f3f13875c89200a20589791df7af6d996f97e3a63bef6854fff5cff511c4",
+      "sha256": "38d3f3f13875c89200a20589791df7af6d996f97e3a63bef6854fff5cff511c4",
+      "upstream_sha256": "38d3f3f13875c89200a20589791df7af6d996f97e3a63bef6854fff5cff511c4",
+      "fork_head_sha256": "38d3f3f13875c89200a20589791df7af6d996f97e3a63bef6854fff5cff511c4"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_store_cached.zig": {
+      "captured_sha256": "caa513c13b53da46ac18430f34c992287043f6878d2178bf3d2dfee248f60e20",
+      "source_lf_sha256": "caa513c13b53da46ac18430f34c992287043f6878d2178bf3d2dfee248f60e20",
+      "sha256": "caa513c13b53da46ac18430f34c992287043f6878d2178bf3d2dfee248f60e20",
+      "upstream_sha256": "caa513c13b53da46ac18430f34c992287043f6878d2178bf3d2dfee248f60e20",
+      "fork_head_sha256": "caa513c13b53da46ac18430f34c992287043f6878d2178bf3d2dfee248f60e20"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_to_raw.zig": {
+      "captured_sha256": "4bb59ef213b1c51005935093b8849fc9b0cc77d8c6f0ab3ae68a58fb10cc49bf",
+      "source_lf_sha256": "4bb59ef213b1c51005935093b8849fc9b0cc77d8c6f0ab3ae68a58fb10cc49bf",
+      "sha256": "4bb59ef213b1c51005935093b8849fc9b0cc77d8c6f0ab3ae68a58fb10cc49bf",
+      "upstream_sha256": "4bb59ef213b1c51005935093b8849fc9b0cc77d8c6f0ab3ae68a58fb10cc49bf",
+      "fork_head_sha256": "4bb59ef213b1c51005935093b8849fc9b0cc77d8c6f0ab3ae68a58fb10cc49bf"
+    },
+    "vendor/olaf/cli/olaf_cli_commands/olaf_cli_cmd_to_wav.zig": {
+      "captured_sha256": "2f084e14e213df4306e63e1cc6edc61a3f1066c7a70d4f598dece4fb6b3118df",
+      "source_lf_sha256": "2f084e14e213df4306e63e1cc6edc61a3f1066c7a70d4f598dece4fb6b3118df",
+      "sha256": "2f084e14e213df4306e63e1cc6edc61a3f1066c7a70d4f598dece4fb6b3118df",
+      "upstream_sha256": "2f084e14e213df4306e63e1cc6edc61a3f1066c7a70d4f598dece4fb6b3118df",
+      "fork_head_sha256": "2f084e14e213df4306e63e1cc6edc61a3f1066c7a70d4f598dece4fb6b3118df"
+    },
+    "vendor/olaf/cli/olaf_cli_config.zig": {
+      "captured_sha256": "fa098158d27f1335a1e71758ebca51867ec6d11a17f6a0cee7601ff3326d2a78",
+      "source_lf_sha256": "b2b579230ecc3125b3d26e9d854513519d4704525b247498c01383b838934c41",
+      "sha256": "b2b579230ecc3125b3d26e9d854513519d4704525b247498c01383b838934c41",
+      "upstream_sha256": "e8abfebf7943324bb04f2005ce03c7acd6300a92e4e827445ec10c57e82cd206",
+      "fork_head_sha256": "e8abfebf7943324bb04f2005ce03c7acd6300a92e4e827445ec10c57e82cd206"
+    },
+    "vendor/olaf/cli/olaf_cli_core.zig": {
+      "captured_sha256": "767d15e09db599f4c620e67f3b4050863ff0e25d36b38c02c8d2a0aa4ea6e0d9",
+      "source_lf_sha256": "da4b0653d71991de28608f79cb9620c31af4f2555e30606e7f391310dce3c20d",
+      "sha256": "da4b0653d71991de28608f79cb9620c31af4f2555e30606e7f391310dce3c20d",
+      "upstream_sha256": "accdb09dd4396dfda962eccdf38b1027992c67d2406e6a1c31ade088cce96aa0",
+      "fork_head_sha256": "accdb09dd4396dfda962eccdf38b1027992c67d2406e6a1c31ade088cce96aa0"
+    },
+    "vendor/olaf/cli/olaf_cli_has.zig": {
+      "captured_sha256": "048718d5e812a3044adbb81c46ad05ec9011549bf4c3d2915522312bd41ae27e",
+      "source_lf_sha256": "048718d5e812a3044adbb81c46ad05ec9011549bf4c3d2915522312bd41ae27e",
+      "sha256": "048718d5e812a3044adbb81c46ad05ec9011549bf4c3d2915522312bd41ae27e",
+      "upstream_sha256": "048718d5e812a3044adbb81c46ad05ec9011549bf4c3d2915522312bd41ae27e",
+      "fork_head_sha256": "048718d5e812a3044adbb81c46ad05ec9011549bf4c3d2915522312bd41ae27e"
+    },
+    "vendor/olaf/cli/olaf_cli_help.zig": {
+      "captured_sha256": "42e25f4d13040ba53b78d3fc9e72458aba2f73800573602958cc3110dab71ec1",
+      "source_lf_sha256": "42e25f4d13040ba53b78d3fc9e72458aba2f73800573602958cc3110dab71ec1",
+      "sha256": "42e25f4d13040ba53b78d3fc9e72458aba2f73800573602958cc3110dab71ec1",
+      "upstream_sha256": "42e25f4d13040ba53b78d3fc9e72458aba2f73800573602958cc3110dab71ec1",
+      "fork_head_sha256": "42e25f4d13040ba53b78d3fc9e72458aba2f73800573602958cc3110dab71ec1"
+    },
+    "vendor/olaf/cli/olaf_cli_output.zig": {
+      "captured_sha256": "cb2d52ba3d34e29ae2dde844385cbfd371a6433891ce7f25676c5aab74609623",
+      "source_lf_sha256": "cb2d52ba3d34e29ae2dde844385cbfd371a6433891ce7f25676c5aab74609623",
+      "sha256": "cb2d52ba3d34e29ae2dde844385cbfd371a6433891ce7f25676c5aab74609623",
+      "upstream_sha256": "cb2d52ba3d34e29ae2dde844385cbfd371a6433891ce7f25676c5aab74609623",
+      "fork_head_sha256": "cb2d52ba3d34e29ae2dde844385cbfd371a6433891ce7f25676c5aab74609623"
+    },
+    "vendor/olaf/cli/olaf_cli_rest_backend.zig": {
+      "captured_sha256": "16a27482b1b939bf7e1489f5e37c13370959b8d7284dd24d1bf3f9e37dcd99b6",
+      "source_lf_sha256": "16a27482b1b939bf7e1489f5e37c13370959b8d7284dd24d1bf3f9e37dcd99b6",
+      "sha256": "16a27482b1b939bf7e1489f5e37c13370959b8d7284dd24d1bf3f9e37dcd99b6",
+      "upstream_sha256": "16a27482b1b939bf7e1489f5e37c13370959b8d7284dd24d1bf3f9e37dcd99b6",
+      "fork_head_sha256": "16a27482b1b939bf7e1489f5e37c13370959b8d7284dd24d1bf3f9e37dcd99b6"
+    },
+    "vendor/olaf/cli/olaf_cli_rest_client.zig": {
+      "captured_sha256": "d8ed0b73c7d345b091b626071c4c42a305ead84979163b983c52bd553cfad960",
+      "source_lf_sha256": "d8ed0b73c7d345b091b626071c4c42a305ead84979163b983c52bd553cfad960",
+      "sha256": "d8ed0b73c7d345b091b626071c4c42a305ead84979163b983c52bd553cfad960",
+      "upstream_sha256": "d8ed0b73c7d345b091b626071c4c42a305ead84979163b983c52bd553cfad960",
+      "fork_head_sha256": "d8ed0b73c7d345b091b626071c4c42a305ead84979163b983c52bd553cfad960"
+    },
+    "vendor/olaf/cli/olaf_cli_session.zig": {
+      "captured_sha256": "09fb55d3ce4f19475dc4419c63ee80f121142307c81152710b10756ca1ed890a",
+      "source_lf_sha256": "09fb55d3ce4f19475dc4419c63ee80f121142307c81152710b10756ca1ed890a",
+      "sha256": "09fb55d3ce4f19475dc4419c63ee80f121142307c81152710b10756ca1ed890a",
+      "upstream_sha256": "09fb55d3ce4f19475dc4419c63ee80f121142307c81152710b10756ca1ed890a",
+      "fork_head_sha256": "09fb55d3ce4f19475dc4419c63ee80f121142307c81152710b10756ca1ed890a"
+    },
+    "vendor/olaf/cli/olaf_cli_threading.zig": {
+      "captured_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
+      "source_lf_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
+      "sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
+      "upstream_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
+      "fork_head_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595"
+    },
+    "vendor/olaf/cli/olaf_cli_types.zig": {
+      "captured_sha256": "007a6c8c131bf82fe7d8f295945d5cd7cdfe054db20692a027710e7f5673b079",
+      "source_lf_sha256": "007a6c8c131bf82fe7d8f295945d5cd7cdfe054db20692a027710e7f5673b079",
+      "sha256": "007a6c8c131bf82fe7d8f295945d5cd7cdfe054db20692a027710e7f5673b079",
+      "upstream_sha256": "007a6c8c131bf82fe7d8f295945d5cd7cdfe054db20692a027710e7f5673b079",
+      "fork_head_sha256": "007a6c8c131bf82fe7d8f295945d5cd7cdfe054db20692a027710e7f5673b079"
+    },
+    "vendor/olaf/cli/olaf_cli_util.zig": {
+      "captured_sha256": "cee3c15b52ea8d91c1555ba90f0a323917579cd9795525f873af68794f6eaa21",
+      "source_lf_sha256": "cee3c15b52ea8d91c1555ba90f0a323917579cd9795525f873af68794f6eaa21",
+      "sha256": "cee3c15b52ea8d91c1555ba90f0a323917579cd9795525f873af68794f6eaa21",
+      "upstream_sha256": "cee3c15b52ea8d91c1555ba90f0a323917579cd9795525f873af68794f6eaa21",
+      "fork_head_sha256": "cee3c15b52ea8d91c1555ba90f0a323917579cd9795525f873af68794f6eaa21"
+    },
+    "vendor/olaf/cli/olaf_cli_util_audio.zig": {
+      "captured_sha256": "f76c42b2f1d12f89761b3c0ee58b02d6e12ddb4f38f6c820c433e8fabd65b525",
+      "source_lf_sha256": "f76c42b2f1d12f89761b3c0ee58b02d6e12ddb4f38f6c820c433e8fabd65b525",
+      "sha256": "f76c42b2f1d12f89761b3c0ee58b02d6e12ddb4f38f6c820c433e8fabd65b525",
+      "upstream_sha256": "f76c42b2f1d12f89761b3c0ee58b02d6e12ddb4f38f6c820c433e8fabd65b525",
+      "fork_head_sha256": "f76c42b2f1d12f89761b3c0ee58b02d6e12ddb4f38f6c820c433e8fabd65b525"
+    },
+    "vendor/olaf/cli/olaf_config.example.json": {
+      "captured_sha256": "6f41e3b1c0c7d27cb6d3ba372740089bd8dd707a4602a3a5c7331a83fb273d6e",
+      "source_lf_sha256": "6f41e3b1c0c7d27cb6d3ba372740089bd8dd707a4602a3a5c7331a83fb273d6e",
+      "sha256": "6f41e3b1c0c7d27cb6d3ba372740089bd8dd707a4602a3a5c7331a83fb273d6e",
+      "upstream_sha256": "6f41e3b1c0c7d27cb6d3ba372740089bd8dd707a4602a3a5c7331a83fb273d6e",
+      "fork_head_sha256": "6f41e3b1c0c7d27cb6d3ba372740089bd8dd707a4602a3a5c7331a83fb273d6e"
+    },
+    "vendor/olaf/cli/olaf_config.schema.json": {
+      "captured_sha256": "5cef6aeb67b00bfdb100c8ee773a7293c507a26960a961a5671c6d625e0bcb41",
+      "source_lf_sha256": "a4a13e0cbdabfb3e590e0f49a1aaaa8485d52ba7c0b442c48cd40c3fd3faa2bb",
+      "sha256": "a4a13e0cbdabfb3e590e0f49a1aaaa8485d52ba7c0b442c48cd40c3fd3faa2bb",
+      "upstream_sha256": "05aeaf2cdfcddc5c4a9806f1a6c91d462f4316d3a86364b4827cd32781219fa3",
+      "fork_head_sha256": "05aeaf2cdfcddc5c4a9806f1a6c91d462f4316d3a86364b4827cd32781219fa3"
+    },
+    "vendor/olaf/cli/rest/olaf_rest.zig": {
+      "captured_sha256": "32a34c331f00bb07434080fd23a06af3d7810718cbd445cea625aadbdd7a24bc",
+      "source_lf_sha256": "32a34c331f00bb07434080fd23a06af3d7810718cbd445cea625aadbdd7a24bc",
+      "sha256": "32a34c331f00bb07434080fd23a06af3d7810718cbd445cea625aadbdd7a24bc",
+      "upstream_sha256": "32a34c331f00bb07434080fd23a06af3d7810718cbd445cea625aadbdd7a24bc",
+      "fork_head_sha256": "32a34c331f00bb07434080fd23a06af3d7810718cbd445cea625aadbdd7a24bc"
+    },
+    "vendor/olaf/cli/rest/olaf_rest_api.zig": {
+      "captured_sha256": "be6128502fe92432223822edecc85467ecde020769cb4bc8782ed514ae0cd7d3",
+      "source_lf_sha256": "be6128502fe92432223822edecc85467ecde020769cb4bc8782ed514ae0cd7d3",
+      "sha256": "be6128502fe92432223822edecc85467ecde020769cb4bc8782ed514ae0cd7d3",
+      "upstream_sha256": "be6128502fe92432223822edecc85467ecde020769cb4bc8782ed514ae0cd7d3",
+      "fork_head_sha256": "be6128502fe92432223822edecc85467ecde020769cb4bc8782ed514ae0cd7d3"
+    },
+    "vendor/olaf/cli/rest/olaf_rest_envelope.zig": {
+      "captured_sha256": "10b8f0e9a7d86e3dfce94462b4e2cd10d170abe0212882d8ebe3f1f49e282b9e",
+      "source_lf_sha256": "10b8f0e9a7d86e3dfce94462b4e2cd10d170abe0212882d8ebe3f1f49e282b9e",
+      "sha256": "10b8f0e9a7d86e3dfce94462b4e2cd10d170abe0212882d8ebe3f1f49e282b9e",
+      "upstream_sha256": "10b8f0e9a7d86e3dfce94462b4e2cd10d170abe0212882d8ebe3f1f49e282b9e",
+      "fork_head_sha256": "10b8f0e9a7d86e3dfce94462b4e2cd10d170abe0212882d8ebe3f1f49e282b9e"
+    },
+    "vendor/olaf/cli/rest/olaf_rest_lb.zig": {
+      "captured_sha256": "605b7cb698564043f926b1f53fd69409422f9b39f5dbe5e5dec7d8ed10ce7655",
+      "source_lf_sha256": "605b7cb698564043f926b1f53fd69409422f9b39f5dbe5e5dec7d8ed10ce7655",
+      "sha256": "605b7cb698564043f926b1f53fd69409422f9b39f5dbe5e5dec7d8ed10ce7655",
+      "upstream_sha256": "605b7cb698564043f926b1f53fd69409422f9b39f5dbe5e5dec7d8ed10ce7655",
+      "fork_head_sha256": "605b7cb698564043f926b1f53fd69409422f9b39f5dbe5e5dec7d8ed10ce7655"
+    },
+    "vendor/olaf/cli/rest/olaf_rest_params.zig": {
+      "captured_sha256": "cff6a77e5a60f35a368b19d487e54d481381478d3f553e27e8ac8e85d138f490",
+      "source_lf_sha256": "cff6a77e5a60f35a368b19d487e54d481381478d3f553e27e8ac8e85d138f490",
+      "sha256": "cff6a77e5a60f35a368b19d487e54d481381478d3f553e27e8ac8e85d138f490",
+      "upstream_sha256": "cff6a77e5a60f35a368b19d487e54d481381478d3f553e27e8ac8e85d138f490",
+      "fork_head_sha256": "cff6a77e5a60f35a368b19d487e54d481381478d3f553e27e8ac8e85d138f490"
+    },
+    "vendor/olaf/cli/rest/olaf_rest_server.zig": {
+      "captured_sha256": "e3e189beae41a0d2df91dd5d7582967b7d5139d92e16d7834b521d1eb381174e",
+      "source_lf_sha256": "e3e189beae41a0d2df91dd5d7582967b7d5139d92e16d7834b521d1eb381174e",
+      "sha256": "e3e189beae41a0d2df91dd5d7582967b7d5139d92e16d7834b521d1eb381174e",
+      "upstream_sha256": "e3e189beae41a0d2df91dd5d7582967b7d5139d92e16d7834b521d1eb381174e",
+      "fork_head_sha256": "e3e189beae41a0d2df91dd5d7582967b7d5139d92e16d7834b521d1eb381174e"
+    },
+    "vendor/olaf/cli/tui/olaf_tui.zig": {
+      "captured_sha256": "67d66a3073c58eaffb30d96e329d5e9e9948ae9c81d26d2ea65732bb5ff580d4",
+      "source_lf_sha256": "67d66a3073c58eaffb30d96e329d5e9e9948ae9c81d26d2ea65732bb5ff580d4",
+      "sha256": "67d66a3073c58eaffb30d96e329d5e9e9948ae9c81d26d2ea65732bb5ff580d4",
+      "upstream_sha256": "67d66a3073c58eaffb30d96e329d5e9e9948ae9c81d26d2ea65732bb5ff580d4",
+      "fork_head_sha256": "67d66a3073c58eaffb30d96e329d5e9e9948ae9c81d26d2ea65732bb5ff580d4"
+    },
+    "vendor/olaf/cli/ui/olaf_ui.zig": {
+      "captured_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
+      "source_lf_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
+      "sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
+      "upstream_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
+      "fork_head_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf"
+    },
+    "vendor/olaf/cli/ui/olaf_ui_live.html": {
+      "captured_sha256": "79ba0c6df01bb86f01effaada0a1e463f9e72d0df8744a8a13a58df0505e906d",
+      "source_lf_sha256": "79ba0c6df01bb86f01effaada0a1e463f9e72d0df8744a8a13a58df0505e906d",
+      "sha256": "79ba0c6df01bb86f01effaada0a1e463f9e72d0df8744a8a13a58df0505e906d",
+      "upstream_sha256": "79ba0c6df01bb86f01effaada0a1e463f9e72d0df8744a8a13a58df0505e906d",
+      "fork_head_sha256": "79ba0c6df01bb86f01effaada0a1e463f9e72d0df8744a8a13a58df0505e906d"
+    },
+    "vendor/olaf/cli/ui/olaf_ui_live.zig": {
+      "captured_sha256": "76778253883589e8ea6e503824f51e7866720568326a42dd599ceee602eae72d",
+      "source_lf_sha256": "76778253883589e8ea6e503824f51e7866720568326a42dd599ceee602eae72d",
+      "sha256": "76778253883589e8ea6e503824f51e7866720568326a42dd599ceee602eae72d",
+      "upstream_sha256": "76778253883589e8ea6e503824f51e7866720568326a42dd599ceee602eae72d",
+      "fork_head_sha256": "76778253883589e8ea6e503824f51e7866720568326a42dd599ceee602eae72d"
+    },
+    "vendor/olaf/cli/ui/olaf_ui_results.html": {
+      "captured_sha256": "12860018b72112503a0790b0bdf0597a9f6dfd2f3e819d6d0c7697617ffddac2",
+      "source_lf_sha256": "12860018b72112503a0790b0bdf0597a9f6dfd2f3e819d6d0c7697617ffddac2",
+      "sha256": "12860018b72112503a0790b0bdf0597a9f6dfd2f3e819d6d0c7697617ffddac2",
+      "upstream_sha256": "12860018b72112503a0790b0bdf0597a9f6dfd2f3e819d6d0c7697617ffddac2",
+      "fork_head_sha256": "12860018b72112503a0790b0bdf0597a9f6dfd2f3e819d6d0c7697617ffddac2"
+    },
+    "vendor/olaf/cli/ui/olaf_ui_upload.html": {
+      "captured_sha256": "fa461ba662c65d8a60385fed1388286e4a0eaa43c8a5d2ffdc0c6e098702a8e8",
+      "source_lf_sha256": "fa461ba662c65d8a60385fed1388286e4a0eaa43c8a5d2ffdc0c6e098702a8e8",
+      "sha256": "fa461ba662c65d8a60385fed1388286e4a0eaa43c8a5d2ffdc0c6e098702a8e8",
+      "upstream_sha256": "fa461ba662c65d8a60385fed1388286e4a0eaa43c8a5d2ffdc0c6e098702a8e8",
+      "fork_head_sha256": "fa461ba662c65d8a60385fed1388286e4a0eaa43c8a5d2ffdc0c6e098702a8e8"
+    },
+    "vendor/olaf/notices/LMDB-mdb-NOTICE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "5971498c119f59cb4e336da88db78fb2f81d9467d6ccf057d886b954270a3ae5"
+    },
+    "vendor/olaf/notices/LMDB-midl-NOTICE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "327953dc6d2c833d188583294061bec70f4ab98b9452167041dd516adb3d9a1e"
+    },
+    "vendor/olaf/notices/OpenLDAP-LICENSE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "310fe25c858a9515fc8c8d7d1f24a67c9496f84a91e0a0e41ea9975b1371e569"
+    },
+    "vendor/olaf/notices/PFFFT-NOTICE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "5e5bcdb710616235d35523b1542483c643e839177cd80f1dd4d1aa07f2976b57"
+    },
+    "vendor/olaf/notices/PFFFT-header-NOTICE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "92a4573f319c1a5384ff57cad8ff1e04b3035b80e8923539994d9f9ed0f3f7e5"
+    },
+    "vendor/olaf/notices/Zig-LICENSE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "5c537d6853e005298a285d508cff9ac7192cea23576c840d485b2b586a7ff177"
+    },
+    "vendor/olaf/notices/c-algorithms-NOTICE.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "c35803e2fbad226800ef39e4548b288991f295cf5fcb5c72fa5bff8134f2a82b"
+    },
+    "vendor/olaf/notices/mingw-w64-COPYING.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f"
+    },
+    "vendor/olaf/notices/musl-COPYRIGHT.txt": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+    },
+    "vendor/olaf/python-wrapper/README.md": {
+      "captured_sha256": "48c7759cd048b1c1f423420f76465fd3529f57ce421043817f008e50bc5bb7d9",
+      "source_lf_sha256": "48c7759cd048b1c1f423420f76465fd3529f57ce421043817f008e50bc5bb7d9",
+      "sha256": "48c7759cd048b1c1f423420f76465fd3529f57ce421043817f008e50bc5bb7d9",
+      "upstream_sha256": "48c7759cd048b1c1f423420f76465fd3529f57ce421043817f008e50bc5bb7d9",
+      "fork_head_sha256": "48c7759cd048b1c1f423420f76465fd3529f57ce421043817f008e50bc5bb7d9"
+    },
+    "vendor/olaf/python-wrapper/cffi_debug.h": {
+      "captured_sha256": "dd45c826324e56525bcc410c8ef326b2d632abe846550102cc9167ee55531803",
+      "source_lf_sha256": "dd45c826324e56525bcc410c8ef326b2d632abe846550102cc9167ee55531803",
+      "sha256": "dd45c826324e56525bcc410c8ef326b2d632abe846550102cc9167ee55531803",
+      "upstream_sha256": "dd45c826324e56525bcc410c8ef326b2d632abe846550102cc9167ee55531803",
+      "fork_head_sha256": "dd45c826324e56525bcc410c8ef326b2d632abe846550102cc9167ee55531803"
+    },
+    "vendor/olaf/python-wrapper/olaf.py": {
+      "captured_sha256": "1134b9744a4ac2566fa29361329eb2c1baa47312d30c890bc62a2151cde73329",
+      "source_lf_sha256": "1134b9744a4ac2566fa29361329eb2c1baa47312d30c890bc62a2151cde73329",
+      "sha256": "1134b9744a4ac2566fa29361329eb2c1baa47312d30c890bc62a2151cde73329",
+      "upstream_sha256": "1134b9744a4ac2566fa29361329eb2c1baa47312d30c890bc62a2151cde73329",
+      "fork_head_sha256": "1134b9744a4ac2566fa29361329eb2c1baa47312d30c890bc62a2151cde73329"
+    },
+    "vendor/olaf/python-wrapper/pyproject.toml": {
+      "captured_sha256": "d1e8cd3c7baac6d305a139aeff3713dbd6f50f141b67173e190ed4d0f42851ad",
+      "source_lf_sha256": "d1e8cd3c7baac6d305a139aeff3713dbd6f50f141b67173e190ed4d0f42851ad",
+      "sha256": "d1e8cd3c7baac6d305a139aeff3713dbd6f50f141b67173e190ed4d0f42851ad",
+      "upstream_sha256": "d1e8cd3c7baac6d305a139aeff3713dbd6f50f141b67173e190ed4d0f42851ad",
+      "fork_head_sha256": "d1e8cd3c7baac6d305a139aeff3713dbd6f50f141b67173e190ed4d0f42851ad"
+    },
+    "vendor/olaf/python-wrapper/setup.py": {
+      "captured_sha256": "2d99fd6d1c0147c028de70495e9c83ab4dc70d829203c9b1ebd9f442d7cc76b4",
+      "source_lf_sha256": "2d99fd6d1c0147c028de70495e9c83ab4dc70d829203c9b1ebd9f442d7cc76b4",
+      "sha256": "2d99fd6d1c0147c028de70495e9c83ab4dc70d829203c9b1ebd9f442d7cc76b4",
+      "upstream_sha256": "2d99fd6d1c0147c028de70495e9c83ab4dc70d829203c9b1ebd9f442d7cc76b4",
+      "fork_head_sha256": "2d99fd6d1c0147c028de70495e9c83ab4dc70d829203c9b1ebd9f442d7cc76b4"
+    },
+    "vendor/olaf/src/hash-table.c": {
+      "captured_sha256": "7f61cbce0953a2a1560d9eef7238fd125df905994d838abf5e4910c78b65403a",
+      "source_lf_sha256": "7f61cbce0953a2a1560d9eef7238fd125df905994d838abf5e4910c78b65403a",
+      "sha256": "7f61cbce0953a2a1560d9eef7238fd125df905994d838abf5e4910c78b65403a",
+      "upstream_sha256": "7f61cbce0953a2a1560d9eef7238fd125df905994d838abf5e4910c78b65403a",
+      "fork_head_sha256": "7f61cbce0953a2a1560d9eef7238fd125df905994d838abf5e4910c78b65403a"
+    },
+    "vendor/olaf/src/hash-table.h": {
+      "captured_sha256": "109acbf71a0b623d40acffd2dffd2e607645a99f7d0c8817c5c689e0571a4554",
+      "source_lf_sha256": "109acbf71a0b623d40acffd2dffd2e607645a99f7d0c8817c5c689e0571a4554",
+      "sha256": "109acbf71a0b623d40acffd2dffd2e607645a99f7d0c8817c5c689e0571a4554",
+      "upstream_sha256": "109acbf71a0b623d40acffd2dffd2e607645a99f7d0c8817c5c689e0571a4554",
+      "fork_head_sha256": "109acbf71a0b623d40acffd2dffd2e607645a99f7d0c8817c5c689e0571a4554"
+    },
+    "vendor/olaf/src/lmdb.h": {
+      "captured_sha256": "15e41246f610e5e15e30d36196fb3841ee45887779ac285faa9f4391ef3f82b8",
+      "source_lf_sha256": "15e41246f610e5e15e30d36196fb3841ee45887779ac285faa9f4391ef3f82b8",
+      "sha256": "15e41246f610e5e15e30d36196fb3841ee45887779ac285faa9f4391ef3f82b8",
+      "upstream_sha256": "15e41246f610e5e15e30d36196fb3841ee45887779ac285faa9f4391ef3f82b8",
+      "fork_head_sha256": "15e41246f610e5e15e30d36196fb3841ee45887779ac285faa9f4391ef3f82b8"
+    },
+    "vendor/olaf/src/mdb.c": {
+      "captured_sha256": "8570e44296094cccc85ecf5e662b971e836827090318644f28c4647115f72fa9",
+      "source_lf_sha256": "8570e44296094cccc85ecf5e662b971e836827090318644f28c4647115f72fa9",
+      "sha256": "8570e44296094cccc85ecf5e662b971e836827090318644f28c4647115f72fa9",
+      "upstream_sha256": "f4487473f660d5f748e62fe104d5debbe9cb22c15ad1a19820596eb2525cc7fc",
+      "fork_head_sha256": "8570e44296094cccc85ecf5e662b971e836827090318644f28c4647115f72fa9"
+    },
+    "vendor/olaf/src/midl.c": {
+      "captured_sha256": "9f4d8492b2643acbd6d2a69b3a9559a2fbc75490ee50611db53e1df86456725c",
+      "source_lf_sha256": "9f4d8492b2643acbd6d2a69b3a9559a2fbc75490ee50611db53e1df86456725c",
+      "sha256": "9f4d8492b2643acbd6d2a69b3a9559a2fbc75490ee50611db53e1df86456725c",
+      "upstream_sha256": "9f4d8492b2643acbd6d2a69b3a9559a2fbc75490ee50611db53e1df86456725c",
+      "fork_head_sha256": "9f4d8492b2643acbd6d2a69b3a9559a2fbc75490ee50611db53e1df86456725c"
+    },
+    "vendor/olaf/src/midl.h": {
+      "captured_sha256": "4882c5f0419b1d6f0aeec891894d3d6fdb9bf103bff15a679770b36607ed3bb9",
+      "source_lf_sha256": "4882c5f0419b1d6f0aeec891894d3d6fdb9bf103bff15a679770b36607ed3bb9",
+      "sha256": "4882c5f0419b1d6f0aeec891894d3d6fdb9bf103bff15a679770b36607ed3bb9",
+      "upstream_sha256": "4882c5f0419b1d6f0aeec891894d3d6fdb9bf103bff15a679770b36607ed3bb9",
+      "fork_head_sha256": "4882c5f0419b1d6f0aeec891894d3d6fdb9bf103bff15a679770b36607ed3bb9"
+    },
+    "vendor/olaf/src/olaf.c": {
+      "captured_sha256": "5db4efa95f0207d69b658ee4d05a8b63bf24bf657ff4024508ae09f55ca2f0e7",
+      "source_lf_sha256": "5db4efa95f0207d69b658ee4d05a8b63bf24bf657ff4024508ae09f55ca2f0e7",
+      "sha256": "5db4efa95f0207d69b658ee4d05a8b63bf24bf657ff4024508ae09f55ca2f0e7",
+      "upstream_sha256": "5db4efa95f0207d69b658ee4d05a8b63bf24bf657ff4024508ae09f55ca2f0e7",
+      "fork_head_sha256": "5db4efa95f0207d69b658ee4d05a8b63bf24bf657ff4024508ae09f55ca2f0e7"
+    },
+    "vendor/olaf/src/olaf_config.c": {
+      "captured_sha256": "6aca91fa58698e5c1f0421285417fd11c30a835a050d8f7e1fbf32c4746b57fb",
+      "source_lf_sha256": "1bff3d2d5fb64744a19d171f04eafd9d24efc6e6ab03128c30497fdd8a22b58b",
+      "sha256": "1bff3d2d5fb64744a19d171f04eafd9d24efc6e6ab03128c30497fdd8a22b58b",
+      "upstream_sha256": "8be07fa98eeb7bfae151c345fc120894a3a5e93f7817bbbc24357ab42a8b6862",
+      "fork_head_sha256": "8be07fa98eeb7bfae151c345fc120894a3a5e93f7817bbbc24357ab42a8b6862"
+    },
+    "vendor/olaf/src/olaf_config.h": {
+      "captured_sha256": "70ad13f0f900827fc371b1588f0fd986e8bff73fbecc9a2d90040ea1c73c3388",
+      "source_lf_sha256": "137d8aba5a7d6b887bf9709be108aea95a123e3da4d5714f663341def84a27da",
+      "sha256": "137d8aba5a7d6b887bf9709be108aea95a123e3da4d5714f663341def84a27da",
+      "upstream_sha256": "50906930c7762e7d5e2695d39225e6a96a0cebfc2cd2c5f6136a12fa458ce52c",
+      "fork_head_sha256": "50906930c7762e7d5e2695d39225e6a96a0cebfc2cd2c5f6136a12fa458ce52c"
+    },
+    "vendor/olaf/src/olaf_config_internal.h": {
+      "captured_sha256": "c5ec266d504bba196bccb933fdfee835efe51f6acf49e2ddfe233f18e25396e4",
+      "source_lf_sha256": "c5ec266d504bba196bccb933fdfee835efe51f6acf49e2ddfe233f18e25396e4",
+      "sha256": "c5ec266d504bba196bccb933fdfee835efe51f6acf49e2ddfe233f18e25396e4",
+      "upstream_sha256": "c5ec266d504bba196bccb933fdfee835efe51f6acf49e2ddfe233f18e25396e4",
+      "fork_head_sha256": "c5ec266d504bba196bccb933fdfee835efe51f6acf49e2ddfe233f18e25396e4"
+    },
+    "vendor/olaf/src/olaf_db.c": {
+      "captured_sha256": "97594cc69cfbf39645258e4dd0ba521067aa45e0c207840b8e0c88a1cd071ddd",
+      "source_lf_sha256": "280eaa9df16e77650f7911a400d673fee2157230fa65f06e40260558adb6a54d",
+      "sha256": "280eaa9df16e77650f7911a400d673fee2157230fa65f06e40260558adb6a54d",
+      "upstream_sha256": "e063a1ccb2d65fcdf9c1e78cae2d21aaa679279c8978db3f62a9898f09779756",
+      "fork_head_sha256": "e063a1ccb2d65fcdf9c1e78cae2d21aaa679279c8978db3f62a9898f09779756"
+    },
+    "vendor/olaf/src/olaf_db.h": {
+      "captured_sha256": "a6971f1bf9e58bbf55fb8f546160643d29e09baeae80a4a15e44bbc1407038ca",
+      "source_lf_sha256": "a6971f1bf9e58bbf55fb8f546160643d29e09baeae80a4a15e44bbc1407038ca",
+      "sha256": "a6971f1bf9e58bbf55fb8f546160643d29e09baeae80a4a15e44bbc1407038ca",
+      "upstream_sha256": "a6971f1bf9e58bbf55fb8f546160643d29e09baeae80a4a15e44bbc1407038ca",
+      "fork_head_sha256": "a6971f1bf9e58bbf55fb8f546160643d29e09baeae80a4a15e44bbc1407038ca"
+    },
+    "vendor/olaf/src/olaf_db_id.c": {
+      "captured_sha256": "1891b12c315e8b95f7a3515dad4b88a2d37a844b81ac209ae828c72df94465d4",
+      "source_lf_sha256": "1891b12c315e8b95f7a3515dad4b88a2d37a844b81ac209ae828c72df94465d4",
+      "sha256": "1891b12c315e8b95f7a3515dad4b88a2d37a844b81ac209ae828c72df94465d4",
+      "upstream_sha256": "1891b12c315e8b95f7a3515dad4b88a2d37a844b81ac209ae828c72df94465d4",
+      "fork_head_sha256": "1891b12c315e8b95f7a3515dad4b88a2d37a844b81ac209ae828c72df94465d4"
+    },
+    "vendor/olaf/src/olaf_db_mem.c": {
+      "captured_sha256": "1acf112aac79adc22c79e3a7f73c428ce77ccb853dda71e14d1aac7ad03dead6",
+      "source_lf_sha256": "1acf112aac79adc22c79e3a7f73c428ce77ccb853dda71e14d1aac7ad03dead6",
+      "sha256": "1acf112aac79adc22c79e3a7f73c428ce77ccb853dda71e14d1aac7ad03dead6",
+      "upstream_sha256": "1acf112aac79adc22c79e3a7f73c428ce77ccb853dda71e14d1aac7ad03dead6",
+      "fork_head_sha256": "1acf112aac79adc22c79e3a7f73c428ce77ccb853dda71e14d1aac7ad03dead6"
+    },
+    "vendor/olaf/src/olaf_db_mem_pack.h": {
+      "captured_sha256": "86f22d163fc1cc409dce8422ee3bbeebd5f797967a7a16276ee366c0e13ec31e",
+      "source_lf_sha256": "86f22d163fc1cc409dce8422ee3bbeebd5f797967a7a16276ee366c0e13ec31e",
+      "sha256": "86f22d163fc1cc409dce8422ee3bbeebd5f797967a7a16276ee366c0e13ec31e",
+      "upstream_sha256": "86f22d163fc1cc409dce8422ee3bbeebd5f797967a7a16276ee366c0e13ec31e",
+      "fork_head_sha256": "86f22d163fc1cc409dce8422ee3bbeebd5f797967a7a16276ee366c0e13ec31e"
+    },
+    "vendor/olaf/src/olaf_deque.c": {
+      "captured_sha256": "704674aa754e5002c98e159f8d60c4c146828fb0c8034b218b69df17f84f95b9",
+      "source_lf_sha256": "704674aa754e5002c98e159f8d60c4c146828fb0c8034b218b69df17f84f95b9",
+      "sha256": "704674aa754e5002c98e159f8d60c4c146828fb0c8034b218b69df17f84f95b9",
+      "upstream_sha256": "704674aa754e5002c98e159f8d60c4c146828fb0c8034b218b69df17f84f95b9",
+      "fork_head_sha256": "704674aa754e5002c98e159f8d60c4c146828fb0c8034b218b69df17f84f95b9"
+    },
+    "vendor/olaf/src/olaf_deque.h": {
+      "captured_sha256": "849d8bea0cffa0f0f07c99cad1e398bb0a126880bfafb6016e4c0b9b5e81443e",
+      "source_lf_sha256": "849d8bea0cffa0f0f07c99cad1e398bb0a126880bfafb6016e4c0b9b5e81443e",
+      "sha256": "849d8bea0cffa0f0f07c99cad1e398bb0a126880bfafb6016e4c0b9b5e81443e",
+      "upstream_sha256": "849d8bea0cffa0f0f07c99cad1e398bb0a126880bfafb6016e4c0b9b5e81443e",
+      "fork_head_sha256": "849d8bea0cffa0f0f07c99cad1e398bb0a126880bfafb6016e4c0b9b5e81443e"
+    },
+    "vendor/olaf/src/olaf_ep_extractor.c": {
+      "captured_sha256": "ab1211691db970a61e0f449bc7f745ead351f213b37189b5b6f2f442c4a5ba0a",
+      "source_lf_sha256": "ab1211691db970a61e0f449bc7f745ead351f213b37189b5b6f2f442c4a5ba0a",
+      "sha256": "ab1211691db970a61e0f449bc7f745ead351f213b37189b5b6f2f442c4a5ba0a",
+      "upstream_sha256": "ab1211691db970a61e0f449bc7f745ead351f213b37189b5b6f2f442c4a5ba0a",
+      "fork_head_sha256": "ab1211691db970a61e0f449bc7f745ead351f213b37189b5b6f2f442c4a5ba0a"
+    },
+    "vendor/olaf/src/olaf_ep_extractor.h": {
+      "captured_sha256": "87a0a0214ce40871dfe40b2c3eec585dea7945789ba4b452332f2513524e6fbc",
+      "source_lf_sha256": "87a0a0214ce40871dfe40b2c3eec585dea7945789ba4b452332f2513524e6fbc",
+      "sha256": "87a0a0214ce40871dfe40b2c3eec585dea7945789ba4b452332f2513524e6fbc",
+      "upstream_sha256": "87a0a0214ce40871dfe40b2c3eec585dea7945789ba4b452332f2513524e6fbc",
+      "fork_head_sha256": "87a0a0214ce40871dfe40b2c3eec585dea7945789ba4b452332f2513524e6fbc"
+    },
+    "vendor/olaf/src/olaf_fft.c": {
+      "captured_sha256": "e8dfaea1dbba4754621335bbe73605215da7275bf26e2b4146503478269fc9f6",
+      "source_lf_sha256": "e8dfaea1dbba4754621335bbe73605215da7275bf26e2b4146503478269fc9f6",
+      "sha256": "e8dfaea1dbba4754621335bbe73605215da7275bf26e2b4146503478269fc9f6",
+      "upstream_sha256": "e8dfaea1dbba4754621335bbe73605215da7275bf26e2b4146503478269fc9f6",
+      "fork_head_sha256": "e8dfaea1dbba4754621335bbe73605215da7275bf26e2b4146503478269fc9f6"
+    },
+    "vendor/olaf/src/olaf_fft.h": {
+      "captured_sha256": "55a8069f77f286e17ef3b64fe2cdb8db2f1a4e0258ac05fadf3d221bcfad4238",
+      "source_lf_sha256": "55a8069f77f286e17ef3b64fe2cdb8db2f1a4e0258ac05fadf3d221bcfad4238",
+      "sha256": "55a8069f77f286e17ef3b64fe2cdb8db2f1a4e0258ac05fadf3d221bcfad4238",
+      "upstream_sha256": "55a8069f77f286e17ef3b64fe2cdb8db2f1a4e0258ac05fadf3d221bcfad4238",
+      "fork_head_sha256": "55a8069f77f286e17ef3b64fe2cdb8db2f1a4e0258ac05fadf3d221bcfad4238"
+    },
+    "vendor/olaf/src/olaf_fp_db_writer.c": {
+      "captured_sha256": "33c812854767725744bbcbd8afc24d25e4a2208e7ec8945b20357e47e131bb95",
+      "source_lf_sha256": "33c812854767725744bbcbd8afc24d25e4a2208e7ec8945b20357e47e131bb95",
+      "sha256": "33c812854767725744bbcbd8afc24d25e4a2208e7ec8945b20357e47e131bb95",
+      "upstream_sha256": "33c812854767725744bbcbd8afc24d25e4a2208e7ec8945b20357e47e131bb95",
+      "fork_head_sha256": "33c812854767725744bbcbd8afc24d25e4a2208e7ec8945b20357e47e131bb95"
+    },
+    "vendor/olaf/src/olaf_fp_db_writer.h": {
+      "captured_sha256": "346a6c8acc5be164c858c22b5d220dc469247959366e78905910c0e9dac70c92",
+      "source_lf_sha256": "346a6c8acc5be164c858c22b5d220dc469247959366e78905910c0e9dac70c92",
+      "sha256": "346a6c8acc5be164c858c22b5d220dc469247959366e78905910c0e9dac70c92",
+      "upstream_sha256": "346a6c8acc5be164c858c22b5d220dc469247959366e78905910c0e9dac70c92",
+      "fork_head_sha256": "346a6c8acc5be164c858c22b5d220dc469247959366e78905910c0e9dac70c92"
+    },
+    "vendor/olaf/src/olaf_fp_db_writer_cache.c": {
+      "captured_sha256": "aae98430fa1176f554162aea2001cfe86810005df557025d7d247bf6bce12824",
+      "source_lf_sha256": "aae98430fa1176f554162aea2001cfe86810005df557025d7d247bf6bce12824",
+      "sha256": "aae98430fa1176f554162aea2001cfe86810005df557025d7d247bf6bce12824",
+      "upstream_sha256": "aae98430fa1176f554162aea2001cfe86810005df557025d7d247bf6bce12824",
+      "fork_head_sha256": "aae98430fa1176f554162aea2001cfe86810005df557025d7d247bf6bce12824"
+    },
+    "vendor/olaf/src/olaf_fp_db_writer_cache.h": {
+      "captured_sha256": "40231e86c584e6da57f9d428288c50226a549b5b40d20189bfdab03dbce73f72",
+      "source_lf_sha256": "40231e86c584e6da57f9d428288c50226a549b5b40d20189bfdab03dbce73f72",
+      "sha256": "40231e86c584e6da57f9d428288c50226a549b5b40d20189bfdab03dbce73f72",
+      "upstream_sha256": "40231e86c584e6da57f9d428288c50226a549b5b40d20189bfdab03dbce73f72",
+      "fork_head_sha256": "40231e86c584e6da57f9d428288c50226a549b5b40d20189bfdab03dbce73f72"
+    },
+    "vendor/olaf/src/olaf_fp_db_writer_mem.c": {
+      "captured_sha256": "ba43ef3f1aa15beb78fcc1c90fba1c57f7bbcc900773a2ca3a1efa8ace4f4b81",
+      "source_lf_sha256": "ba43ef3f1aa15beb78fcc1c90fba1c57f7bbcc900773a2ca3a1efa8ace4f4b81",
+      "sha256": "ba43ef3f1aa15beb78fcc1c90fba1c57f7bbcc900773a2ca3a1efa8ace4f4b81",
+      "upstream_sha256": "ba43ef3f1aa15beb78fcc1c90fba1c57f7bbcc900773a2ca3a1efa8ace4f4b81",
+      "fork_head_sha256": "ba43ef3f1aa15beb78fcc1c90fba1c57f7bbcc900773a2ca3a1efa8ace4f4b81"
+    },
+    "vendor/olaf/src/olaf_fp_extractor.c": {
+      "captured_sha256": "f7eb8f5db23f9726254a186344cbfd1dadd9ee17159158ca01dc06f1797801f0",
+      "source_lf_sha256": "f7eb8f5db23f9726254a186344cbfd1dadd9ee17159158ca01dc06f1797801f0",
+      "sha256": "f7eb8f5db23f9726254a186344cbfd1dadd9ee17159158ca01dc06f1797801f0",
+      "upstream_sha256": "f7eb8f5db23f9726254a186344cbfd1dadd9ee17159158ca01dc06f1797801f0",
+      "fork_head_sha256": "f7eb8f5db23f9726254a186344cbfd1dadd9ee17159158ca01dc06f1797801f0"
+    },
+    "vendor/olaf/src/olaf_fp_extractor.h": {
+      "captured_sha256": "3ad8e8d190200e34490b068838e2f7cd8dc32a4561f951ad660dd502b7e14d85",
+      "source_lf_sha256": "3ad8e8d190200e34490b068838e2f7cd8dc32a4561f951ad660dd502b7e14d85",
+      "sha256": "3ad8e8d190200e34490b068838e2f7cd8dc32a4561f951ad660dd502b7e14d85",
+      "upstream_sha256": "3ad8e8d190200e34490b068838e2f7cd8dc32a4561f951ad660dd502b7e14d85",
+      "fork_head_sha256": "3ad8e8d190200e34490b068838e2f7cd8dc32a4561f951ad660dd502b7e14d85"
+    },
+    "vendor/olaf/src/olaf_fp_file_writer.c": {
+      "captured_sha256": "5539343ae26060d668349dc2c3634952bd8add7a3309e0711659e5437bcd8f4e",
+      "source_lf_sha256": "5539343ae26060d668349dc2c3634952bd8add7a3309e0711659e5437bcd8f4e",
+      "sha256": "5539343ae26060d668349dc2c3634952bd8add7a3309e0711659e5437bcd8f4e",
+      "upstream_sha256": "5539343ae26060d668349dc2c3634952bd8add7a3309e0711659e5437bcd8f4e",
+      "fork_head_sha256": "5539343ae26060d668349dc2c3634952bd8add7a3309e0711659e5437bcd8f4e"
+    },
+    "vendor/olaf/src/olaf_fp_file_writer.h": {
+      "captured_sha256": "d5b3150d77cc8be9cc00c128a676ded3b650ea590f0e81e38cc2b52a5c535fa5",
+      "source_lf_sha256": "d5b3150d77cc8be9cc00c128a676ded3b650ea590f0e81e38cc2b52a5c535fa5",
+      "sha256": "d5b3150d77cc8be9cc00c128a676ded3b650ea590f0e81e38cc2b52a5c535fa5",
+      "upstream_sha256": "d5b3150d77cc8be9cc00c128a676ded3b650ea590f0e81e38cc2b52a5c535fa5",
+      "fork_head_sha256": "d5b3150d77cc8be9cc00c128a676ded3b650ea590f0e81e38cc2b52a5c535fa5"
+    },
+    "vendor/olaf/src/olaf_fp_matcher.c": {
+      "captured_sha256": "69cf2e199ec1d86d28d072b2597f7e426c91782fc0292bc5cc362e5024bb862c",
+      "source_lf_sha256": "b0346de73eb84654fec0b0e737549e1ebde8773133b1ddf47be0432371e51565",
+      "sha256": "b0346de73eb84654fec0b0e737549e1ebde8773133b1ddf47be0432371e51565",
+      "upstream_sha256": "23e767dd56b4698990675320df6ac1721e1a27f52de5c9b99eba1a2f4d06aed4",
+      "fork_head_sha256": "23e767dd56b4698990675320df6ac1721e1a27f52de5c9b99eba1a2f4d06aed4"
+    },
+    "vendor/olaf/src/olaf_fp_matcher.h": {
+      "captured_sha256": "14904a5e9bab40bbc81610b55cbdfd3a45ab67b48b6dabbdc723f0134bb1e9ae",
+      "source_lf_sha256": "14904a5e9bab40bbc81610b55cbdfd3a45ab67b48b6dabbdc723f0134bb1e9ae",
+      "sha256": "14904a5e9bab40bbc81610b55cbdfd3a45ab67b48b6dabbdc723f0134bb1e9ae",
+      "upstream_sha256": "14904a5e9bab40bbc81610b55cbdfd3a45ab67b48b6dabbdc723f0134bb1e9ae",
+      "fork_head_sha256": "14904a5e9bab40bbc81610b55cbdfd3a45ab67b48b6dabbdc723f0134bb1e9ae"
+    },
+    "vendor/olaf/src/olaf_fp_matcher_internal.h": {
+      "captured_sha256": "288d9885f09322fd717059cd51cea23ee45295962b78ddcc24f00489f8293fae",
+      "source_lf_sha256": "288d9885f09322fd717059cd51cea23ee45295962b78ddcc24f00489f8293fae",
+      "sha256": "288d9885f09322fd717059cd51cea23ee45295962b78ddcc24f00489f8293fae",
+      "upstream_sha256": "288d9885f09322fd717059cd51cea23ee45295962b78ddcc24f00489f8293fae",
+      "fork_head_sha256": "288d9885f09322fd717059cd51cea23ee45295962b78ddcc24f00489f8293fae"
+    },
+    "vendor/olaf/src/olaf_fp_ref_mem.h": {
+      "captured_sha256": "05d6f612ba1d1fa4bebd77bfb0a6e893084c5f3a50ffafd37c36c76749e0b691",
+      "source_lf_sha256": "05d6f612ba1d1fa4bebd77bfb0a6e893084c5f3a50ffafd37c36c76749e0b691",
+      "sha256": "05d6f612ba1d1fa4bebd77bfb0a6e893084c5f3a50ffafd37c36c76749e0b691",
+      "upstream_sha256": "05d6f612ba1d1fa4bebd77bfb0a6e893084c5f3a50ffafd37c36c76749e0b691",
+      "fork_head_sha256": "05d6f612ba1d1fa4bebd77bfb0a6e893084c5f3a50ffafd37c36c76749e0b691"
+    },
+    "vendor/olaf/src/olaf_max_filter.h": {
+      "captured_sha256": "852e29dd211367df289e66c4625813cf9daff1ea7639e6758744e26d45bb29e1",
+      "source_lf_sha256": "852e29dd211367df289e66c4625813cf9daff1ea7639e6758744e26d45bb29e1",
+      "sha256": "852e29dd211367df289e66c4625813cf9daff1ea7639e6758744e26d45bb29e1",
+      "upstream_sha256": "852e29dd211367df289e66c4625813cf9daff1ea7639e6758744e26d45bb29e1",
+      "fork_head_sha256": "852e29dd211367df289e66c4625813cf9daff1ea7639e6758744e26d45bb29e1"
+    },
+    "vendor/olaf/src/olaf_max_filter_lemire.c": {
+      "captured_sha256": "cefea0226aacf8a7e13db5a26077ec294c81c550e6ab4f0181bf3f595739deec",
+      "source_lf_sha256": "cefea0226aacf8a7e13db5a26077ec294c81c550e6ab4f0181bf3f595739deec",
+      "sha256": "cefea0226aacf8a7e13db5a26077ec294c81c550e6ab4f0181bf3f595739deec",
+      "upstream_sha256": "cefea0226aacf8a7e13db5a26077ec294c81c550e6ab4f0181bf3f595739deec",
+      "fork_head_sha256": "cefea0226aacf8a7e13db5a26077ec294c81c550e6ab4f0181bf3f595739deec"
+    },
+    "vendor/olaf/src/olaf_max_filter_naive.c": {
+      "captured_sha256": "e6e0bc8b9fd64b5f0b35766444f03c71adaec9718bfa2cb029b9112373b12280",
+      "source_lf_sha256": "e6e0bc8b9fd64b5f0b35766444f03c71adaec9718bfa2cb029b9112373b12280",
+      "sha256": "e6e0bc8b9fd64b5f0b35766444f03c71adaec9718bfa2cb029b9112373b12280",
+      "upstream_sha256": "e6e0bc8b9fd64b5f0b35766444f03c71adaec9718bfa2cb029b9112373b12280",
+      "fork_head_sha256": "e6e0bc8b9fd64b5f0b35766444f03c71adaec9718bfa2cb029b9112373b12280"
+    },
+    "vendor/olaf/src/olaf_max_filter_perceptual.c": {
+      "captured_sha256": "6e31fd29e86c071cd36904aae8b57418b410b247c087cad0180783a7a01981ff",
+      "source_lf_sha256": "6e31fd29e86c071cd36904aae8b57418b410b247c087cad0180783a7a01981ff",
+      "sha256": "6e31fd29e86c071cd36904aae8b57418b410b247c087cad0180783a7a01981ff",
+      "upstream_sha256": "6e31fd29e86c071cd36904aae8b57418b410b247c087cad0180783a7a01981ff",
+      "fork_head_sha256": "6e31fd29e86c071cd36904aae8b57418b410b247c087cad0180783a7a01981ff"
+    },
+    "vendor/olaf/src/olaf_max_filter_perceptual_van_herk.c": {
+      "captured_sha256": "aa66298985682e0206857df232edef6138a222d262264461ec1a186e1c569d06",
+      "source_lf_sha256": "aa66298985682e0206857df232edef6138a222d262264461ec1a186e1c569d06",
+      "sha256": "aa66298985682e0206857df232edef6138a222d262264461ec1a186e1c569d06",
+      "upstream_sha256": "aa66298985682e0206857df232edef6138a222d262264461ec1a186e1c569d06",
+      "fork_head_sha256": "aa66298985682e0206857df232edef6138a222d262264461ec1a186e1c569d06"
+    },
+    "vendor/olaf/src/olaf_reader.h": {
+      "captured_sha256": "fac9525bdb6651bb3d729f0c58de3159e9fb312f0028d4d22d43468179c1297e",
+      "source_lf_sha256": "fac9525bdb6651bb3d729f0c58de3159e9fb312f0028d4d22d43468179c1297e",
+      "sha256": "fac9525bdb6651bb3d729f0c58de3159e9fb312f0028d4d22d43468179c1297e",
+      "upstream_sha256": "fac9525bdb6651bb3d729f0c58de3159e9fb312f0028d4d22d43468179c1297e",
+      "fork_head_sha256": "fac9525bdb6651bb3d729f0c58de3159e9fb312f0028d4d22d43468179c1297e"
+    },
+    "vendor/olaf/src/olaf_reader_stream.c": {
+      "captured_sha256": "32e6b4de680b313c9abe9ea7d566f9e5ca20a3c141f0e9e05599f393662a96ef",
+      "source_lf_sha256": "32e6b4de680b313c9abe9ea7d566f9e5ca20a3c141f0e9e05599f393662a96ef",
+      "sha256": "32e6b4de680b313c9abe9ea7d566f9e5ca20a3c141f0e9e05599f393662a96ef",
+      "upstream_sha256": "32e6b4de680b313c9abe9ea7d566f9e5ca20a3c141f0e9e05599f393662a96ef",
+      "fork_head_sha256": "32e6b4de680b313c9abe9ea7d566f9e5ca20a3c141f0e9e05599f393662a96ef"
+    },
+    "vendor/olaf/src/olaf_resource_meta_data.h": {
+      "captured_sha256": "829e8ddebe8b043c2c9e89e73ccfcc38381665155d88d678de11ce4c464247df",
+      "source_lf_sha256": "829e8ddebe8b043c2c9e89e73ccfcc38381665155d88d678de11ce4c464247df",
+      "sha256": "829e8ddebe8b043c2c9e89e73ccfcc38381665155d88d678de11ce4c464247df",
+      "upstream_sha256": "829e8ddebe8b043c2c9e89e73ccfcc38381665155d88d678de11ce4c464247df",
+      "fork_head_sha256": "829e8ddebe8b043c2c9e89e73ccfcc38381665155d88d678de11ce4c464247df"
+    },
+    "vendor/olaf/src/olaf_runner.c": {
+      "captured_sha256": "e17e83a52df6a50dfb8b014a7f2edd35d363357d43b51dbf65240e09eb5b9b3a",
+      "source_lf_sha256": "e17e83a52df6a50dfb8b014a7f2edd35d363357d43b51dbf65240e09eb5b9b3a",
+      "sha256": "e17e83a52df6a50dfb8b014a7f2edd35d363357d43b51dbf65240e09eb5b9b3a",
+      "upstream_sha256": "e17e83a52df6a50dfb8b014a7f2edd35d363357d43b51dbf65240e09eb5b9b3a",
+      "fork_head_sha256": "e17e83a52df6a50dfb8b014a7f2edd35d363357d43b51dbf65240e09eb5b9b3a"
+    },
+    "vendor/olaf/src/olaf_runner.h": {
+      "captured_sha256": "a4659413db6e1e9509f6765e69d0eaa9efc699030e27ddf5081a90d1dfb58c10",
+      "source_lf_sha256": "a4659413db6e1e9509f6765e69d0eaa9efc699030e27ddf5081a90d1dfb58c10",
+      "sha256": "a4659413db6e1e9509f6765e69d0eaa9efc699030e27ddf5081a90d1dfb58c10",
+      "upstream_sha256": "a4659413db6e1e9509f6765e69d0eaa9efc699030e27ddf5081a90d1dfb58c10",
+      "fork_head_sha256": "a4659413db6e1e9509f6765e69d0eaa9efc699030e27ddf5081a90d1dfb58c10"
+    },
+    "vendor/olaf/src/olaf_stream_processor.c": {
+      "captured_sha256": "e860c4288cbac158a8ec2d5412bda5d21f04e413ec6f91703a4c86a55f242bd1",
+      "source_lf_sha256": "e860c4288cbac158a8ec2d5412bda5d21f04e413ec6f91703a4c86a55f242bd1",
+      "sha256": "e860c4288cbac158a8ec2d5412bda5d21f04e413ec6f91703a4c86a55f242bd1",
+      "upstream_sha256": "e860c4288cbac158a8ec2d5412bda5d21f04e413ec6f91703a4c86a55f242bd1",
+      "fork_head_sha256": "e860c4288cbac158a8ec2d5412bda5d21f04e413ec6f91703a4c86a55f242bd1"
+    },
+    "vendor/olaf/src/olaf_stream_processor.h": {
+      "captured_sha256": "226ed40679c9018a759fce37793e36866b6c0bee46854a9c1503c234330ae9f0",
+      "source_lf_sha256": "226ed40679c9018a759fce37793e36866b6c0bee46854a9c1503c234330ae9f0",
+      "sha256": "226ed40679c9018a759fce37793e36866b6c0bee46854a9c1503c234330ae9f0",
+      "upstream_sha256": "226ed40679c9018a759fce37793e36866b6c0bee46854a9c1503c234330ae9f0",
+      "fork_head_sha256": "226ed40679c9018a759fce37793e36866b6c0bee46854a9c1503c234330ae9f0"
+    },
+    "vendor/olaf/src/olaf_wasm.c": {
+      "captured_sha256": "bfd01d19db8252b6219647d7f49d2d7769e4d0f902654863aa73f1a8719407ef",
+      "source_lf_sha256": "bfd01d19db8252b6219647d7f49d2d7769e4d0f902654863aa73f1a8719407ef",
+      "sha256": "bfd01d19db8252b6219647d7f49d2d7769e4d0f902654863aa73f1a8719407ef",
+      "upstream_sha256": "bfd01d19db8252b6219647d7f49d2d7769e4d0f902654863aa73f1a8719407ef",
+      "fork_head_sha256": "bfd01d19db8252b6219647d7f49d2d7769e4d0f902654863aa73f1a8719407ef"
+    },
+    "vendor/olaf/src/olaf_window.h": {
+      "captured_sha256": "6780656a42a1333d226bb33d635c44fd695e7ca6ae0baf46f4839b853e9936c8",
+      "source_lf_sha256": "6780656a42a1333d226bb33d635c44fd695e7ca6ae0baf46f4839b853e9936c8",
+      "sha256": "6780656a42a1333d226bb33d635c44fd695e7ca6ae0baf46f4839b853e9936c8",
+      "upstream_sha256": "6780656a42a1333d226bb33d635c44fd695e7ca6ae0baf46f4839b853e9936c8",
+      "fork_head_sha256": "6780656a42a1333d226bb33d635c44fd695e7ca6ae0baf46f4839b853e9936c8"
+    },
+    "vendor/olaf/src/pffft.c": {
+      "captured_sha256": "6451277f82a558ee85b89cbceb9e9f3c12a24ffa4009f73411e0c91aa3cd64fa",
+      "source_lf_sha256": "6451277f82a558ee85b89cbceb9e9f3c12a24ffa4009f73411e0c91aa3cd64fa",
+      "sha256": "6451277f82a558ee85b89cbceb9e9f3c12a24ffa4009f73411e0c91aa3cd64fa",
+      "upstream_sha256": "6451277f82a558ee85b89cbceb9e9f3c12a24ffa4009f73411e0c91aa3cd64fa",
+      "fork_head_sha256": "6451277f82a558ee85b89cbceb9e9f3c12a24ffa4009f73411e0c91aa3cd64fa"
+    },
+    "vendor/olaf/src/pffft.h": {
+      "captured_sha256": "d977f836df5846400274bd396c088a048d3ca5f9c3304c14bb1f658aa525a760",
+      "source_lf_sha256": "d977f836df5846400274bd396c088a048d3ca5f9c3304c14bb1f658aa525a760",
+      "sha256": "d977f836df5846400274bd396c088a048d3ca5f9c3304c14bb1f658aa525a760",
+      "upstream_sha256": "d977f836df5846400274bd396c088a048d3ca5f9c3304c14bb1f658aa525a760",
+      "fork_head_sha256": "d977f836df5846400274bd396c088a048d3ca5f9c3304c14bb1f658aa525a760"
+    },
+    "vendor/olaf/src/queue.c": {
+      "captured_sha256": "41e0f6d71d3a7c42c35ca86caecdab40c0cd7ff88d75f94049a9c6c3ca0e8d61",
+      "source_lf_sha256": "41e0f6d71d3a7c42c35ca86caecdab40c0cd7ff88d75f94049a9c6c3ca0e8d61",
+      "sha256": "41e0f6d71d3a7c42c35ca86caecdab40c0cd7ff88d75f94049a9c6c3ca0e8d61",
+      "upstream_sha256": "41e0f6d71d3a7c42c35ca86caecdab40c0cd7ff88d75f94049a9c6c3ca0e8d61",
+      "fork_head_sha256": "41e0f6d71d3a7c42c35ca86caecdab40c0cd7ff88d75f94049a9c6c3ca0e8d61"
+    },
+    "vendor/olaf/src/queue.h": {
+      "captured_sha256": "bfd348c1d5ea77360815308a48b5b51e39981a077632dbdd4266c50bd9b8c4ba",
+      "source_lf_sha256": "bfd348c1d5ea77360815308a48b5b51e39981a077632dbdd4266c50bd9b8c4ba",
+      "sha256": "bfd348c1d5ea77360815308a48b5b51e39981a077632dbdd4266c50bd9b8c4ba",
+      "upstream_sha256": "bfd348c1d5ea77360815308a48b5b51e39981a077632dbdd4266c50bd9b8c4ba",
+      "fork_head_sha256": "bfd348c1d5ea77360815308a48b5b51e39981a077632dbdd4266c50bd9b8c4ba"
+    },
+    "vendor/olaf/tests/README.md": {
+      "captured_sha256": "a63128c3c1050b8c9ad304bb86d0795999ca8449463ad54811ba7786c4015b6a",
+      "source_lf_sha256": "a63128c3c1050b8c9ad304bb86d0795999ca8449463ad54811ba7786c4015b6a",
+      "sha256": "c64a6a4443411e390ebc8b23e07fef6eab52b2d70d33815040c2c657c9397758",
+      "upstream_sha256": "a63128c3c1050b8c9ad304bb86d0795999ca8449463ad54811ba7786c4015b6a",
+      "fork_head_sha256": "a63128c3c1050b8c9ad304bb86d0795999ca8449463ad54811ba7786c4015b6a"
+    },
+    "vendor/olaf/tests/dataset_download.zig": {
+      "captured_sha256": "b62ffbb773feb37c1f7ca2add2cb875f17ef751b68360fb85f46528bccf94e35",
+      "source_lf_sha256": "b62ffbb773feb37c1f7ca2add2cb875f17ef751b68360fb85f46528bccf94e35",
+      "sha256": "1df93b12dab114d2c7fc42d063adec7a6375f7e5d54d8dc4b3a0dd8e13e83064",
+      "upstream_sha256": "b62ffbb773feb37c1f7ca2add2cb875f17ef751b68360fb85f46528bccf94e35",
+      "fork_head_sha256": "b62ffbb773feb37c1f7ca2add2cb875f17ef751b68360fb85f46528bccf94e35"
+    },
+    "vendor/olaf/tests/golden/output_snapshot.txt": {
+      "captured_sha256": "aa89e6eed0ec9169535effcc45a143011e87fef925d81ef2c233043938711790",
+      "source_lf_sha256": "aa89e6eed0ec9169535effcc45a143011e87fef925d81ef2c233043938711790",
+      "sha256": "aa89e6eed0ec9169535effcc45a143011e87fef925d81ef2c233043938711790",
+      "upstream_sha256": "aa89e6eed0ec9169535effcc45a143011e87fef925d81ef2c233043938711790",
+      "fork_head_sha256": "aa89e6eed0ec9169535effcc45a143011e87fef925d81ef2c233043938711790"
+    },
+    "vendor/olaf/tests/olaf_config_alloc.h": {
+      "captured_sha256": "7a357d9960b41979ddca272e4ce5b613635a86eb0ff254ebaa0ce9462886b670",
+      "source_lf_sha256": "7a357d9960b41979ddca272e4ce5b613635a86eb0ff254ebaa0ce9462886b670",
+      "sha256": "7a357d9960b41979ddca272e4ce5b613635a86eb0ff254ebaa0ce9462886b670",
+      "upstream_sha256": "7a357d9960b41979ddca272e4ce5b613635a86eb0ff254ebaa0ce9462886b670",
+      "fork_head_sha256": "7a357d9960b41979ddca272e4ce5b613635a86eb0ff254ebaa0ce9462886b670"
+    },
+    "vendor/olaf/tests/olaf_config_parity.c": {
+      "captured_sha256": "ce11994b574d22a410532922353f403eef654103dc42b1f767eced4e0230d6e9",
+      "source_lf_sha256": "ce11994b574d22a410532922353f403eef654103dc42b1f767eced4e0230d6e9",
+      "sha256": "ce11994b574d22a410532922353f403eef654103dc42b1f767eced4e0230d6e9",
+      "upstream_sha256": "ce11994b574d22a410532922353f403eef654103dc42b1f767eced4e0230d6e9",
+      "fork_head_sha256": "ce11994b574d22a410532922353f403eef654103dc42b1f767eced4e0230d6e9"
+    },
+    "vendor/olaf/tests/olaf_config_parity.h": {
+      "captured_sha256": "1d8336065e9517b28b08fda8600ec1cee824747f5ef574ebdbf25cc1865496ab",
+      "source_lf_sha256": "1d8336065e9517b28b08fda8600ec1cee824747f5ef574ebdbf25cc1865496ab",
+      "sha256": "1d8336065e9517b28b08fda8600ec1cee824747f5ef574ebdbf25cc1865496ab",
+      "upstream_sha256": "1d8336065e9517b28b08fda8600ec1cee824747f5ef574ebdbf25cc1865496ab",
+      "fork_head_sha256": "1d8336065e9517b28b08fda8600ec1cee824747f5ef574ebdbf25cc1865496ab"
+    },
+    "vendor/olaf/tests/olaf_config_tests.c": {
+      "captured_sha256": "2f46a76eee5cff5ff730e01fbfcb0d882aa9d74298191a6af57f2cd70762fbec",
+      "source_lf_sha256": "2f46a76eee5cff5ff730e01fbfcb0d882aa9d74298191a6af57f2cd70762fbec",
+      "sha256": "2f46a76eee5cff5ff730e01fbfcb0d882aa9d74298191a6af57f2cd70762fbec",
+      "upstream_sha256": "2f46a76eee5cff5ff730e01fbfcb0d882aa9d74298191a6af57f2cd70762fbec",
+      "fork_head_sha256": "2f46a76eee5cff5ff730e01fbfcb0d882aa9d74298191a6af57f2cd70762fbec"
+    },
+    "vendor/olaf/tests/olaf_db_concurrency_tests.c": {
+      "captured_sha256": "25bb0f8c235909124b36bf7be47da849efad0d23d4fb9af9129bff44a0a2c5dc",
+      "source_lf_sha256": "2711db8fc04b3a332d39056368e214c95206106d112974ea5423996b23d89b62",
+      "sha256": "2711db8fc04b3a332d39056368e214c95206106d112974ea5423996b23d89b62",
+      "upstream_sha256": "fe2cb63bec8872346e65f6c79bef41871a4ebdddb9184c5c75f6749fc636ec49",
+      "fork_head_sha256": "fe2cb63bec8872346e65f6c79bef41871a4ebdddb9184c5c75f6749fc636ec49"
+    },
+    "vendor/olaf/tests/olaf_db_safety_tests.zig": {
+      "captured_sha256": "cda2ab4c6e1ab9868cd07acda88f62c036fbc1866b29691848086fbb37740aa2",
+      "source_lf_sha256": "cda2ab4c6e1ab9868cd07acda88f62c036fbc1866b29691848086fbb37740aa2",
+      "sha256": "cda2ab4c6e1ab9868cd07acda88f62c036fbc1866b29691848086fbb37740aa2",
+      "upstream_sha256": "cda2ab4c6e1ab9868cd07acda88f62c036fbc1866b29691848086fbb37740aa2",
+      "fork_head_sha256": "cda2ab4c6e1ab9868cd07acda88f62c036fbc1866b29691848086fbb37740aa2"
+    },
+    "vendor/olaf/tests/olaf_fp_db_writer_tests.c": {
+      "captured_sha256": "bda30281c79639fc92133be71b186128779e641b2d24cc15b74b32a40b34efb4",
+      "source_lf_sha256": "bda30281c79639fc92133be71b186128779e641b2d24cc15b74b32a40b34efb4",
+      "sha256": "bda30281c79639fc92133be71b186128779e641b2d24cc15b74b32a40b34efb4",
+      "upstream_sha256": "bda30281c79639fc92133be71b186128779e641b2d24cc15b74b32a40b34efb4",
+      "fork_head_sha256": "bda30281c79639fc92133be71b186128779e641b2d24cc15b74b32a40b34efb4"
+    },
+    "vendor/olaf/tests/olaf_functional_tests.zig": {
+      "captured_sha256": "5ed924bd6546d9cd6354fec25f70280ffedae427251abcc7cba1ba023d4e8b44",
+      "source_lf_sha256": "5ed924bd6546d9cd6354fec25f70280ffedae427251abcc7cba1ba023d4e8b44",
+      "sha256": "5ed924bd6546d9cd6354fec25f70280ffedae427251abcc7cba1ba023d4e8b44",
+      "upstream_sha256": "5ed924bd6546d9cd6354fec25f70280ffedae427251abcc7cba1ba023d4e8b44",
+      "fork_head_sha256": "5ed924bd6546d9cd6354fec25f70280ffedae427251abcc7cba1ba023d4e8b44"
+    },
+    "vendor/olaf/tests/olaf_matcher_v3_tests.c": {
+      "captured_sha256": "d6d0ed1bce20b0cc280fff44f7e86cdce25d930219344098cae6a92e176dd02b",
+      "source_lf_sha256": "15c52987ad2bdd3d0eba19a47b9f669086555e824a1cc50718c5d60e0da66b51",
+      "sha256": "15c52987ad2bdd3d0eba19a47b9f669086555e824a1cc50718c5d60e0da66b51",
+      "upstream_sha256": null,
+      "fork_head_sha256": null
+    },
+    "vendor/olaf/tests/olaf_tests.c": {
+      "captured_sha256": "f2aa8b3c2382ae9f6581b35d0a57c99bad7584907baf0c9bb27a51f8b2f1366a",
+      "source_lf_sha256": "f2aa8b3c2382ae9f6581b35d0a57c99bad7584907baf0c9bb27a51f8b2f1366a",
+      "sha256": "e05ba1f4dc4fbd4dc821713946328e8970c24f84aae3ca55ba6f7fe79c933b06",
+      "upstream_sha256": "f2aa8b3c2382ae9f6581b35d0a57c99bad7584907baf0c9bb27a51f8b2f1366a",
+      "fork_head_sha256": "f2aa8b3c2382ae9f6581b35d0a57c99bad7584907baf0c9bb27a51f8b2f1366a"
+    },
+    "vendor/olaf/tests/olaf_ui_live_test.mjs": {
+      "captured_sha256": "4e134c79e15f5765dbad2b22962f65e2f6b1e2cfa0f289b349ecb3a5b1e861b2",
+      "source_lf_sha256": "4e134c79e15f5765dbad2b22962f65e2f6b1e2cfa0f289b349ecb3a5b1e861b2",
+      "sha256": "4e134c79e15f5765dbad2b22962f65e2f6b1e2cfa0f289b349ecb3a5b1e861b2",
+      "upstream_sha256": "4e134c79e15f5765dbad2b22962f65e2f6b1e2cfa0f289b349ecb3a5b1e861b2",
+      "fork_head_sha256": "4e134c79e15f5765dbad2b22962f65e2f6b1e2cfa0f289b349ecb3a5b1e861b2"
+    },
+    "vendor/olaf/tests/olaf_unit_tests.zig": {
+      "captured_sha256": "d717a7f4f34013f4e780b517608e8f50854810df66541d6aa1d00f299de96417",
+      "source_lf_sha256": "d717a7f4f34013f4e780b517608e8f50854810df66541d6aa1d00f299de96417",
+      "sha256": "d717a7f4f34013f4e780b517608e8f50854810df66541d6aa1d00f299de96417",
+      "upstream_sha256": "d717a7f4f34013f4e780b517608e8f50854810df66541d6aa1d00f299de96417",
+      "fork_head_sha256": "d717a7f4f34013f4e780b517608e8f50854810df66541d6aa1d00f299de96417"
+    },
+    "vendor/olaf/tests/run_config_sanitizers.py": {
+      "captured_sha256": "de39a7034677e9c450fc21680b83de7f0660d04590ecd0f7b81f1e90768bf90d",
+      "source_lf_sha256": "de39a7034677e9c450fc21680b83de7f0660d04590ecd0f7b81f1e90768bf90d",
+      "sha256": "de39a7034677e9c450fc21680b83de7f0660d04590ecd0f7b81f1e90768bf90d",
+      "upstream_sha256": "de39a7034677e9c450fc21680b83de7f0660d04590ecd0f7b81f1e90768bf90d",
+      "fork_head_sha256": "de39a7034677e9c450fc21680b83de7f0660d04590ecd0f7b81f1e90768bf90d"
+    },
+    "vendor/olaf/tests/run_db_sanitizers.py": {
+      "captured_sha256": "cc99fe34d22e18a917c8504e487ac45ff50e7b5d846e37645a5c5850099f5616",
+      "source_lf_sha256": "cc99fe34d22e18a917c8504e487ac45ff50e7b5d846e37645a5c5850099f5616",
+      "sha256": "cc99fe34d22e18a917c8504e487ac45ff50e7b5d846e37645a5c5850099f5616",
+      "upstream_sha256": "cc99fe34d22e18a917c8504e487ac45ff50e7b5d846e37645a5c5850099f5616",
+      "fork_head_sha256": "cc99fe34d22e18a917c8504e487ac45ff50e7b5d846e37645a5c5850099f5616"
+    },
+    "vendor/olaf/tests/test_python_constructor.py": {
+      "captured_sha256": "54e84ebdc804b475dd48b2f588be3cebce705d37705426060ce65a950226aad3",
+      "source_lf_sha256": "54e84ebdc804b475dd48b2f588be3cebce705d37705426060ce65a950226aad3",
+      "sha256": "54e84ebdc804b475dd48b2f588be3cebce705d37705426060ce65a950226aad3",
+      "upstream_sha256": "54e84ebdc804b475dd48b2f588be3cebce705d37705426060ce65a950226aad3",
+      "fork_head_sha256": "54e84ebdc804b475dd48b2f588be3cebce705d37705426060ce65a950226aad3"
+    },
+    "vendor/olaf/wasm/js/olaf_wasm.js": {
+      "captured_sha256": "4d1e3162eb894d2af21c04a685e011be9cc57054947deb414550abd83662766e",
+      "source_lf_sha256": "4d1e3162eb894d2af21c04a685e011be9cc57054947deb414550abd83662766e",
+      "sha256": "4d1e3162eb894d2af21c04a685e011be9cc57054947deb414550abd83662766e",
+      "upstream_sha256": "4d1e3162eb894d2af21c04a685e011be9cc57054947deb414550abd83662766e",
+      "fork_head_sha256": "4d1e3162eb894d2af21c04a685e011be9cc57054947deb414550abd83662766e"
+    },
+    "vendor/olaf/wasm/olaf_wasm_test.mjs": {
+      "captured_sha256": "3999ce5b62692498d80a16bcb3574258cace30deb2d6170682134d8846284691",
+      "source_lf_sha256": "3999ce5b62692498d80a16bcb3574258cace30deb2d6170682134d8846284691",
+      "sha256": "3999ce5b62692498d80a16bcb3574258cace30deb2d6170682134d8846284691",
+      "upstream_sha256": "3999ce5b62692498d80a16bcb3574258cace30deb2d6170682134d8846284691",
+      "fork_head_sha256": "3999ce5b62692498d80a16bcb3574258cace30deb2d6170682134d8846284691"
+    },
+    "vendor/olaf/wasm/package.json": {
+      "captured_sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8",
+      "source_lf_sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8",
+      "sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8",
+      "upstream_sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8",
+      "fork_head_sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8"
+    },
+    "vendor/zigzag/.gitattributes": {
+      "origin": "release distribution metadata or component notice",
+      "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
+    },
+    "vendor/zigzag/LICENSE": {
+      "captured_sha256": "8bad9f873488b3011193754eff43032e78fbf4771f0f7eefb0394b4a5c34a474",
+      "source_lf_sha256": "8bad9f873488b3011193754eff43032e78fbf4771f0f7eefb0394b4a5c34a474",
+      "sha256": "8bad9f873488b3011193754eff43032e78fbf4771f0f7eefb0394b4a5c34a474"
+    },
+    "vendor/zigzag/README.md": {
+      "captured_sha256": "2ccbc0e32467a80e89ed6403743fac7f939f3a501f49065a00142f9caea02d41",
+      "source_lf_sha256": "2ccbc0e32467a80e89ed6403743fac7f939f3a501f49065a00142f9caea02d41",
+      "sha256": "2ccbc0e32467a80e89ed6403743fac7f939f3a501f49065a00142f9caea02d41"
+    },
+    "vendor/zigzag/build.zig": {
+      "captured_sha256": "febfc998d2f6b296ae9846877b54d04d9f99f6da03765bd748362cfdfbe3f785",
+      "source_lf_sha256": "febfc998d2f6b296ae9846877b54d04d9f99f6da03765bd748362cfdfbe3f785",
+      "sha256": "febfc998d2f6b296ae9846877b54d04d9f99f6da03765bd748362cfdfbe3f785"
+    },
+    "vendor/zigzag/build.zig.zon": {
+      "captured_sha256": "71cdd7bb48e4c40dd434fc92491c22d9576931926731267dad983f82690f022c",
+      "source_lf_sha256": "71cdd7bb48e4c40dd434fc92491c22d9576931926731267dad983f82690f022c",
+      "sha256": "71cdd7bb48e4c40dd434fc92491c22d9576931926731267dad983f82690f022c"
+    },
+    "vendor/zigzag/src/accessibility.zig": {
+      "captured_sha256": "056fb66307501c9ab79e2ae5fe8121d47c9d2ae1e842fde53a0585152c50a340",
+      "source_lf_sha256": "056fb66307501c9ab79e2ae5fe8121d47c9d2ae1e842fde53a0585152c50a340",
+      "sha256": "056fb66307501c9ab79e2ae5fe8121d47c9d2ae1e842fde53a0585152c50a340"
+    },
+    "vendor/zigzag/src/components/bar_chart.zig": {
+      "captured_sha256": "00fe23d446f767b30c88177c1e45e7b9aa300d45f5460a0707550e2adc5fd988",
+      "source_lf_sha256": "00fe23d446f767b30c88177c1e45e7b9aa300d45f5460a0707550e2adc5fd988",
+      "sha256": "00fe23d446f767b30c88177c1e45e7b9aa300d45f5460a0707550e2adc5fd988"
+    },
+    "vendor/zigzag/src/components/braille_canvas.zig": {
+      "captured_sha256": "1782598a0d90dc98dd8f0413ef8f33bf0296ca3486856fc729cf917489293c38",
+      "source_lf_sha256": "1782598a0d90dc98dd8f0413ef8f33bf0296ca3486856fc729cf917489293c38",
+      "sha256": "1782598a0d90dc98dd8f0413ef8f33bf0296ca3486856fc729cf917489293c38"
+    },
+    "vendor/zigzag/src/components/breadcrumb.zig": {
+      "captured_sha256": "24cddd3fd57fe4f88d44f67c5beb7d5a0850f1f5b8ed46e679dd3da4a5d37f9e",
+      "source_lf_sha256": "24cddd3fd57fe4f88d44f67c5beb7d5a0850f1f5b8ed46e679dd3da4a5d37f9e",
+      "sha256": "24cddd3fd57fe4f88d44f67c5beb7d5a0850f1f5b8ed46e679dd3da4a5d37f9e"
+    },
+    "vendor/zigzag/src/components/calendar.zig": {
+      "captured_sha256": "e4994cbc1a2a9eb275ebb1794caa16514a1aff2d03ba90bbf6cbf5bafc1db6c7",
+      "source_lf_sha256": "e4994cbc1a2a9eb275ebb1794caa16514a1aff2d03ba90bbf6cbf5bafc1db6c7",
+      "sha256": "e4994cbc1a2a9eb275ebb1794caa16514a1aff2d03ba90bbf6cbf5bafc1db6c7"
+    },
+    "vendor/zigzag/src/components/canvas.zig": {
+      "captured_sha256": "5389bc24807996730f89e9790a32f6a72eedb710e1b159e0d83d81c93e4d0ac6",
+      "source_lf_sha256": "5389bc24807996730f89e9790a32f6a72eedb710e1b159e0d83d81c93e4d0ac6",
+      "sha256": "5389bc24807996730f89e9790a32f6a72eedb710e1b159e0d83d81c93e4d0ac6"
+    },
+    "vendor/zigzag/src/components/chart.zig": {
+      "captured_sha256": "2e766bed32c5859e050eb4c3e9dac3e901556c84728723dcff8b606f4bd1d49e",
+      "source_lf_sha256": "2e766bed32c5859e050eb4c3e9dac3e901556c84728723dcff8b606f4bd1d49e",
+      "sha256": "2e766bed32c5859e050eb4c3e9dac3e901556c84728723dcff8b606f4bd1d49e"
+    },
+    "vendor/zigzag/src/components/charting.zig": {
+      "captured_sha256": "acf7e69b1be3d7aa10a5c36c1046554a29601d813cfb4e6d67b3057ad8b84925",
+      "source_lf_sha256": "acf7e69b1be3d7aa10a5c36c1046554a29601d813cfb4e6d67b3057ad8b84925",
+      "sha256": "acf7e69b1be3d7aa10a5c36c1046554a29601d813cfb4e6d67b3057ad8b84925"
+    },
+    "vendor/zigzag/src/components/checkbox.zig": {
+      "captured_sha256": "3170058c5f95845955d63a59fe33e0e8d56e106741f9abaa9895fad6cb9d3a6e",
+      "source_lf_sha256": "3170058c5f95845955d63a59fe33e0e8d56e106741f9abaa9895fad6cb9d3a6e",
+      "sha256": "3170058c5f95845955d63a59fe33e0e8d56e106741f9abaa9895fad6cb9d3a6e"
+    },
+    "vendor/zigzag/src/components/code_view.zig": {
+      "captured_sha256": "5b6e4f2c0fd5f60fe5d659aab33e2b39dabc13161fd2bc662f6ae3dfd348b903",
+      "source_lf_sha256": "5b6e4f2c0fd5f60fe5d659aab33e2b39dabc13161fd2bc662f6ae3dfd348b903",
+      "sha256": "5b6e4f2c0fd5f60fe5d659aab33e2b39dabc13161fd2bc662f6ae3dfd348b903"
+    },
+    "vendor/zigzag/src/components/command_palette.zig": {
+      "captured_sha256": "af35628b6fa4c85a11e4c0dbfd84a44d72ecd54ed33699964e40357f03f24d10",
+      "source_lf_sha256": "af35628b6fa4c85a11e4c0dbfd84a44d72ecd54ed33699964e40357f03f24d10",
+      "sha256": "af35628b6fa4c85a11e4c0dbfd84a44d72ecd54ed33699964e40357f03f24d10"
+    },
+    "vendor/zigzag/src/components/confirm.zig": {
+      "captured_sha256": "74a42e7e347962ead0084fec1c7b7dfcf4378808746108b0c5a25602e349582f",
+      "source_lf_sha256": "74a42e7e347962ead0084fec1c7b7dfcf4378808746108b0c5a25602e349582f",
+      "sha256": "74a42e7e347962ead0084fec1c7b7dfcf4378808746108b0c5a25602e349582f"
+    },
+    "vendor/zigzag/src/components/context_menu.zig": {
+      "captured_sha256": "ff8011b5c391bbb8384e9f603d434908ebe3cc356703b3fcd2aff58c9a89081e",
+      "source_lf_sha256": "ff8011b5c391bbb8384e9f603d434908ebe3cc356703b3fcd2aff58c9a89081e",
+      "sha256": "ff8011b5c391bbb8384e9f603d434908ebe3cc356703b3fcd2aff58c9a89081e"
+    },
+    "vendor/zigzag/src/components/data_table.zig": {
+      "captured_sha256": "baa8476f3b9883672bbf82b51b51a8da1da7b20f84032634c40fc93710b4411f",
+      "source_lf_sha256": "baa8476f3b9883672bbf82b51b51a8da1da7b20f84032634c40fc93710b4411f",
+      "sha256": "baa8476f3b9883672bbf82b51b51a8da1da7b20f84032634c40fc93710b4411f"
+    },
+    "vendor/zigzag/src/components/diff_view.zig": {
+      "captured_sha256": "d33287de584d71e47fcda79c5c39a1729fa125ab17f006c1df2345925a0a8237",
+      "source_lf_sha256": "d33287de584d71e47fcda79c5c39a1729fa125ab17f006c1df2345925a0a8237",
+      "sha256": "d33287de584d71e47fcda79c5c39a1729fa125ab17f006c1df2345925a0a8237"
+    },
+    "vendor/zigzag/src/components/dropdown.zig": {
+      "captured_sha256": "98e449f24962893595ded68f249058a4ba2eb369966ab3fe642bf179e80a82fc",
+      "source_lf_sha256": "98e449f24962893595ded68f249058a4ba2eb369966ab3fe642bf179e80a82fc",
+      "sha256": "98e449f24962893595ded68f249058a4ba2eb369966ab3fe642bf179e80a82fc"
+    },
+    "vendor/zigzag/src/components/file_picker.zig": {
+      "captured_sha256": "b0650b3fac7ce8e8687da85c881c0a30a207e36ab5601ae0189c27e2b72d23da",
+      "source_lf_sha256": "b0650b3fac7ce8e8687da85c881c0a30a207e36ab5601ae0189c27e2b72d23da",
+      "sha256": "b0650b3fac7ce8e8687da85c881c0a30a207e36ab5601ae0189c27e2b72d23da"
+    },
+    "vendor/zigzag/src/components/focus.zig": {
+      "captured_sha256": "a2701594c67a0f702513c90c894977bbeca61a97af7c037ef4851fbaf2f0c9d0",
+      "source_lf_sha256": "a2701594c67a0f702513c90c894977bbeca61a97af7c037ef4851fbaf2f0c9d0",
+      "sha256": "a2701594c67a0f702513c90c894977bbeca61a97af7c037ef4851fbaf2f0c9d0"
+    },
+    "vendor/zigzag/src/components/form.zig": {
+      "captured_sha256": "b6054d6f92b7d73b70e48defae624871d6033b3abadf0f26470bf3faaba8126a",
+      "source_lf_sha256": "b6054d6f92b7d73b70e48defae624871d6033b3abadf0f26470bf3faaba8126a",
+      "sha256": "b6054d6f92b7d73b70e48defae624871d6033b3abadf0f26470bf3faaba8126a"
+    },
+    "vendor/zigzag/src/components/gauge.zig": {
+      "captured_sha256": "0a1a5e31f264e7caf206f1551263464832913e266a0bc6326e158474c994d33e",
+      "source_lf_sha256": "0a1a5e31f264e7caf206f1551263464832913e266a0bc6326e158474c994d33e",
+      "sha256": "0a1a5e31f264e7caf206f1551263464832913e266a0bc6326e158474c994d33e"
+    },
+    "vendor/zigzag/src/components/heatmap.zig": {
+      "captured_sha256": "d7e80a506537680c97fd0b41862181331c0c9b4eff750a74893ea2925938841a",
+      "source_lf_sha256": "d7e80a506537680c97fd0b41862181331c0c9b4eff750a74893ea2925938841a",
+      "sha256": "d7e80a506537680c97fd0b41862181331c0c9b4eff750a74893ea2925938841a"
+    },
+    "vendor/zigzag/src/components/help.zig": {
+      "captured_sha256": "5e6cb7037b33391522517d67747b7b89538bd6a50088b1005ecea652e9ca855e",
+      "source_lf_sha256": "5e6cb7037b33391522517d67747b7b89538bd6a50088b1005ecea652e9ca855e",
+      "sha256": "5e6cb7037b33391522517d67747b7b89538bd6a50088b1005ecea652e9ca855e"
+    },
+    "vendor/zigzag/src/components/keybinding.zig": {
+      "captured_sha256": "2c3105e70621733319a4d380a58f6213f9f6ff3fe2ebff343c9195ce49ca51fa",
+      "source_lf_sha256": "2c3105e70621733319a4d380a58f6213f9f6ff3fe2ebff343c9195ce49ca51fa",
+      "sha256": "2c3105e70621733319a4d380a58f6213f9f6ff3fe2ebff343c9195ce49ca51fa"
+    },
+    "vendor/zigzag/src/components/list.zig": {
+      "captured_sha256": "e0deff358f4c404bdaab51af55e7fe396c5d616fec75be858f1d7b08d3c8138a",
+      "source_lf_sha256": "e0deff358f4c404bdaab51af55e7fe396c5d616fec75be858f1d7b08d3c8138a",
+      "sha256": "e0deff358f4c404bdaab51af55e7fe396c5d616fec75be858f1d7b08d3c8138a"
+    },
+    "vendor/zigzag/src/components/markdown.zig": {
+      "captured_sha256": "00e671c98095a8f2d99e78a3d9f68b7d059cb86a54ce7fff786e23055ae5df8c",
+      "source_lf_sha256": "00e671c98095a8f2d99e78a3d9f68b7d059cb86a54ce7fff786e23055ae5df8c",
+      "sha256": "00e671c98095a8f2d99e78a3d9f68b7d059cb86a54ce7fff786e23055ae5df8c"
+    },
+    "vendor/zigzag/src/components/menu_bar.zig": {
+      "captured_sha256": "9be3049b7e1b1482df6cd3cb98cb6a2297ac06b551dfb02e0daf3081fcb00404",
+      "source_lf_sha256": "9be3049b7e1b1482df6cd3cb98cb6a2297ac06b551dfb02e0daf3081fcb00404",
+      "sha256": "9be3049b7e1b1482df6cd3cb98cb6a2297ac06b551dfb02e0daf3081fcb00404"
+    },
+    "vendor/zigzag/src/components/modal.zig": {
+      "captured_sha256": "3668a075ecdc332d74daf6dc43ae89d5ace0faf6acb453120caa3db528893882",
+      "source_lf_sha256": "3668a075ecdc332d74daf6dc43ae89d5ace0faf6acb453120caa3db528893882",
+      "sha256": "3668a075ecdc332d74daf6dc43ae89d5ace0faf6acb453120caa3db528893882"
+    },
+    "vendor/zigzag/src/components/notification.zig": {
+      "captured_sha256": "fc2e899ed3494da67ea48801690c04172de79f45f68029d168856f448cab6151",
+      "source_lf_sha256": "fc2e899ed3494da67ea48801690c04172de79f45f68029d168856f448cab6151",
+      "sha256": "fc2e899ed3494da67ea48801690c04172de79f45f68029d168856f448cab6151"
+    },
+    "vendor/zigzag/src/components/paginator.zig": {
+      "captured_sha256": "66feda330e9ffd96f702a2900223e6219ba04bf55b3e2b294980c7d5dfa89c39",
+      "source_lf_sha256": "66feda330e9ffd96f702a2900223e6219ba04bf55b3e2b294980c7d5dfa89c39",
+      "sha256": "66feda330e9ffd96f702a2900223e6219ba04bf55b3e2b294980c7d5dfa89c39"
+    },
+    "vendor/zigzag/src/components/progress.zig": {
+      "captured_sha256": "4be3b6ec5190647238472d42dcfcd3a4efbe2ffcf01d51d2d3b9398a13f82502",
+      "source_lf_sha256": "4be3b6ec5190647238472d42dcfcd3a4efbe2ffcf01d51d2d3b9398a13f82502",
+      "sha256": "4be3b6ec5190647238472d42dcfcd3a4efbe2ffcf01d51d2d3b9398a13f82502"
+    },
+    "vendor/zigzag/src/components/radio_group.zig": {
+      "captured_sha256": "86a5600add245beb9b64b14568e988aff294af407802d134a13b76bbdea027f0",
+      "source_lf_sha256": "86a5600add245beb9b64b14568e988aff294af407802d134a13b76bbdea027f0",
+      "sha256": "86a5600add245beb9b64b14568e988aff294af407802d134a13b76bbdea027f0"
+    },
+    "vendor/zigzag/src/components/rich_log.zig": {
+      "captured_sha256": "972033bd71232bcd402e955ac33372e9078dfaa80213f1b0ccd8de36b8c2e7d5",
+      "source_lf_sha256": "972033bd71232bcd402e955ac33372e9078dfaa80213f1b0ccd8de36b8c2e7d5",
+      "sha256": "972033bd71232bcd402e955ac33372e9078dfaa80213f1b0ccd8de36b8c2e7d5"
+    },
+    "vendor/zigzag/src/components/slider.zig": {
+      "captured_sha256": "d97103dd60234d908cbc9943168f8993f6a3fd96cf1decbf3a39c971b239a18a",
+      "source_lf_sha256": "d97103dd60234d908cbc9943168f8993f6a3fd96cf1decbf3a39c971b239a18a",
+      "sha256": "d97103dd60234d908cbc9943168f8993f6a3fd96cf1decbf3a39c971b239a18a"
+    },
+    "vendor/zigzag/src/components/sortable_table.zig": {
+      "captured_sha256": "80362e263dafa4b0f97aedb5b1d16a1a6a3efc7c44792e8a90c8ec3339d8caba",
+      "source_lf_sha256": "80362e263dafa4b0f97aedb5b1d16a1a6a3efc7c44792e8a90c8ec3339d8caba",
+      "sha256": "80362e263dafa4b0f97aedb5b1d16a1a6a3efc7c44792e8a90c8ec3339d8caba"
+    },
+    "vendor/zigzag/src/components/sparkline.zig": {
+      "captured_sha256": "5647d35bfd7be2994bd80163326d82e385fea31a3fafc2479d54bafc09206a78",
+      "source_lf_sha256": "5647d35bfd7be2994bd80163326d82e385fea31a3fafc2479d54bafc09206a78",
+      "sha256": "5647d35bfd7be2994bd80163326d82e385fea31a3fafc2479d54bafc09206a78"
+    },
+    "vendor/zigzag/src/components/spinner.zig": {
+      "captured_sha256": "b2deb9aa784c9428fd272dd4d377f2526767bfc9a54b5c48ef002c2d107e3323",
+      "source_lf_sha256": "b2deb9aa784c9428fd272dd4d377f2526767bfc9a54b5c48ef002c2d107e3323",
+      "sha256": "b2deb9aa784c9428fd272dd4d377f2526767bfc9a54b5c48ef002c2d107e3323"
+    },
+    "vendor/zigzag/src/components/split_pane.zig": {
+      "captured_sha256": "0945ed7316fe8116c7eb0afa25f89c42245678dd1bddae6dec98104f21e7f76d",
+      "source_lf_sha256": "0945ed7316fe8116c7eb0afa25f89c42245678dd1bddae6dec98104f21e7f76d",
+      "sha256": "0945ed7316fe8116c7eb0afa25f89c42245678dd1bddae6dec98104f21e7f76d"
+    },
+    "vendor/zigzag/src/components/status_bar.zig": {
+      "captured_sha256": "465f8cde35f09d746e320bd9b386dd3bf7c9c21cf27a1a08de891a426e2f7d79",
+      "source_lf_sha256": "465f8cde35f09d746e320bd9b386dd3bf7c9c21cf27a1a08de891a426e2f7d79",
+      "sha256": "465f8cde35f09d746e320bd9b386dd3bf7c9c21cf27a1a08de891a426e2f7d79"
+    },
+    "vendor/zigzag/src/components/stepper.zig": {
+      "captured_sha256": "4d3e12a72e2190bc42aa1f6792d4ee201a68c9b135160be09c85bc31721e1572",
+      "source_lf_sha256": "4d3e12a72e2190bc42aa1f6792d4ee201a68c9b135160be09c85bc31721e1572",
+      "sha256": "4d3e12a72e2190bc42aa1f6792d4ee201a68c9b135160be09c85bc31721e1572"
+    },
+    "vendor/zigzag/src/components/styled_list.zig": {
+      "captured_sha256": "82e4d5f3fe5e5411b5fae2f84f779e6b844fdcba4e3f631f9d2c06732af9cc5f",
+      "source_lf_sha256": "82e4d5f3fe5e5411b5fae2f84f779e6b844fdcba4e3f631f9d2c06732af9cc5f",
+      "sha256": "82e4d5f3fe5e5411b5fae2f84f779e6b844fdcba4e3f631f9d2c06732af9cc5f"
+    },
+    "vendor/zigzag/src/components/tab_group.zig": {
+      "captured_sha256": "7cfb2a912a4bcaea748ba4ccf6b20fbdc81bc9c02f254eb1d939e2d33bf5468c",
+      "source_lf_sha256": "7cfb2a912a4bcaea748ba4ccf6b20fbdc81bc9c02f254eb1d939e2d33bf5468c",
+      "sha256": "7cfb2a912a4bcaea748ba4ccf6b20fbdc81bc9c02f254eb1d939e2d33bf5468c"
+    },
+    "vendor/zigzag/src/components/table.zig": {
+      "captured_sha256": "947ea7963849613b92986e2f5ee9ed400b036b62de9b3dc44c4d20421535a63d",
+      "source_lf_sha256": "947ea7963849613b92986e2f5ee9ed400b036b62de9b3dc44c4d20421535a63d",
+      "sha256": "947ea7963849613b92986e2f5ee9ed400b036b62de9b3dc44c4d20421535a63d"
+    },
+    "vendor/zigzag/src/components/text_area.zig": {
+      "captured_sha256": "dc6fce2c51c05803d8b293d997abf1618a91bee826080faea56f3792b73ffeea",
+      "source_lf_sha256": "dc6fce2c51c05803d8b293d997abf1618a91bee826080faea56f3792b73ffeea",
+      "sha256": "dc6fce2c51c05803d8b293d997abf1618a91bee826080faea56f3792b73ffeea"
+    },
+    "vendor/zigzag/src/components/text_input.zig": {
+      "captured_sha256": "c06257515c7f950593216e7fa67899154043593a7c6e9db3d209069b2c0e19c9",
+      "source_lf_sha256": "c06257515c7f950593216e7fa67899154043593a7c6e9db3d209069b2c0e19c9",
+      "sha256": "c06257515c7f950593216e7fa67899154043593a7c6e9db3d209069b2c0e19c9"
+    },
+    "vendor/zigzag/src/components/timer.zig": {
+      "captured_sha256": "70ec5503415ff8bc8401f972d795055e3ecc18f9be93c91b89a7d5497f99d554",
+      "source_lf_sha256": "70ec5503415ff8bc8401f972d795055e3ecc18f9be93c91b89a7d5497f99d554",
+      "sha256": "70ec5503415ff8bc8401f972d795055e3ecc18f9be93c91b89a7d5497f99d554"
+    },
+    "vendor/zigzag/src/components/toast.zig": {
+      "captured_sha256": "fff6fd3d4d803d623bcc9502f763adccb40cdc8868cdc1cfcea29576921f345a",
+      "source_lf_sha256": "fff6fd3d4d803d623bcc9502f763adccb40cdc8868cdc1cfcea29576921f345a",
+      "sha256": "fff6fd3d4d803d623bcc9502f763adccb40cdc8868cdc1cfcea29576921f345a"
+    },
+    "vendor/zigzag/src/components/tooltip.zig": {
+      "captured_sha256": "5837f3d6f5942e9ce3ba7ecddc54feb8c1e19596b0b707eb12eb0e7a56886cc5",
+      "source_lf_sha256": "5837f3d6f5942e9ce3ba7ecddc54feb8c1e19596b0b707eb12eb0e7a56886cc5",
+      "sha256": "5837f3d6f5942e9ce3ba7ecddc54feb8c1e19596b0b707eb12eb0e7a56886cc5"
+    },
+    "vendor/zigzag/src/components/tree.zig": {
+      "captured_sha256": "cb975e35244d82fed7311b7e8bfb1af871ba62e30af7ad4c002b898f230ef1a9",
+      "source_lf_sha256": "cb975e35244d82fed7311b7e8bfb1af871ba62e30af7ad4c002b898f230ef1a9",
+      "sha256": "cb975e35244d82fed7311b7e8bfb1af871ba62e30af7ad4c002b898f230ef1a9"
+    },
+    "vendor/zigzag/src/components/viewport.zig": {
+      "captured_sha256": "0570375eb4848e955b548a50bc5ac30691aef2431f71d9ba9c7860231ffaf450",
+      "source_lf_sha256": "0570375eb4848e955b548a50bc5ac30691aef2431f71d9ba9c7860231ffaf450",
+      "sha256": "0570375eb4848e955b548a50bc5ac30691aef2431f71d9ba9c7860231ffaf450"
+    },
+    "vendor/zigzag/src/components/virtual_list.zig": {
+      "captured_sha256": "d91d989a942f7971dcd9330e5b4b570c4cdd84384369e0865ac57202a74db22c",
+      "source_lf_sha256": "d91d989a942f7971dcd9330e5b4b570c4cdd84384369e0865ac57202a74db22c",
+      "sha256": "d91d989a942f7971dcd9330e5b4b570c4cdd84384369e0865ac57202a74db22c"
+    },
+    "vendor/zigzag/src/core/action.zig": {
+      "captured_sha256": "e2f214db18b0645b62475525ddf446d8f1ebbbc45a38e83d197e36964ba8493c",
+      "source_lf_sha256": "e2f214db18b0645b62475525ddf446d8f1ebbbc45a38e83d197e36964ba8493c",
+      "sha256": "e2f214db18b0645b62475525ddf446d8f1ebbbc45a38e83d197e36964ba8493c"
+    },
+    "vendor/zigzag/src/core/animation.zig": {
+      "captured_sha256": "dd77aa7f3630bfc31d86bf06a95d9b28a1cd594c557c8daff44c49002073e49b",
+      "source_lf_sha256": "dd77aa7f3630bfc31d86bf06a95d9b28a1cd594c557c8daff44c49002073e49b",
+      "sha256": "dd77aa7f3630bfc31d86bf06a95d9b28a1cd594c557c8daff44c49002073e49b"
+    },
+    "vendor/zigzag/src/core/async_task.zig": {
+      "captured_sha256": "5dd1c8ed14785d02bdcbf516a57ccd9ddc5f0316a80ccabd9f8fb01cda09a5d6",
+      "source_lf_sha256": "5dd1c8ed14785d02bdcbf516a57ccd9ddc5f0316a80ccabd9f8fb01cda09a5d6",
+      "sha256": "5dd1c8ed14785d02bdcbf516a57ccd9ddc5f0316a80ccabd9f8fb01cda09a5d6"
+    },
+    "vendor/zigzag/src/core/command.zig": {
+      "captured_sha256": "0910c08d6ca5b30e69e0a9e4e8338b212c2165fc5dbad47b78789cd2d0f803d5",
+      "source_lf_sha256": "0910c08d6ca5b30e69e0a9e4e8338b212c2165fc5dbad47b78789cd2d0f803d5",
+      "sha256": "0910c08d6ca5b30e69e0a9e4e8338b212c2165fc5dbad47b78789cd2d0f803d5"
+    },
+    "vendor/zigzag/src/core/context.zig": {
+      "captured_sha256": "af9be0bed1e540a5f305f549b9213f227b80c0dea42144f3dc0201f7f2ffc783",
+      "source_lf_sha256": "af9be0bed1e540a5f305f549b9213f227b80c0dea42144f3dc0201f7f2ffc783",
+      "sha256": "af9be0bed1e540a5f305f549b9213f227b80c0dea42144f3dc0201f7f2ffc783"
+    },
+    "vendor/zigzag/src/core/dev_console.zig": {
+      "captured_sha256": "50ede645742173b9f1c165a8c386d7530750dc595629acaf2d6737ade7f8ff69",
+      "source_lf_sha256": "50ede645742173b9f1c165a8c386d7530750dc595629acaf2d6737ade7f8ff69",
+      "sha256": "50ede645742173b9f1c165a8c386d7530750dc595629acaf2d6737ade7f8ff69"
+    },
+    "vendor/zigzag/src/core/environment.zig": {
+      "captured_sha256": "6d80e308cd18ad0ce5a36dd476586d05a4f8cfe03300153019d479e7867d0471",
+      "source_lf_sha256": "6d80e308cd18ad0ce5a36dd476586d05a4f8cfe03300153019d479e7867d0471",
+      "sha256": "6d80e308cd18ad0ce5a36dd476586d05a4f8cfe03300153019d479e7867d0471"
+    },
+    "vendor/zigzag/src/core/fuzzy.zig": {
+      "captured_sha256": "620b9780f9bb52023b77fdad462a1c42c34f6ebca891c9e00819c28e0465671f",
+      "source_lf_sha256": "620b9780f9bb52023b77fdad462a1c42c34f6ebca891c9e00819c28e0465671f",
+      "sha256": "620b9780f9bb52023b77fdad462a1c42c34f6ebca891c9e00819c28e0465671f"
+    },
+    "vendor/zigzag/src/core/log.zig": {
+      "captured_sha256": "ac43c09712ed014d4b0d4c99e90e9e74e5a849e585b0833d07eff764601d1305",
+      "source_lf_sha256": "ac43c09712ed014d4b0d4c99e90e9e74e5a849e585b0833d07eff764601d1305",
+      "sha256": "ac43c09712ed014d4b0d4c99e90e9e74e5a849e585b0833d07eff764601d1305"
+    },
+    "vendor/zigzag/src/core/message.zig": {
+      "captured_sha256": "57a221f9858968c22f2f8163178be51dbfaa0f562ff02d006f2e282582e51ba1",
+      "source_lf_sha256": "57a221f9858968c22f2f8163178be51dbfaa0f562ff02d006f2e282582e51ba1",
+      "sha256": "57a221f9858968c22f2f8163178be51dbfaa0f562ff02d006f2e282582e51ba1"
+    },
+    "vendor/zigzag/src/core/program.zig": {
+      "captured_sha256": "667521951ca973a1498d46f4670a5d446d5171fe3f5b8790acac730d17ad54d8",
+      "source_lf_sha256": "667521951ca973a1498d46f4670a5d446d5171fe3f5b8790acac730d17ad54d8",
+      "sha256": "667521951ca973a1498d46f4670a5d446d5171fe3f5b8790acac730d17ad54d8"
+    },
+    "vendor/zigzag/src/core/screen_stack.zig": {
+      "captured_sha256": "6acbe8d942e0f8c098f3dbf162a2b9568f49a3b33616c41d592c411d8c0abdbf",
+      "source_lf_sha256": "6acbe8d942e0f8c098f3dbf162a2b9568f49a3b33616c41d592c411d8c0abdbf",
+      "sha256": "6acbe8d942e0f8c098f3dbf162a2b9568f49a3b33616c41d592c411d8c0abdbf"
+    },
+    "vendor/zigzag/src/core/sub_program.zig": {
+      "captured_sha256": "5e71c86794afc4b0cb5c7d97ff7fe66173503624380206e72582a2e6924616eb",
+      "source_lf_sha256": "5e71c86794afc4b0cb5c7d97ff7fe66173503624380206e72582a2e6924616eb",
+      "sha256": "5e71c86794afc4b0cb5c7d97ff7fe66173503624380206e72582a2e6924616eb"
+    },
+    "vendor/zigzag/src/input/hitbox.zig": {
+      "captured_sha256": "16f8f8f1613a217e676a6c7d7c5cd7fb4613d16c0428787c22a0cb152b1bb78e",
+      "source_lf_sha256": "16f8f8f1613a217e676a6c7d7c5cd7fb4613d16c0428787c22a0cb152b1bb78e",
+      "sha256": "16f8f8f1613a217e676a6c7d7c5cd7fb4613d16c0428787c22a0cb152b1bb78e"
+    },
+    "vendor/zigzag/src/input/keyboard.zig": {
+      "captured_sha256": "02408b59c242ea769bdf543a3c1cd757ece7faacdaa7b1642149b0da33b0f078",
+      "source_lf_sha256": "02408b59c242ea769bdf543a3c1cd757ece7faacdaa7b1642149b0da33b0f078",
+      "sha256": "02408b59c242ea769bdf543a3c1cd757ece7faacdaa7b1642149b0da33b0f078"
+    },
+    "vendor/zigzag/src/input/keys.zig": {
+      "captured_sha256": "a4f6323e7979e7bdb8aadfe496b4b3aa6c2dc9018dfe9e2a03253b6fde368aa6",
+      "source_lf_sha256": "a4f6323e7979e7bdb8aadfe496b4b3aa6c2dc9018dfe9e2a03253b6fde368aa6",
+      "sha256": "a4f6323e7979e7bdb8aadfe496b4b3aa6c2dc9018dfe9e2a03253b6fde368aa6"
+    },
+    "vendor/zigzag/src/input/mouse.zig": {
+      "captured_sha256": "fd68f8e455296d58c15cd62b1af6e82be2307856bec784f92ba858ad6fa0d85e",
+      "source_lf_sha256": "fd68f8e455296d58c15cd62b1af6e82be2307856bec784f92ba858ad6fa0d85e",
+      "sha256": "fd68f8e455296d58c15cd62b1af6e82be2307856bec784f92ba858ad6fa0d85e"
+    },
+    "vendor/zigzag/src/layout/flex.zig": {
+      "captured_sha256": "70ab35cbaea27c8bbb5820c370c3ac4c01f1b67f7dcb4543005bd1a3f27ce9f0",
+      "source_lf_sha256": "70ab35cbaea27c8bbb5820c370c3ac4c01f1b67f7dcb4543005bd1a3f27ce9f0",
+      "sha256": "70ab35cbaea27c8bbb5820c370c3ac4c01f1b67f7dcb4543005bd1a3f27ce9f0"
+    },
+    "vendor/zigzag/src/layout/join.zig": {
+      "captured_sha256": "a120f829e178959e32f378f309d558ee384048b7f3199df597a0711b4c84d800",
+      "source_lf_sha256": "a120f829e178959e32f378f309d558ee384048b7f3199df597a0711b4c84d800",
+      "sha256": "a120f829e178959e32f378f309d558ee384048b7f3199df597a0711b4c84d800"
+    },
+    "vendor/zigzag/src/layout/layer.zig": {
+      "captured_sha256": "73b46233c7c7e5165039299c72a5a9fd9b8bcefc596e2034c757fbc252c6d949",
+      "source_lf_sha256": "73b46233c7c7e5165039299c72a5a9fd9b8bcefc596e2034c757fbc252c6d949",
+      "sha256": "73b46233c7c7e5165039299c72a5a9fd9b8bcefc596e2034c757fbc252c6d949"
+    },
+    "vendor/zigzag/src/layout/layout.zig": {
+      "captured_sha256": "26a097ed43a0c42890c1c68f53901bc0df37312fcf37520b76d559fd1094ec9c",
+      "source_lf_sha256": "26a097ed43a0c42890c1c68f53901bc0df37312fcf37520b76d559fd1094ec9c",
+      "sha256": "26a097ed43a0c42890c1c68f53901bc0df37312fcf37520b76d559fd1094ec9c"
+    },
+    "vendor/zigzag/src/layout/measure.zig": {
+      "captured_sha256": "5f676a95b4ed70fcc381c8f9d3a9b6bdf7e90ebac06eb56863133f60042dd7b2",
+      "source_lf_sha256": "5f676a95b4ed70fcc381c8f9d3a9b6bdf7e90ebac06eb56863133f60042dd7b2",
+      "sha256": "5f676a95b4ed70fcc381c8f9d3a9b6bdf7e90ebac06eb56863133f60042dd7b2"
+    },
+    "vendor/zigzag/src/layout/place.zig": {
+      "captured_sha256": "0a05300278ab59590f53cf9d4220351817c13a30505cba75de355e2a4202df6d",
+      "source_lf_sha256": "0a05300278ab59590f53cf9d4220351817c13a30505cba75de355e2a4202df6d",
+      "sha256": "0a05300278ab59590f53cf9d4220351817c13a30505cba75de355e2a4202df6d"
+    },
+    "vendor/zigzag/src/root.zig": {
+      "captured_sha256": "4c691499036b8e0f3206d6d2166b1abad664e603857e97919b40d7107ffce93a",
+      "source_lf_sha256": "4c691499036b8e0f3206d6d2166b1abad664e603857e97919b40d7107ffce93a",
+      "sha256": "4c691499036b8e0f3206d6d2166b1abad664e603857e97919b40d7107ffce93a"
+    },
+    "vendor/zigzag/src/style/border.zig": {
+      "captured_sha256": "1d465bbd650cb49783c584a5372d28b48609e35b31f70b7eb0d10c1570015cd4",
+      "source_lf_sha256": "1d465bbd650cb49783c584a5372d28b48609e35b31f70b7eb0d10c1570015cd4",
+      "sha256": "1d465bbd650cb49783c584a5372d28b48609e35b31f70b7eb0d10c1570015cd4"
+    },
+    "vendor/zigzag/src/style/color.zig": {
+      "captured_sha256": "a6f9ed1bf2027b93d7b2c5b41ff58cf58edadfa667378eedea543959665ebcab",
+      "source_lf_sha256": "a6f9ed1bf2027b93d7b2c5b41ff58cf58edadfa667378eedea543959665ebcab",
+      "sha256": "a6f9ed1bf2027b93d7b2c5b41ff58cf58edadfa667378eedea543959665ebcab"
+    },
+    "vendor/zigzag/src/style/compress.zig": {
+      "captured_sha256": "cc2661469f8ae2d88fd761b7b9576ec1dc3b7d0af15fa1c71ac7c1e9c18176a6",
+      "source_lf_sha256": "cc2661469f8ae2d88fd761b7b9576ec1dc3b7d0af15fa1c71ac7c1e9c18176a6",
+      "sha256": "cc2661469f8ae2d88fd761b7b9576ec1dc3b7d0af15fa1c71ac7c1e9c18176a6"
+    },
+    "vendor/zigzag/src/style/overflow.zig": {
+      "captured_sha256": "a4b18b173ea9fdc53defd78508e05b2c05f6839dfdbb3103a678384b5812a7b0",
+      "source_lf_sha256": "a4b18b173ea9fdc53defd78508e05b2c05f6839dfdbb3103a678384b5812a7b0",
+      "sha256": "a4b18b173ea9fdc53defd78508e05b2c05f6839dfdbb3103a678384b5812a7b0"
+    },
+    "vendor/zigzag/src/style/style.zig": {
+      "captured_sha256": "966bfff9d0ec30b99a2b539972a1925645d7d85c4ad0f66905097732f99fec84",
+      "source_lf_sha256": "966bfff9d0ec30b99a2b539972a1925645d7d85c4ad0f66905097732f99fec84",
+      "sha256": "966bfff9d0ec30b99a2b539972a1925645d7d85c4ad0f66905097732f99fec84"
+    },
+    "vendor/zigzag/src/style/theme.zig": {
+      "captured_sha256": "1a0648a3e2f580f16e65abce07868cf5251c619ba264ec15744a1e25df37ed06",
+      "source_lf_sha256": "1a0648a3e2f580f16e65abce07868cf5251c619ba264ec15744a1e25df37ed06",
+      "sha256": "1a0648a3e2f580f16e65abce07868cf5251c619ba264ec15744a1e25df37ed06"
+    },
+    "vendor/zigzag/src/terminal/ansi.zig": {
+      "captured_sha256": "32a6c74b886571df472a5dd0bd9a088ab41d535e17eefc36196ff076c6941443",
+      "source_lf_sha256": "32a6c74b886571df472a5dd0bd9a088ab41d535e17eefc36196ff076c6941443",
+      "sha256": "32a6c74b886571df472a5dd0bd9a088ab41d535e17eefc36196ff076c6941443"
+    },
+    "vendor/zigzag/src/terminal/platform/posix.zig": {
+      "captured_sha256": "ddea9b8eea80b84bb4447fa9a57c7f1c877b4047a70bbf0aa5e37ebc4ddd29ee",
+      "source_lf_sha256": "ddea9b8eea80b84bb4447fa9a57c7f1c877b4047a70bbf0aa5e37ebc4ddd29ee",
+      "sha256": "ddea9b8eea80b84bb4447fa9a57c7f1c877b4047a70bbf0aa5e37ebc4ddd29ee"
+    },
+    "vendor/zigzag/src/terminal/platform/wasm.zig": {
+      "captured_sha256": "9097e09625a57adb5073db0919722d758c1f872707552ac0d0ba6700bd9b974e",
+      "source_lf_sha256": "9097e09625a57adb5073db0919722d758c1f872707552ac0d0ba6700bd9b974e",
+      "sha256": "9097e09625a57adb5073db0919722d758c1f872707552ac0d0ba6700bd9b974e"
+    },
+    "vendor/zigzag/src/terminal/platform/windows.zig": {
+      "captured_sha256": "98dd7441ef0e6519eaf0e9c866d99689da8828767020e6df72a2742c59a158a5",
+      "source_lf_sha256": "98dd7441ef0e6519eaf0e9c866d99689da8828767020e6df72a2742c59a158a5",
+      "sha256": "98dd7441ef0e6519eaf0e9c866d99689da8828767020e6df72a2742c59a158a5"
+    },
+    "vendor/zigzag/src/terminal/screen.zig": {
+      "captured_sha256": "a3a2d3f58d257bf23b344b778e739f270cd16882174346368c8905f957b2f63a",
+      "source_lf_sha256": "a3a2d3f58d257bf23b344b778e739f270cd16882174346368c8905f957b2f63a",
+      "sha256": "a3a2d3f58d257bf23b344b778e739f270cd16882174346368c8905f957b2f63a"
+    },
+    "vendor/zigzag/src/terminal/terminal.zig": {
+      "captured_sha256": "e286028128ca94ec9380ccc6a847a1cbc52b345bf1598771039a0d3947f32360",
+      "source_lf_sha256": "e286028128ca94ec9380ccc6a847a1cbc52b345bf1598771039a0d3947f32360",
+      "sha256": "e286028128ca94ec9380ccc6a847a1cbc52b345bf1598771039a0d3947f32360"
+    },
+    "vendor/zigzag/src/testing/snapshot.zig": {
+      "captured_sha256": "763d5d5f02e3bd8d626c67374a9761a71ec4a9c7cc54de8200b4d49dc784d3b8",
+      "source_lf_sha256": "763d5d5f02e3bd8d626c67374a9761a71ec4a9c7cc54de8200b4d49dc784d3b8",
+      "sha256": "763d5d5f02e3bd8d626c67374a9761a71ec4a9c7cc54de8200b4d49dc784d3b8"
+    },
+    "vendor/zigzag/src/unicode.zig": {
+      "captured_sha256": "952472db851b1065e8470b5e7f0ab17f773c9702d2e92971121ee30a2f6378de",
+      "source_lf_sha256": "952472db851b1065e8470b5e7f0ab17f773c9702d2e92971121ee30a2f6378de",
+      "sha256": "952472db851b1065e8470b5e7f0ab17f773c9702d2e92971121ee30a2f6378de"
+    },
+    "vendor/zigzag/src/unicode/display_width.zig": {
+      "captured_sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f",
+      "source_lf_sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f",
+      "sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f"
+    }
+  },
+  "additional_notice_sources": {
+    "OpenLDAP-LICENSE.txt": {
+      "url": "https://www.openldap.org/software/release/license.html",
+      "version": "2.8, 17 August 2003",
+      "retrieved_date": "2026-10-29",
+      "method": "Verbatim PRE license text; outer whitespace trimmed, final LF added."
+    },
+    "Zig-LICENSE.txt": {
+      "toolchain_version": "0.16.0",
+      "toolchain_path": "LICENSE",
+      "sha256": "5c537d6853e005298a285d508cff9ac7192cea23576c840d485b2b586a7ff177"
+    },
+    "mingw-w64-COPYING.txt": {
+      "toolchain_version": "0.16.0",
+      "toolchain_path": "lib/libc/mingw/COPYING",
+      "sha256": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f"
+    },
+    "musl-COPYRIGHT.txt": {
+      "toolchain_version": "0.16.0",
+      "toolchain_path": "lib/libc/musl/COPYRIGHT",
+      "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+    }
+  },
+  "patch_series": [
+    "patches/olaf/0001-windows-lmdb-paths.patch",
+    "patches/olaf/0002-working-matcher-config-db.patch",
+    "patches/olaf/0003-release-local-source-build.patch"
+  ],
+  "release_modified_files": [
+    "build.zig",
+    "build.zig.zon",
+    "tests/README.md",
+    "tests/dataset_download.zig",
+    "tests/olaf_tests.c"
+  ],
+  "modifications": [
+    {
+      "patch": "patches/olaf/0001-windows-lmdb-paths.patch",
+      "summary": "Windows LMDB filename suffixes; sole source change between public base and fork commit."
+    },
+    {
+      "patch": "patches/olaf/0002-working-matcher-config-db.patch",
+      "summary": "Complete captured working matcher/config/DB changes and new test; no extraction/index format change, but C config ABI changes."
+    },
+    {
+      "patch": "patches/olaf/0003-release-local-source-build.patch",
+      "summary": "Local Zigzag path; packaging source inventory; opt-in audio suite with no automatic downloads; explicit missing-fixture errors; release test documentation and synthetic legacy test path."
+    }
+  ],
+  "build": {
+    "zig_version": "0.16.0",
+    "cpu": "baseline",
+    "optimize": "ReleaseFast",
+    "jobs": 1,
+    "targets": {
+      "windows-x64": "x86_64-windows-gnu",
+      "linux-x64": "x86_64-linux-musl",
+      "macos-arm64": "aarch64-macos.11.0.0-none",
+      "macos-x64": "x86_64-macos.11.0.0-none"
+    },
+    "native_validation": "Not compiled or executed during source vendoring; all four target builds unverified. Source-only tests and mocked output checks are not native test results."
+  },
+  "hash_scope": "Final sha256 values cover UTF-8 text with CRLF normalized to LF, including source, notices, build helper, tests and ordered patches. PROVENANCE.json excludes itself to avoid recursive hashing. Runtime BUILD-INFO.json separately hashes the source manifest and actual binary.",
+  "licensing_review_remaining": [
+    "Final application/combined-distribution and AGPL network-service obligations; process separation is not a blanket exemption.",
+    "External FFmpeg/FFprobe if a release bundles them.",
+    "Binary-specific toolchain/CRT/system-library subcomponent notices and SDK obligations; included Zig/mingw/musl notice files do not certify every emitted component.",
+    "Upstream patent warning is not resolved by source vendoring."
+  ],
+  "source_completeness_limits": [
+    "The complete desktop build module closure is included; standard C/Zig headers are supplied by Zig 0.16.0.",
+    "Zigzag standalone examples/tests are absent from its original published package and are not part of the Olaf module dependency.",
+    "The optional ALLOC_TESTING c-algorithms harness header alloc-testing.h is absent from original Olaf and is not enabled in supported builds.",
+    "Audio/dataset and browser demo assets listed in exclusions are not source-only test passes; the full test suite is disabled by default."
+  ]
+}
