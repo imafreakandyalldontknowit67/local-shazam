@@ -69,8 +69,11 @@ SHA-256, each exact version and archive checksum, primary source URL, manifest
 license declaration, published VCS revision, copied-notice hashes and review
 status. The application package itself is covered by the unchanged root MIT text.
 
-All 115 published archives were checksum-verified against Cargo.lock and inspected
-without compiling. Complete distributed license/notice files are retained in
+The prior inventory recorded all 115 published archives as checksum-verified
+against Cargo.lock and inspected without compiling. This reconciliation checks
+all local notice/lockfile hashes and independently re-fetches the 11 exact archives
+listed in [release review](licenses/RELEASE_REVIEW.md), not all 115 anew. Complete
+distributed license/notice files are retained in
 `licenses/rust/<name>-<version>/`. Additional attribution/license comment blocks
 are retained as `EMBEDDED-NOTICES.txt`, with source-file headings. Where archives
 omitted licensing documents, the document was fetched from the exact VCS revision
@@ -78,9 +81,12 @@ recorded inside that archive, not from a moving main branch.
 
 Inventory coverage is **not** a complete binary license audit. There are **seven
 explicitly unresolved Apple-family attribution/SDK reviews** in that inventory;
-108 packages have supplied license-text evidence (107 in their archives, one from
-pinned upstream). A separate `sqlite-wasm-rs` embedded-musl provenance/notice
-blocker also remains. Do not convert these evidence counts into a compliance claim.
+108 packages have some supplied license-text evidence (107 in their archives,
+including incomplete wasm embedded provenance, one from pinned upstream). The
+`sqlite-wasm-rs` embedded-musl concern remains for applicable source/wasm
+distributions; it is not automatically a native-binary blocker. Do not convert
+these evidence counts into a compliance claim. Exact manifests and immutable
+upstream investigation are retained in [release review](licenses/RELEASE_REVIEW.md).
 
 Important non-generic and embedded terms include:
 
@@ -99,6 +105,11 @@ Important non-generic and embedded terms include:
   those sources. Confirm their provenance and complete notices before shipping
   this dependency source or a binary incorporating the shim. The Olaf toolchain's
   separate musl notice is not proof of coverage for these files.
+  The exact rusqlite 0.41.1 manifest restricts sqlite-wasm-rs to
+  `cfg(all(target_family = "wasm", target_os = "unknown"))`; the four native
+  targets do not satisfy it. Historical app-source archives do not vendor that
+  shim implementation. No complete target-resolved feature graph was available;
+  recheck applicability if targets/features/source bundling change.
 - `unicode-ident`: `(MIT OR Apache-2.0) AND Unicode-3.0`; the Unicode license is
   included, not lost by selecting MIT for the Rust portions.
 - `foldhash`: Zlib; `libloading`: ISC; `rustix` / `linux-raw-sys`: their actual
@@ -136,7 +147,9 @@ toolchain before distribution; record any additional notices and source duties.
 No FFmpeg license/source coverage is claimed for a hypothetical bundled build.
 Changing that packaging decision requires a new build-specific audit.
 
-The Python reference application's `click`, `numpy`, `scipy`, `tqdm` and build
+The repository-only Python reference (agreed archive destination
+`legacy/python/README.md`, pending parent relocation verification) is not shipped
+in native packages. Its `click`, `numpy`, `scipy`, `tqdm` and build
 dependencies, and Olaf's optional Python wrapper dependencies, are declared with
 version ranges rather than an exact resolved distribution inventory. They are
 not included as Python wheels/interpreters in this source license inventory.

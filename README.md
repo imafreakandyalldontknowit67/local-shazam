@@ -72,10 +72,13 @@ with a repository account that can view drafts. These are not public downloads y
 | macOS (Intel) | x64 tar archive containing `local-shazam` |
 
 All four packages passed the [native CI build and packaging gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988)
-at source commit `92a983a57ff9`. That does not establish minimum OS support,
-snippet accuracy or hardware stability. Source archives and SHA256 checksums are
-included in the draft release. Native source version: `0.2.0`; older `1.0.x` tags
-are Python releases.
+at source commit `92a983a57ff92ad4b9342fb4dd992edf728b5a97`, not current HEAD.
+Read-only [artifact and draft metadata review](licenses/review/native-preview.json)
+confirmed the historical set. Checksums are not publisher authentication; these
+gates do not establish minimum OS support, privacy, snippet accuracy or hardware
+stability. Source archives and SHA256 checksums accompany the private draft
+`v0.2.0-native.1` (a draft name, not a verified existing tag). Native source
+version: `0.2.0`; older `1.0.x` tags are Python releases.
 
 Extract the complete package into a writable folder and keep `olaf-runtime/`
 beside the app. These are portable command-line/menu apps, not installers or
@@ -99,6 +102,8 @@ For setup and packaging, see [Building](docs/BUILDING.md),
 [Releasing](docs/RELEASING.md) and [Third-party notices](THIRD_PARTY_NOTICES.md).
 The preview packages are verified at source commit `92a983a57ff9`; this is build
 and packaging evidence, not a new snippet-accuracy or hardware-stability claim.
+Historical binaries still require a compiler-privacy rebuild and independent
+verification; see the [release-readiness checklist](docs/RELEASING.md).
 
 ## Getting started
 
@@ -189,10 +194,12 @@ metadata before sharing logs; do not upload private audio or your index database
 
 ## Legacy Python reference
 
-`shazam/`, `start.py` and `pyproject.toml` retain the unchanged Python `1.0.1`
-reference, requiring Python 3.10+ and its dependencies. It is not the native
-release path: its first-120-second decoding, 30-second decode timeout and
-size/first-8-KiB identity checks still apply, unlike complete-track native indexing.
+The agreed archive location is [legacy/python/README.md](legacy/python/README.md)
+for the Python `1.0.1` reference (relocation verification remains a parent-owned
+integration gate). It requires Python 3.10+ and its dependencies and is
+repository-only historical source, not included in native packages. It is not
+the native release path: its first-120-second decoding, 30-second decode timeout
+and size/first-8-KiB identity checks still apply, unlike complete-track native indexing.
 
 ## Project notes and licensing
 

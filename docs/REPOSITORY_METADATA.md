@@ -31,9 +31,10 @@ global-catalog access, universal codecs or guaranteed identification.
   experimental. Keep `--backend rust` visible as the comparison backend.
 - Native source version is `0.2.0`; historical `1.0.x` tags are Python releases.
   Do not infer or propose a new tag from those unrelated version sequences.
-- Windows x64, Linux x64 and macOS arm64/x64 are planned CI targets awaiting
-  verification, not a supported-download list. Do not add passing-build badges
-  or a latest-release promise without corresponding evidence.
+- Windows x64, Linux x64 and macOS arm64/x64 passed native gates only at
+  historical commit `92a983a57ff92ad4b9342fb4dd992edf728b5a97`, in run
+  `41023384988`. Do not translate that into current-HEAD, privacy, minimum-OS
+  support, clean-host or release approval badges. No latest-public-release promise.
 - Keep unresolved stability/resource caveats visible. At most six default
   workers is a concurrency policy, not a proven fix for development crashes.
 - Scores and suggestions are not probabilities. Held-out accuracy for the
@@ -50,20 +51,30 @@ Existing presentation links: [overview](../README.md),
 [Olaf guide](../rust-app/OLAF.md), [local SVG banner](../assets/banner.svg) and
 [application license](../LICENSE).
 
-Planned cross-branch links, absent from this presentation checkout at authoring
-time and requiring verification after integration:
+Integrated documentation:
 
 - [Building](BUILDING.md)
-- [Releasing](RELEASING.md)
+- [Releasing and pending gates](RELEASING.md)
 - [Third-party notices](../THIRD_PARTY_NOTICES.md)
+- [License review](../licenses/RELEASE_REVIEW.md)
 
-These placeholders identify companion work, not completed release evidence.
+The repository-only Python archive destination is `legacy/python/README.md`;
+post-integration relocation verification is pending with the parent. Native
+packages do not ship the historical Python app.
 
-## Integrated preview status (2026-10-30)
+## Historical preview status (reviewed 2026-10-30)
 
-The proposed source and presentation work is integrated. All four native CI jobs
-passed for `92a983a57ff92ad4b9342fb4dd992edf728b5a97`. GitHub holds a private draft
-prerelease `v0.2.0-native.1` with 12 binary/source archives and consolidated checksums.
-Earlier planning language above records the proposal, not the current build status.
-Licensing review and unsigned/notarized limitations remain; no public launch or
-new recognition-accuracy claim. Source music and production index were untouched.
+Authenticated read-only GitHub metadata confirms a private repository, successful
+native run `41023384988` at the commit above, and draft/prerelease flags for
+`v0.2.0-native.1` with 12 archives and consolidated checksums. API asset sizes and
+digests match the existing local files. No corresponding tag ref was resolved;
+the draft's tag name must not be advertised as an existing verified tag.
+See [the bounded evidence record](../licenses/review/native-preview.json).
+
+The run used the push-triggered build workflow, not evidence that the separate
+manual draft workflow or its authorization paths were exercised. No publication
+or remote metadata changes were made by this review. Licensing/SDK and
+compiler-privacy gates remain open, along with unsigned/non-notarized and
+compatibility limitations. Final release decisions and any later owner visibility
+change are outside this task; visibility alone resolves none of the source,
+privacy or legal obligations.

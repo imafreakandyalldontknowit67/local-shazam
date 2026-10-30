@@ -1,49 +1,161 @@
 # Required release review — not a readiness certification
 
-## Open blockers
+## Scope and factual closures (2026-10-30)
 
-1. **Source hygiene resolved during integration:** the removed fixture line in
-   the release patch is published upstream, not operator-private data. Its exact
-   line digest and path are recognized by the checker; all other content is still
-   scanned. Evidence: https://github.com/JorenSix/Olaf/blob/f6f7cbefb50485953f71100c9d08c625f01780ba/tests/olaf_tests.c#L106
-   Retaining the line preserves an accurately replayable patch. Recheck all source
-   and staged bytes before publishing.
-2. **Apple-family attribution and SDK terms:** `block2 0.6.2`, `dispatch2 0.3.1`,
-   `objc2 0.6.5`, `objc2-app-kit 0.3.2`, `objc2-core-foundation 0.3.2`,
-   `objc2-encode 4.1.0`, and `objc2-foundation 0.3.2` omit complete license texts
-   from their published archives. The exact-revision upstream `LICENSE.md`
-   documents the declared MIT / alternative terms but supplies links rather
-   than complete attributed grants and explicitly raises uncertainty about
-   Apple-SDK-derived code. Those documents are preserved per crate. The generic
-   [MIT template](terms/MIT-template.txt) supplies the linked standard terms,
-   **not** missing copyright attribution or SDK permission. Obtain maintainer/
-   legal confirmation for the actual source/binary distribution; do not silently
-   claim that crate metadata settles it. Non-Apple builds still need an explicit
-   applicability decision if dependency source containing these crates is shipped.
-3. **Wasm musl shim attribution/source provenance:** `sqlite-wasm-rs 0.6.2`
-   includes and compiles sources under `shim/musl/`. The root crate MIT text and
-   qsort/printf notices are preserved, but the archive does not include a musl-wide
-   COPYRIGHT or identify the exact musl import revision for the remaining files
-   lacking individual headers. Obtain the matching upstream provenance and full
-   notices; the separate Olaf/Zig musl notice cannot be assumed to cover this
-   source. This is relevant when that dependency source or target binary is shipped.
-4. **AGPL corresponding source and integration:** confirm that every runtime
-   binary matches the supplied modified source, all patches, dependency source,
-   build instructions/configuration, modification notices, and any required
-   installation information. Audit the combined application's licensing and
-   network-service/source-offer obligations against the actual integration. A
-   private repository URL or a subprocess boundary does not close this blocker.
-5. **Binary-specific closure:** no binaries were built or inspected in this task.
-   Review actual target feature graphs/link inputs, Rust standard library and
-   compiler runtime, Zig/CRT/SDK components and all applicable embedded notices.
-   Include any additional required full texts and matching source. Audit Python
-   artifacts separately if a packaging change includes them. FFmpeg remains
-   external and is not redistributed.
+This is a bounded reconciliation, not a new release, a replay of the completed
+license/presentation tasks, or legal approval. Keep the repository private.
+Original application [MIT](../LICENSE) bytes and all preexisting third-party
+notice bytes are unchanged; public names, emails and attribution URLs are
+intentional. Do not infer a named holder from Cargo authors or fill the generic
+MIT template as though it were an attributed grant.
 
-Also retain the original application's existing attribution, confirm the release
-owner's rights without inventing a named holder for the unchanged MIT notice, and
-review Olaf's upstream patent warning. None of these reviews is replaced by the
-license inventory. Re-audit on lockfile, source, feature, target or toolchain changes.
+- [x] Compared all **115 registry packages** (plus the app) with Cargo.lock,
+  LF-normalized lockfile hash, and supplied notice hashes. This rechecks the
+  recorded whole-lock inventory; it does not claim every package is linked.
+- [x] Re-fetched **11 exact checksum-verified Cargo archives**: seven Apple-family
+  crates plus sqlite-wasm-rs, rfd, rusqlite and libsqlite3-sys. Rechecked published
+  `.cargo_vcs_info.json`; retained exact metadata, relevant manifests and build
+  scripts with [copy hashes and archive URLs](review/source-records.json).
+  No Cargo, compiler, dependency scripts or downloaded tools were executed.
+- [x] Examined each Apple crate's immutable upstream tree at its published VCS
+  revision and compared the already-retained `UPSTREAM-LICENSE.md` bytes. No
+  additional attributed grant was located; the result is **not** factual closure
+  of its attribution/SDK blocker. See [investigation record](review/investigation.json).
+- [x] Independently verified twelve local historical archives, embedded source/
+  payload hashes, exact gate records and cross-target source inventory equality
+  at **`92a983a57ff92ad4b9342fb4dd992edf728b5a97`**. Each target records 16
+  dataset-free gates. Authenticated read-only GitHub metadata confirms run
+  **`41023384988`** succeeded, repository private, draft/prerelease flags for
+  **`v0.2.0-native.1`**, and matching API sizes/digests for all 13 assets. Remote
+  bytes were not downloaded; no matching tag ref was resolved. These are
+  historical facts, not current-HEAD validation or publisher authentication.
+  [Native evidence](review/native-preview.json) excludes raw build logs/paths.
+- [x] Historical app archives include Cargo.lock and license evidence, **not**
+  vendored Cargo dependency implementations or the legacy Python app. The
+  selected metadata/build definitions added here are review evidence, not a full
+  dependency source bundle. Shipped source and linked binaries require separate
+  applicability decisions.
+- [x] Owned documentation/evidence checked with lightweight static hash,
+  lockfile, status/reference and source-hygiene checks. No operator-personal-path
+  or credential finding remained in that scope; no attribution was scrubbed.
+  History review was limited to commit metadata and relevant public release/doc
+  changes around the preview, not an audit or rewrite of historical private blobs.
+
+## Unresolved license decisions and scoped applicability
+
+### 1. Seven Apple-family crates — maintainer/legal review remains open
+
+`block2 0.6.2`, `dispatch2 0.3.1`, `objc2 0.6.5`, `objc2-app-kit 0.3.2`,
+`objc2-core-foundation 0.3.2`, `objc2-encode 4.1.0`, `objc2-foundation 0.3.2`:
+exact archives omit complete license documents; the exact upstream trees examined
+supply `LICENSE.md` rather than additional attributed grants. That document
+links MIT/alternative standard terms and explicitly leaves Apple-SDK-derived
+code uncertain. A generic [MIT template](terms/MIT-template.txt), author metadata
+or newer moving-branch license cannot repair this evidence gap.
+
+The exact [rfd 0.17.2 manifest](review/crates/rfd-0.17.2/Cargo.toml) declares
+six of these under `cfg(target_os = "macos")`; objc2 declares objc2-encode.
+The historical macOS app's recorded link inputs include AppKit, Foundation,
+CoreFoundation and libobjc. Thus this is a concrete macOS review path, not merely
+a name appearing in a whole-lock inventory. No complete target-resolved feature
+graph was retained; Windows/Linux selection is not inferred from the lockfile.
+Any redistribution of these crates' implementation source also requires review,
+even in a non-Apple source bundle.
+
+Consult the preserved [pinned upstream statement](rust/objc2-0.6.5/UPSTREAM-LICENSE.md)
+and [Apple's SDK agreement](https://www.apple.com/legal/sla/docs/xcode.pdf).
+The current Apple publication is context, not proof of the exact SDK agreement
+used by historical runners or permission for these crates. Obtain maintainer/
+legal resolution; do not silently declare the SDK issue either permitted or illegal.
+
+### 2. sqlite-wasm-rs 0.6.2 — unresolved source/wasm concern, scoped out by native predicate
+
+Its exact archive and [build.rs](review/crates/sqlite-wasm-rs-0.6.2/build.rs)
+include 36 musl C compile inputs plus shim headers and printf. Existing root MIT,
+SQLite dedication and qsort/printf notices remain intact. Inspection of published
+revision `4b5c931e88ac09a114bd58368402a74761cec311` found no musl-wide COPYRIGHT
+or precise musl import revision to support the other files. An unrelated
+Olaf/Zig musl COPYRIGHT is **not** a substitute. No authentic missing musl grant
+was found to add; this blocker was not papered over with a generic text.
+
+The [rusqlite 0.41.1 manifest](review/crates/rusqlite-0.41.1/Cargo.toml) enables
+`ffi-sqlite-wasm-rs` by default but places the dependency under
+`cfg(all(target_family = "wasm", target_os = "unknown"))`. Its non-wasm predicate
+selects libsqlite3-sys instead; the application enables `bundled`. None of the
+four native target triples satisfies the wasm predicate. **Static inference:**
+the shim is not selected on this dependency path for those native binaries;
+it is not an established native-binary blocker merely because it is locked.
+A complete resolved feature/link graph remains unavailable and was not generated.
+
+Before shipping that shim source, a wasm binary, a newly vendored registry bundle
+or different target/features, obtain exact import provenance and complete notices.
+The small metadata/build-script evidence copies here do not ship the shim
+implementation or constitute its corresponding source.
+
+### 3. AGPL corresponding source and integration — owner/legal approval open
+
+Historical artifact checks establish byte/hash correspondence, not legal
+sufficiency. Review each modified runtime's preferred-form source, ordered patches,
+embedded dependencies, Zigzag, configuration, build/install scripts, modification
+notices/dates and any required installation information. Ensure recipients can
+obtain exactly that source through a license-compliant delivery method. A private
+repository URL alone does not meet this plan; visibility change alone does not
+complete it either.
+
+Review the application's actual integration and intended deployment, including
+combined-work/aggregation and remote-network source-offer questions. Olaf's
+retained CLI includes REST modules; do not infer all deployment obligations from
+the native app's subprocess usage. Neither a subprocess boundary nor green CI
+establishes AGPL compliance. Consult sections 1, 5, 6 and 13 of the supplied
+[AGPL text](olaf/AGPL-3.0.txt) and [FSF publication](https://www.gnu.org/licenses/agpl-3.0.html).
+Confirm original-app rights without inventing a copyright holder, and review the
+upstream patent warning. This is an evidence checklist, not a legal conclusion.
+
+### 4. Target-specific binary/toolchain/SDK closure — incomplete
+
+Cargo.lock inventories registry packages, not all Rust std/compiler runtime,
+Zig/CRT, SDK or linker contributions. Historical manifests retain limited import/
+link observations, not a resolved feature graph, link map or complete license BOM:
+
+| Target | Available historical observation | Still required |
+| --- | --- | --- |
+| Windows x64 | App uses MSVC target; recorded imports include VCRUNTIME140/UCRT. Olaf uses Zig GNU target and UCRT imports. PE import tables rechecked read-only. | Exact emitted Rust/Zig/mingw/CRT inputs and redistribution terms; clean-host availability. |
+| Linux x64 | App records libc, libm, libgcc_s, loader and Wayland dependencies, with GLIBC_2.39 among symbol needs. Olaf musl recipe has no recorded dynamic needs. | Exact runtime/static components, system-library terms and source duties; no blanket static/minimum-glibc claim. |
+| macOS arm64/x64 | App records Apple frameworks, libobjc/libiconv/libSystem; Olaf records libSystem. | Exact SDK/compiler inputs and accepted terms, emitted runtime notices, Apple-family resolution. |
+
+Existing Zig 0.16.0/mingw-w64/musl notices are preserved from vendor provenance,
+not newly downloaded toolchains, and do not establish complete emitted coverage.
+Actual target-selected dependencies and source duties must be recorded on the
+fresh parent builds. FFmpeg/FFprobe remain external; any bundling requires its own
+audit. Python wheels/interpreters are not in native packages; review separately
+if that changes. Minimum OS/glibc, clean-host behavior, signing/notarization and
+bit-for-bit reproducibility remain unverified.
+
+## Parent-owned and final release checklist — pending
+
+- [ ] Integrate compiler-privacy implementation and inspect `docs/BUILD_PRIVACY.md`;
+  this task has not inspected or approved the other agent's implementation.
+- [ ] Verify historical Python relocation to `legacy/python/README.md` and links;
+  preserve old tags/history; keep it repository-only, outside native packages.
+- [ ] Fresh parent-run hosted rebuilds at the integrated commit on all four hosts;
+  explicit dataset-free gates, not substitution of run 41023384988.
+- [ ] Independent rebuilt artifact/source checks: hashes, source correspondence,
+  notices, exact file inventory, executable/archive metadata and compiler-path
+  privacy. Baseline [privacy audit](../docs/PRIVACY_AUDIT.md) findings in historical
+  executables remain a reason to rebuild, not a reason to edit binary strings.
+- [ ] Approve the four license decisions above, recipient source delivery and
+  target-specific binary closure; record maintainer/legal approval separately
+  from factual evidence closure.
+- [ ] Final history/publication-surface audit after integration: reachable refs,
+  commit metadata, tags, release bodies/assets, workflow logs, remote branches
+  and other publication surfaces, with private visibility rechecked. Redact
+  findings, retain legitimate attribution; no historical private-blob audit or
+  history rewrite is performed by this task.
+- [ ] Final release decision remains with the owner outside this task, as does
+  any later visibility change. Private status alone is not license compliance;
+  making the repository public alone resolves no privacy/source/legal obligation.
+
+Full operational checklist: [Releasing](../docs/RELEASING.md).
 
 ## Read-only source privacy interface
 
@@ -100,16 +212,24 @@ not by removing local music or indexes. Rotate any real exposed credentials.
 
 ## Inventory verification limits
 
-All 115 Cargo registry archive checksums match the lockfile. 107 packages supplied
-license evidence in the archive; `rsqlite-vfs` needed its pinned upstream LICENSE.
-The seven Apple-family packages and the wasm musl shim above remain explicitly
-blocked for the applicable distributions. The inventory
-records original notice hashes, not a claim that a name-based scan proves all
-copyrights were found. Complete license files, relevant embedded comment blocks,
-SQLite dedications and Wayland XML grants were inspected and retained. Review
-actual dependency source and binary closure before relying on these notices.
+The prior inventory recorded checksum verification for all 115 Cargo archives.
+This reconciliation checks lockfile correspondence and local notice hashes and
+re-fetches only the 11 specified archives. The recorded license-text coverage is
+107 archives (including incomplete sqlite-wasm-rs embedded provenance) plus
+rsqlite-vfs's pinned upstream LICENSE; seven Apple-family rows remain blocked.
+These counts are evidence categories, not approvals. The wasm row remains
+blocked for applicable source/wasm distribution, not declared native-selected.
 
-The miniature tests do not import the app/audio packages, compile, read production
-data, index music, download datasets or use service credentials. OS symlink tests
-may skip on Windows when link privileges are unavailable; Git symlink-index tests
-still run. A fresh-platform run should exercise both real links and junctions.
+Review evidence is hashed in `review/source-records.json`; immutable investigation
+URLs/statuses are in `review/investigation.json`. Existing notice hashes in
+`rust-inventory.json` and `olaf-inventory.json` were not replaced or normalized.
+Static tests in `tests/release/test_release_review.py` require no network, Cargo,
+compilers, application execution, music/index access or new repositories. Existing
+mocked packaging and Olaf source tests are separate from historical native gates.
+The parent must rerun relevant checks after integration; no guessed test counts
+or broad current-build approval are recorded here.
+
+Local reconciliation results on 2026-10-30: `test_release_review.py` 10 passed;
+`test_packaging.py` 28 run, 27 passed, one skipped because Windows symlink
+creation privilege is unavailable; `test_olaf_source.py` 13 passed. These are
+static/synthetic source checks, not native compilation or current-build approval.
