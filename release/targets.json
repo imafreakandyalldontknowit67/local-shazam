@@ -78,7 +78,11 @@
       "CHANGELOG.md",
       "assets/banner.svg",
       "rust-app/README.md",
-      "rust-app/OLAF.md"
+      "rust-app/OLAF.md",
+      "assets/brand/*.svg",
+      "assets/brand/tokens.json",
+      "docs/*.md",
+      "docs/BRAND-PROMPT.txt"
     ],
     "olaf": [
       "vendor/olaf/build.zig",
