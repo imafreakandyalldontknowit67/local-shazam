@@ -1,0 +1,186 @@
+name: Manually gated private draft prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_draft:
+        description: 'Create a PRIVATE DRAFT PRERELEASE after all four native gates (default OFF)'
+        type: boolean
+        required: true
+        default: false
+      reviewed_tag:
+        description: 'Existing reviewed tag at the selected workflow commit; never created by this workflow'
+        type: string
+        default: ''
+      reviewed_commit:
+        description: 'Full reviewed 40-character commit SHA; must equal the selected workflow commit'
+        type: string
+        default: ''
+      confirmation:
+        description: 'Exact confirmation: DRAFT PRERELEASE <reviewed_tag> AT <reviewed_commit>'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: private-draft-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Assert private repository and manual reviewed identity
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          CREATE_DRAFT: ${{ inputs.create_draft }}
+          REVIEWED_TAG: ${{ inputs.reviewed_tag }}
+          REVIEWED_COMMIT: ${{ inputs.reviewed_commit }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        with:
+          script: |
+            if (context.eventName !== 'workflow_dispatch') throw new Error('Manual dispatch only');
+            const repo = (await github.rest.repos.get(context.repo)).data;
+            if (!repo.private) throw new Error('Repository must be private');
+            if (process.env.CREATE_DRAFT !== 'true') {
+              core.info('Build-only dispatch. Draft creation is OFF.');
+              return;
+            }
+            const tag = process.env.REVIEWED_TAG;
+            const sha = process.env.REVIEWED_COMMIT;
+            if (!/^v[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$/.test(tag)) throw new Error('Invalid reviewed tag');
+            if (!/^[a-f0-9]{40}$/.test(sha) || sha !== context.sha) throw new Error('Reviewed SHA must equal tested workflow SHA');
+            if (process.env.CONFIRMATION !== `DRAFT PRERELEASE ${tag} AT ${sha}`) throw new Error('Explicit confirmation missing');
+            await github.rest.git.getRef({...context.repo, ref: `tags/${tag}`});
+            const commit = (await github.rest.repos.getCommit({...context.repo, ref: `refs/tags/${tag}`})).data.sha;
+            if (commit !== sha) throw new Error('Existing tag does not point at tested commit');
+            try {
+              await github.rest.repos.getReleaseByTag({...context.repo, tag});
+              throw new Error('A release already exists for this tag; refusing to modify it');
+            } catch (error) { if (error.status !== 404) throw error; }
+
+  build:
+    needs: preflight
+    permissions:
+      contents: read
+    uses: ./.github/workflows/portable-build.yml
+
+  verify-all:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.13.1'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: portable-*
+          path: build/downloads
+      - name: Reverify every target, tested commit and cross-platform source equality
+        env:
+          TESTED_COMMIT: ${{ github.sha }}
+        run: |
+          python -B - <<'PY'
+          import importlib.util, os
+          from pathlib import Path
+          spec = importlib.util.spec_from_file_location('release', 'scripts/release.py')
+          release = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(release)
+          root = Path('build/downloads')
+          assert {p.name for p in root.iterdir()} == {'portable-' + t for t in release.TARGETS}
+          inventories = []
+          for target in release.TARGETS:
+              manifest = release.verify(root / ('portable-' + target))
+              assert manifest['target'] == target
+              assert manifest['commit'] == os.environ['TESTED_COMMIT']
+              inventories.append(manifest['source_inventory'])
+          assert all(i == inventories[0] for i in inventories), 'Native jobs built different sources'
+          PY
+
+  draft:
+    if: github.event_name == 'workflow_dispatch' && inputs.create_draft == true
+    needs: [preflight, build, verify-all]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: private-prerelease
+    permissions:
+      contents: write
+    steps:
+      # No checkout or repository scripts run in this write-token job.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: portable-*
+          path: artifacts
+      - name: Reassert all gates and create ONLY a draft AND prerelease with sources
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          REVIEWED_TAG: ${{ inputs.reviewed_tag }}
+          REVIEWED_COMMIT: ${{ inputs.reviewed_commit }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const crypto = require('crypto');
+            const tag = process.env.REVIEWED_TAG, sha = process.env.REVIEWED_COMMIT;
+            if (context.eventName !== 'workflow_dispatch' || sha !== context.sha ||
+                !/^[a-f0-9]{40}$/.test(sha) || !/^v[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$/.test(tag) ||
+                process.env.CONFIRMATION !== `DRAFT PRERELEASE ${tag} AT ${sha}`) throw new Error('Manual gate mismatch');
+            async function assertPrivateTag() {
+              if (!(await github.rest.repos.get(context.repo)).data.private) throw new Error('Repository is not private');
+              await github.rest.git.getRef({...context.repo, ref: `tags/${tag}`});
+              if ((await github.rest.repos.getCommit({...context.repo, ref: `refs/tags/${tag}`})).data.sha !== sha)
+                throw new Error('Reviewed existing tag moved or is missing');
+            }
+            const targets = ['windows-x64', 'linux-x64', 'macos-arm64', 'macos-x64'];
+            const dirs = fs.readdirSync('artifacts').sort();
+            if (JSON.stringify(dirs) !== JSON.stringify(targets.map(t => 'portable-' + t).sort())) throw new Error('Missing/extra target');
+            const assets = [], checksums = [];
+            for (const target of targets) {
+              const dir = path.join('artifacts', 'portable-' + target);
+              const stem = `local-shazam-${sha.slice(0,12)}-${target}`;
+              const names = [stem + (target === 'windows-x64' ? '.zip' : '.tar.gz'), stem + '-app-source.tar.gz', stem + '-olaf-source.tar.gz'];
+              if (JSON.stringify(fs.readdirSync(dir).sort()) !== JSON.stringify([...names, 'SHA256SUMS'].sort())) throw new Error('Artifact set incomplete');
+              const lines = fs.readFileSync(path.join(dir, 'SHA256SUMS'), 'utf8').trim().split('\n');
+              const actualLines = [];
+              for (const name of names) {
+                const file = path.join(dir, name);
+                if (!fs.lstatSync(file).isFile()) throw new Error('Nonregular artifact');
+                const data = fs.readFileSync(file);
+                const hash = crypto.createHash('sha256').update(data).digest('hex');
+                const line = `${hash}  ${name}`;
+                actualLines.push(line); checksums.push(line); assets.push({name, data});
+              }
+              if (JSON.stringify(lines.sort()) !== JSON.stringify(actualLines.sort())) throw new Error('Artifact checksum mismatch');
+            }
+            assets.push({name: 'SHA256SUMS', data: Buffer.from(checksums.sort().join('\n') + '\n')});
+            await assertPrivateTag();
+            try {
+              await github.rest.repos.getReleaseByTag({...context.repo, tag});
+              throw new Error('Existing release will not be modified');
+            } catch (error) { if (error.status !== 404) throw error; }
+            const created = (await github.rest.repos.createRelease({
+              ...context.repo, tag_name: tag, name: `${tag} — private experimental draft`,
+              draft: true, prerelease: true, make_latest: 'false', generate_release_notes: false,
+              body: `Private experimental DRAFT PRERELEASE. Tested commit: ${sha}.\nUnsigned/not notarized; OS/glibc minimums unverified. FFmpeg/FFprobe external.\nAll four native dataset-free gates passed in run ${context.runId}; no accuracy or bit-for-bit reproducibility claim.\nApp and complete Olaf corresponding source archives and SHA256SUMS accompany binaries. Never publish or promote using this workflow.`
+            })).data;
+            if (!created.draft || !created.prerelease) throw new Error('Release flags invariant failed');
+            for (const asset of assets) {
+              await assertPrivateTag();
+              const current = (await github.rest.repos.getRelease({...context.repo, release_id: created.id})).data;
+              if (!current.draft || !current.prerelease) throw new Error('Draft was externally changed; stopping');
+              await github.rest.repos.uploadReleaseAsset({
+                ...context.repo, release_id: created.id, name: asset.name, data: asset.data,
+                headers: {'content-type': 'application/octet-stream', 'content-length': asset.data.length}
+              });
+            }
+            core.info(`Created private draft prerelease ${created.id}; no publish/promote or tag operation performed.`);
