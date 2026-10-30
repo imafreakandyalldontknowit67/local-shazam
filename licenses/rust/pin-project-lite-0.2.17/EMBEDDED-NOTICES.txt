@@ -1,0 +1,120 @@
+--- src/lib.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/auxiliary/mod.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/compiletest.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/drop_order.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/default/enum.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/default/struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/multifields/enum.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/multifields/struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/enum-all.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/enum-mut.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/enum-none.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/enum-ref.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/struct-all.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/struct-mut.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/struct-none.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/naming/struct-ref.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/not_unpin/enum.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/not_unpin/struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/pinned_drop/enum.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/pinned_drop/struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/pub/enum.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expand/pub/struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/expandtest.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/include/basic.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/proper_unpin.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/test.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/not_unpin/conflict-unpin.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/not_unpin/negative_impls_stable.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/conflict-drop.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/conflict-unpin.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/invalid-bounds.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/invalid.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/negative_impls_stable.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/overlapping_lifetime_names.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/overlapping_unpin_struct.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/packed.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/unpin_sneaky.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pin_project/unsupported.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pinned_drop/call-drop-inner.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
+--- tests/ui/pinned_drop/conditional-drop-impl.rs ---
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
