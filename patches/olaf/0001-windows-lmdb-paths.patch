@@ -1,0 +1,22 @@
+Subject: Use Windows separators for LMDB extended-path suffixes
+Date: 2026-10-29
+
+Source change from fork commit 1240e2552f64ea2d5727c05f859e8303f88aebca. The private agent handoff in that commit is intentionally excluded. Applies to public upstream f6f7cbefb50485953f71100c9d08c625f01780ba.
+
+diff --git a/src/mdb.c b/src/mdb.c
+--- a/src/mdb.c
++++ b/src/mdb.c
+@@ -4665,8 +4665,13 @@
+ 
+ /** Filename suffixes [datafile,lockfile][without,with MDB_NOSUBDIR] */
+ static const mdb_nchar_t *const mdb_suffixes[2][2] = {
++	#ifdef _WIN32
++	{ MDB_NAME("\\data.mdb"), MDB_NAME("")      },
++	{ MDB_NAME("\\lock.mdb"), MDB_NAME("-lock") }
++#else
+ 	{ MDB_NAME("/data.mdb"), MDB_NAME("")      },
+ 	{ MDB_NAME("/lock.mdb"), MDB_NAME("-lock") }
++#endif
+ };
+ 
+ #define MDB_SUFFLEN 9	/**< Max string length in #mdb_suffixes[] */

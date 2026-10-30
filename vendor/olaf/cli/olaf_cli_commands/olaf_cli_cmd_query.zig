@@ -1,0 +1,61 @@
+const std = @import("std");
+const olaf_cli_threading = @import("../olaf_cli_threading.zig");
+const olaf_cli_util = @import("../olaf_cli_util.zig");
+const types = @import("../olaf_cli_types.zig");
+
+const debug = std.log.scoped(.olaf_cli_query).debug;
+
+const print = olaf_cli_util.print;
+
+pub const CommandInfo = struct {
+    pub const name = "query";
+    pub const description = "Query for fingerprint matches.";
+    pub const options = &[_]types.Option{
+        .{ .name = "--fragmented", .text = "Chop queries into fragments of fragment_duration_in_seconds (default 30s) and match each fragment." },
+        .{ .name = "--threads n", .text = "The number of threads to use." },
+        .{ .name = "--no-identity-match", .text = "Identity matches are not reported." },
+        .{ .name = "--format <csv|json>", .text = "Output format (default: csv)." },
+    };
+    pub const help = "[--fragmented] [--threads n] [--format <csv|json>] [audio_file...] | --with-ids [[audio_file audio_identifier]...]";
+    pub const needs_audio_files = true;
+    pub const flags = &[_]types.Flag{ .threads, .fragmented, .no_identity_match, .format, .with_ids };
+};
+
+pub fn execute(allocator: std.mem.Allocator, args: *types.Args) !void {
+    if (args.format == .human) {
+        print("query output has no human format; use --format csv or json.\n", .{});
+        return error.Usage;
+    }
+    if (args.audio_files.items.len == 0) {
+        print("No audio files provided to query.\n", .{});
+        return;
+    }
+
+    debug("Executing query with fragmented={}, threads={}", .{ args.fragmented, args.threads });
+
+    if (args.fragmented) {
+        try olaf_cli_threading.executeFragmentedQuery(
+            args.io,
+            allocator,
+            args.audio_files.items,
+            args.config.?,
+            args.threads,
+            args.config.?.fragment_duration_in_seconds,
+            args.allow_identity_match,
+            args.queryFormat(),
+        );
+    } else {
+        try olaf_cli_threading.executeParallel(
+            args.io,
+            allocator,
+            args.audio_files.items,
+            args.config.?,
+            .Query,
+            args.threads,
+            args.allow_identity_match,
+            args.queryFormat(),
+            args.storeFormat(),
+        null,
+    );
+    }
+}
