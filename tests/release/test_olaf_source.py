@@ -46,7 +46,9 @@ def apply_patch_text(tree: dict[str, str], patch: str, reverse: bool = False) ->
             i += 1
             while i < len(lines) and not lines[i].startswith("@@ "):
                 line = lines[i]
-                sign, text = line[0], line[1:]
+                # Git accepts an empty context line without a space prefix.
+                # Keep new patch files free of trailing-whitespace-only lines.
+                sign, text = (" ", line) if line == "\n" else (line[0], line[1:])
                 if reverse:
                     sign = {"+": "-", "-": "+"}.get(sign, sign)
                 assert sign in (" ", "+", "-"), f"Invalid diff line: {line!r}"
@@ -164,12 +166,16 @@ class SourceDistributionTests(unittest.TestCase):
 
     def test_patch_series_reproduces_base_working_and_final_source(self):
         series = (ROOT / "patches/olaf/series").read_text().splitlines()
-        self.assertEqual(len(series), 3)
+        self.assertEqual(len(series), 4)
+        self.assertEqual(self.provenance['patch_series'], ['patches/olaf/' + name for name in series])
+        fourth = (ROOT / 'patches/olaf' / series[3]).read_text()
+        self.assertEqual(re.findall(r'^diff --git (.*)$', fourth, re.M), ['a/build.zig b/build.zig'])
         records = {name.removeprefix("vendor/olaf/"): record for name, record in self.provenance["files"].items()
                    if name.startswith("vendor/olaf/") and "source_lf_sha256" in record}
         final = {name: (ROOT / "vendor/olaf" / name).read_text(encoding="utf-8") for name in records}
         tree = final.copy()
-        apply_patch_text(tree, (ROOT / "patches/olaf" / series[2]).read_text(encoding="utf-8"), reverse=True)
+        for patch in reversed(series[2:]):
+            apply_patch_text(tree, (ROOT / "patches/olaf" / patch).read_text(encoding="utf-8"), reverse=True)
         for name, record in records.items():
             self.assertEqual(builder.sha256(tree[name].encode()), record["source_lf_sha256"], name)
         for patch in reversed(series[:2]):
@@ -237,6 +243,10 @@ class BuildInterfaceTests(unittest.TestCase):
                     self.assertIn("-Dcpu=baseline", command)
                     self.assertIn("-j1", command)
                     self.assertIn("-Doptimize=ReleaseFast", command)
+                    self.assertIn("-Drelease-privacy=true", command)
+                    self.assertTrue(any(arg.startswith("-Dprivacy-cflags=") for arg in command))
+                    self.assertTrue(Path(command[command.index("--cache-dir") + 1]).is_relative_to(Path(tmp)))
+                    self.assertNotIn("CFLAGS", kwargs["env"])
                     self.assertEqual(kwargs["cwd"], ROOT / "vendor/olaf")
                     prefix = Path(command[command.index("--prefix") + 1])
                     binary = prefix / "bin" / executable

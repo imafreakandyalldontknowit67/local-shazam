@@ -8,7 +8,7 @@ blanket licensing conclusion about the surrounding application or its release.
 
 ## Supported integration interface
 
-From the repository root, with Python **3.10+** and installed **Zig 0.16.0**:
+From the repository root, with Python **3.11+** and installed **Zig 0.16.0**:
 
 ```sh
 python scripts/build_olaf.py --check-only
@@ -39,7 +39,11 @@ compiled during source vendoring. Prefer matching-host CI, particularly macOS;
 any SDK/linker prerequisites of a chosen Zig host must be provisioned by CI.
 The helper reports build failures; it never substitutes an old executable.
 
-Each invocation uses fresh temporary install/local/global cache directories.
+Each invocation uses fresh staging-local install/local/global cache directories.
+Compiler/privacy policy is described in `docs/BUILD_PRIVACY.md` in the matching
+source archive. The helper enables the build-only fourth patch: module-relative
+Zig source identities, no emitted debug information, and C file/macro/debug
+prefix maps via a generated response file. No existing binary is rewritten.
 No host-native CPU tuning, prebuilt local runtime, private repository, ignored
 source checkout, global Zig package cache, music, index or settings is used.
 Keep `vendor/olaf` and `vendor/zigzag` as siblings; `.path = "../zigzag"` is the

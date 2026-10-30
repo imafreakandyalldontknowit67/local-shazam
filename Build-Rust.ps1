@@ -4,6 +4,8 @@ param(
     [string]$OutDir = '',
     [switch]$Package
 )
+# All compiler flags and archive privacy gates are enforced by release.py.
+# Windows native dependencies require clang-cl on PATH; there is no cl.exe fallback.
 $ErrorActionPreference = 'Stop'
 if (-not $OutDir) { $OutDir = "build/release/$Target" }
 Push-Location -LiteralPath $PSScriptRoot

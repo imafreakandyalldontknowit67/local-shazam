@@ -1,5 +1,7 @@
 """Small synthetic headers/files only. Never compiles or runs an app/runtime."""
 import importlib.util
+import contextlib
+import io
 import json
 from pathlib import Path
 import re
@@ -91,7 +93,7 @@ class PackagingTests(unittest.TestCase):
                     "source_inventory": source, "source_inventory_sha256": release.digest(release.encoded(source)),
                     "binary_inspections": inspections, "payload": release.tree_records(payload),
                     "olaf_source_version": "0.0.0-fixture",
-                    "build": {"cargo_locked": True, "jobs": 1, "native": True},
+                    "build": {"cargo_locked": True, "jobs": 1, "native": True, "privacy_policy": release.PRIVACY_POLICY},
                     "gates": {"dataset_free_tests": "passed", "completed": completed}}
         (out / "build-manifest.json").write_bytes(release.encoded(manifest))
         return out
@@ -165,7 +167,7 @@ class PackagingTests(unittest.TestCase):
             release.inventory(self.root, self.cfg)
 
     def test_private_file_in_reviewed_tree_is_rejected(self):
-        self.write("vendor/olaf/src/credentials.json", b"secret")
+        self.write("vendor/olaf/src/credentials.json", b"marker")
         with self.assertRaisesRegex(release.ReleaseError, "Private/unsafe"):
             release.inventory(self.root, self.cfg)
 
@@ -291,7 +293,7 @@ class PackagingTests(unittest.TestCase):
 
     def test_archive_links_are_rejected_without_extraction(self):
         archive = self.root / "linked.tar.gz"
-        with release.tarfile.open(archive, "w:gz") as tar:
+        with archive.open("wb") as raw, release.gzip.GzipFile(filename="", fileobj=raw, mode="wb", mtime=0) as gz, release.tarfile.open(fileobj=gz, mode="w") as tar:
             member = release.tarfile.TarInfo("link")
             member.type = release.tarfile.SYMTYPE
             member.linkname = "../../outside"
@@ -322,6 +324,111 @@ class PackagingTests(unittest.TestCase):
         self.assertNotRegex(draft, r"(?m)^  (push|pull_request|release|schedule):")
         self.assertNotIn("zig build test\n", build + draft)
         self.assertNotIn("git push", build + draft)
+
+    def test_private_payloads_fail_even_with_consistent_source_and_payload_hashes(self):
+        marker = ('gh' + 'p_' + 'P' * 36)
+        for member, encoding in (('local-shazam', 'utf-16-le'), ('olaf-runtime/olaf', 'utf-16-be'),
+                                 ('olaf-runtime/provenance.json', 'utf-8'), ('rust-app/src/main.rs', 'utf-8'),
+                                 ('licenses/dependency.txt', 'utf-8')):
+            with self.subTest(member=member):
+                # Deliberately bypass only the writer gate to produce a hostile
+                # fully resealed fixture. The independent reader must reject it.
+                with patch.object(release, 'check_privacy'):
+                    if member.startswith(('rust-app/', 'licenses/')):
+                        self.write(member, marker.encode(encoding))
+                    out = self.fixture()
+                    if not member.startswith(('rust-app/', 'licenses/')):
+                        path = out / 'payload' / member
+                        data = path.read_bytes()
+                        if member.endswith('.json'):
+                            data = release.encoded({'target': 'linux-x64', 'leak': marker})
+                        else:
+                            data += b'X' + marker.encode(encoding) + b'\0\0'
+                        path.write_bytes(data)
+                        p = release.read_manifest(out)
+                        p['payload'] = release.tree_records(out / 'payload')
+                        if member in ('local-shazam', 'olaf-runtime/olaf'):
+                            p['binary_inspections']['app' if member == 'local-shazam' else 'olaf']['sha256'] = release.digest(data)
+                        (out / 'build-manifest.json').write_bytes(release.encoded(p))
+                    release.package('linux-x64', out, self.root)
+                with self.assertRaisesRegex(release.ReleaseError, 'Privacy gate') as error:
+                    release.verify(out)
+                self.assertNotIn(marker, str(error.exception))
+                # Scoped temporary fixture cleanup, not a checkout/artifact repair.
+                release.shutil.rmtree(out)
+                if member.startswith(('rust-app/', 'licenses/')):
+                    self.write(member, b'Synthetic reviewed source/license fixture.\n')
+
+    def test_zip_metadata_tampering_survives_checksums_but_not_verification(self):
+        out = self.packaged('windows-x64')
+        archive = next((out / 'dist').glob('*.zip'))
+        original = archive.read_bytes()
+        for kind in ('archive-comment', 'member-comment', 'extra', 'local-extra', 'trailer'):
+            with self.subTest(kind=kind):
+                archive.write_bytes(original)
+                if kind in ('local-extra', 'trailer'):
+                    data = bytearray(original)
+                    if kind == 'local-extra':
+                        struct.pack_into('<H', data, 28, 1)
+                    else:
+                        data.extend(b'private metadata')
+                    archive.write_bytes(data)
+                else:
+                    with release.zipfile.ZipFile(io.BytesIO(original)) as z:
+                        members = [(info, z.read(info)) for info in z.infolist()]
+                    with release.zipfile.ZipFile(archive, 'w') as z:
+                        for i, (info, data) in enumerate(members):
+                            if i == 0 and kind == 'member-comment':
+                                info.comment = b'private metadata'
+                            if i == 0 and kind == 'extra':
+                                info.extra = b'\xfe\xca\x04\0data'
+                            z.writestr(info, data)
+                        if kind == 'archive-comment':
+                            z.comment = b'private metadata'
+                self.reseal(out)
+                with self.assertRaises(release.ReleaseError):
+                    release.verify(out)
+
+    def test_tar_and_gzip_metadata_are_canonical_not_just_checksummed(self):
+        out = self.packaged()
+        archive = next(p for p in (out / 'dist').glob('*.tar.gz') if '-source' not in p.name)
+        original = archive.read_bytes()
+        for kind in ('uname', 'gname', 'uid', 'gid', 'mtime', 'linkname', 'pax', 'global-pax',
+                     'gzip-name', 'gzip-comment', 'gzip-extra', 'gzip-concatenation'):
+            with self.subTest(kind=kind):
+                archive.write_bytes(original)
+                if kind.startswith('gzip-'):
+                    if kind == 'gzip-concatenation':
+                        data = original + release.gzip.compress(b'', mtime=0)
+                    else:
+                        flags, metadata = {'gzip-name': (8, b'private-name\0'),
+                                           'gzip-comment': (16, b'private-comment\0'),
+                                           'gzip-extra': (4, b'\x04\0data')}[kind]
+                        data = original[:3] + bytes([flags]) + original[4:10] + metadata + original[10:]
+                    archive.write_bytes(data)
+                else:
+                    entries = release.read_archive(archive)
+                    with archive.open('wb') as raw, release.gzip.GzipFile(filename='', fileobj=raw, mode='wb', mtime=0) as gz:
+                        with release.tarfile.open(fileobj=gz, mode='w', format=release.tarfile.PAX_FORMAT,
+                                                  pax_headers={'comment': 'private metadata'} if kind == 'global-pax' else {}) as tar:
+                            for i, (name, (data, mode)) in enumerate(sorted(entries.items())):
+                                info = release.tarfile.TarInfo(name)
+                                info.size, info.mode = len(data), mode
+                                if i == 0:
+                                    if kind == 'pax':
+                                        info.pax_headers = {'comment': 'private metadata'}
+                                    elif kind != 'global-pax':
+                                        setattr(info, kind, 123 if kind in ('uid', 'gid', 'mtime') else 'private metadata')
+                                tar.addfile(info, io.BytesIO(data))
+                self.reseal(out)
+                with self.assertRaises(release.ReleaseError):
+                    release.verify(out)
+
+    def test_writer_rejects_private_binary_before_opening_archive(self):
+        archive = self.root / 'new.zip'
+        with self.assertRaisesRegex(release.ReleaseError, 'Privacy gate'):
+            release.write_archive(archive, {'olaf.exe': (b'MZ' + ('gh' + 'p_' + 'R' * 36).encode(), 0o755)})
+        self.assertFalse(archive.exists())
 
 
 if __name__ == "__main__":
