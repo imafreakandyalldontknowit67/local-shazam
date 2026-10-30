@@ -49,7 +49,7 @@ jobs:
         with:
           python-version: '3.13.1'
       - name: Mocked packaging and source policy tests (no compiler/audio)
-        run: python -B -m unittest discover -s tests/release -p test_packaging.py -v
+        run: python -B -m unittest discover -s tests/release -v
       - name: Release checkout hygiene
         run: |
           python scripts/check_release_hygiene.py --root .

@@ -136,8 +136,11 @@ def staging(out, root=ROOT):
 
 
 def run(args, *, cwd=ROOT, env=None):
-    result = subprocess.run([str(x) for x in args], cwd=cwd, env=env, check=True,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    result = subprocess.run([str(x) for x in args], cwd=cwd, env=env,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if result.returncode:
+        raise ReleaseError(f"Command failed ({Path(str(args[0])).name}, exit {result.returncode}):\n"
+                           + result.stdout[-12000:] + result.stderr[-12000:])
     return result.stdout.strip()
 
 
