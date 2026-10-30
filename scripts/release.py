@@ -178,7 +178,7 @@ def inventory(root, cfg, names=None):
         if name.startswith("vendor/"):
             require(p.suffix in rules["vendor_extensions"]
                     or p.name.startswith(("LICENSE", "COPYING", "NOTICE", "README"))
-                    or p.name == "Makefile", f"Unreviewed vendor file type: {name}")
+                    or p.name in ("Makefile", ".gitattributes", ".zigversion"), f"Unreviewed vendor file type: {name}")
         for group in allowed:
             groups[group][name] = file_hash(p)
     all_names = set(groups["app"]) | set(groups["olaf"])
