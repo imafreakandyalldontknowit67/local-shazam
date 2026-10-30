@@ -575,7 +575,7 @@ def test_build(target, out, root=ROOT):
             cwd=regression / "vendor/olaf", env=env)
         completed.append(step)
     exe = ".exe" if target == "windows-x64" else ""
-    app_version = tomllib.loads((snapshot / "rust-app/Cargo.toml").read_text(encoding="utf-8"))["package"]["version"]
+    app_version = tomllib.loads((snapshot / "rust-app/Cargo.toml").read_text(encoding="utf-8-sig"))["package"]["version"]
     for name, args in (("local-shazam" + exe, ["--help"]), ("local-shazam" + exe, ["--version"]),
                        ("olaf-runtime/olaf" + exe, ["--help"])):
         output = run([out / "payload" / name, *args], cwd=home, env=env)
