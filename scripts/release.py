@@ -144,10 +144,23 @@ def staging(out, root=ROOT):
     return out
 
 
+def report_safe_diagnostics(output):
+    """Expose bounded compiler error headers, never raw command/path context."""
+    if isinstance(output, bytes):
+        output = output.decode('utf-8', 'replace')
+    for line in (output or '')[-24000:].splitlines():
+        if (len(line) <= 400 and re.match(
+                r'^(?:[A-Za-z0-9_.+-]+\.(?:zig|rs|c|h):\d+(?::\d+)?:\s*)?'
+                r'(?:fatal )?error(?:\[[A-Z0-9]+\])?:', line)
+                and not hygiene.privacy_violations('', line.encode('utf-8'))):
+            print(line, file=sys.stderr)
+
+
 def run(args, *, cwd=ROOT, env=None):
     result = subprocess.run([str(x) for x in args], cwd=cwd, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if result.returncode:
+        report_safe_diagnostics(result.stderr)
         # Compiler output/commands may contain source paths, usernames or tokens.
         raise ReleaseError(f"Build command failed (exit {result.returncode}); output withheld for privacy")
     return result.stdout.strip()

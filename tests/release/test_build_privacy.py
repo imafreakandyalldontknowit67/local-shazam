@@ -17,6 +17,19 @@ SPEC.loader.exec_module(release)
 
 
 class CompilerPrivacyTests(unittest.TestCase):
+    def test_safe_compiler_diagnostic_headers_only(self):
+        private = 'C:/' + 'Users/' + 'PrivatePerson/source.rs'
+        secret = 'gh' + 'p_' + 'Q' * 36
+        text = '\n'.join(['error[E0308]: mismatched types',
+                          'build.zig:12:3: error: missing field',
+                          'error: ' + private, 'error: ' + secret,
+                          'compiler command with unreviewed arguments'])
+        output = io.StringIO()
+        with contextlib.redirect_stderr(output):
+            release.report_safe_diagnostics(text.encode())
+        self.assertEqual(output.getvalue().splitlines(), [
+            'error[E0308]: mismatched types', 'build.zig:12:3: error: missing field'])
+
     def test_four_targets_encoded_rust_and_native_flags_with_spaces(self):
         with tempfile.TemporaryDirectory(prefix='privacy space ') as tmp:
             root = Path(tmp).resolve()

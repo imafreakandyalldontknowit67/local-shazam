@@ -160,6 +160,8 @@ def build_runtime(target: str, out_dir: Path, root: Path = ROOT) -> Path:
                        ZIG_LOCAL_CACHE_DIR=str(work / 'cache'), ZIG_GLOBAL_CACHE_DIR=str(work / 'global-cache'))
             subprocess.run(command, cwd=root / "vendor/olaf", env=env, check=True, capture_output=True)
         except (OSError, subprocess.CalledProcessError) as exc:
+            if isinstance(exc, subprocess.CalledProcessError):
+                policy.report_safe_diagnostics(exc.stderr)
             raise BuildError(f"Olaf source build failed for {target}; diagnostic values withheld") from exc
         binary = prefix / "bin" / executable
         if not binary.is_file() or binary.is_symlink() or binary.stat().st_size == 0:
