@@ -236,3 +236,8 @@ Tests use synthetic PE/ELF/Mach-O headers and temporary source trees; they block
 all subprocess/download calls. They do not build or execute application code,
 access datasets, trigger CI or create remote objects. A Windows symlink-creation
 test can be skipped when the host does not grant that privilege.
+
+### Linux native dialog prerequisites
+
+On Ubuntu/Debian, install `pkg-config libwayland-dev libxkbcommon-dev libgtk-3-dev`
+before a native build. CI installs these only on its disposable Linux runner.
