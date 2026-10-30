@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="banner-title banner-description">
+  <title id="banner-title">Local Shazam — your library, recognized locally</title>
+  <desc id="banner-description">An original teal waveform becomes connected audio fingerprint landmarks on a dark navy field. Text reads Local Shazam, Find a clip in your own collection, Native Rust, and Experimental Olaf. The illustration represents local-library recognition, not a global music catalog.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111e32"/>
+      <stop offset="1" stop-color="#07111f"/>
+    </linearGradient>
+    <linearGradient id="signal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#69e8cf"/>
+      <stop offset="1" stop-color="#a1c7ff"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#263950" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="380" rx="24" fill="url(#background)"/>
+  <rect x="1" y="1" width="1198" height="378" rx="23" fill="none" stroke="#2b4058"/>
+  <path d="M40 28H1160" stroke="#69e8cf" stroke-width="2" opacity="0.65"/>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="64" y="88" fill="#82e4d2" font-size="15" font-weight="600" letter-spacing="3">LOCAL AUDIO RECOGNITION</text>
+    <text x="60" y="168" fill="#f3f7fc" font-size="62" font-weight="700" letter-spacing="-2">Local Shazam</text>
+    <text x="64" y="216" fill="#c4d3e5" font-size="25">Find a clip in your own collection.</text>
+
+    <rect x="64" y="270" width="144" height="36" rx="18" fill="#14382f" stroke="#2f695c"/>
+    <circle cx="83" cy="288" r="4" fill="#80efd2"/>
+    <text x="97" y="294" fill="#b6f5e6" font-size="15" font-weight="600">Native Rust</text>
+    <rect x="220" y="270" width="183" height="36" rx="18" fill="#172d48" stroke="#3c5676"/>
+    <text x="238" y="294" fill="#c6dcfb" font-size="15" font-weight="600">Experimental Olaf</text>
+  </g>
+
+  <g aria-hidden="true">
+    <rect x="658" y="55" width="484" height="270" rx="20" fill="#0b1828" stroke="#314a64"/>
+    <rect x="680" y="76" width="440" height="224" rx="8" fill="url(#grid)" opacity="0.6"/>
+
+    <path d="M686 145H1114" fill="none" stroke="#36526c" stroke-width="1" stroke-dasharray="3 7"/>
+    <path d="M690 145H709L716 134L723 156L730 145H740L747 116L754 174L761 131L768 155L775 145H786L794 99L802 191L810 119L818 171L826 132L834 153L842 145H854L862 126L870 163L878 145H888L896 110L904 180L912 88L920 202L928 122L936 168L944 139L952 151L960 145H974L982 123L990 168L998 133L1006 156L1014 145H1026L1034 114L1042 176L1050 130L1058 155L1066 145H1110" fill="none" stroke="url(#signal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <path d="M747 116L763 258M794 99L847 235M912 88L931 266M1034 114L1047 234" fill="none" stroke="#56858a" stroke-width="1.5" stroke-dasharray="3 5" opacity="0.6"/>
+    <path d="M712 241L763 258L797 222L847 235L889 285L931 266L981 285L1047 234L1091 262M763 258L847 235L931 266L1047 234M797 222L889 285M931 266L1091 262" fill="none" stroke="#467f86" stroke-width="1.5"/>
+    <path d="M763 258L847 235L931 266L1047 234" fill="none" stroke="#7cdec9" stroke-width="2.5"/>
+
+    <g fill="#163242" stroke="#89b4ca" stroke-width="2">
+      <circle cx="712" cy="241" r="4"/>
+      <circle cx="797" cy="222" r="4"/>
+      <circle cx="889" cy="285" r="4"/>
+      <circle cx="981" cy="285" r="4"/>
+      <circle cx="1091" cy="262" r="4"/>
+    </g>
+    <g fill="#8cf0d5" stroke="#0b1828" stroke-width="3">
+      <circle cx="763" cy="258" r="7"/>
+      <circle cx="847" cy="235" r="7"/>
+      <circle cx="931" cy="266" r="7"/>
+      <circle cx="1047" cy="234" r="7"/>
+    </g>
+    <g fill="#ffc5ad">
+      <circle cx="747" cy="116" r="4"/>
+      <circle cx="794" cy="99" r="4"/>
+      <circle cx="912" cy="88" r="4"/>
+      <circle cx="1034" cy="114" r="4"/>
+    </g>
+    <path d="M674 84V71H687M1113 71H1126V84M674 296V309H687M1113 309H1126V296" fill="none" stroke="#5f899d" stroke-width="2"/>
+  </g>
+</svg>
