@@ -344,5 +344,19 @@ class LicenseInventoryTests(unittest.TestCase):
         self.assertEqual(listed, locked)
 
 
+class PublicFixtureScopeTests(unittest.TestCase):
+    def test_public_fixture_exception_is_exact_and_path_scoped(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('hygiene_gate', CHECKER)
+        gate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gate)
+        name = 'patches/olaf/0003-release-local-source-build.patch'
+        lines = (REPO / name).read_text(encoding='utf-8').splitlines()
+        allowed = [line for line in lines if gate.public_upstream_fixture(name, line)]
+        self.assertEqual(len(allowed), 1)
+        self.assertFalse(gate.public_upstream_fixture('other.patch', allowed[0]))
+        self.assertFalse(gate.public_upstream_fixture(name, allowed[0] + ' extra'))
+
+
 if __name__ == '__main__':
     unittest.main()

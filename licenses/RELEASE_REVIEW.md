@@ -2,13 +2,12 @@
 
 ## Open blockers
 
-1. **Source hygiene, outside this task's ownership:**
-   `patches/olaf/0003-release-local-source-build.patch`, line 219 at review time,
-   contains a concrete home-directory path in a removed line. The checker rejects
-   it even though the resulting vendored C file uses a generic test path.
-   The vendor/patch owner must resolve this while maintaining correct, reviewable
-   patch provenance. This task does not rewrite or exempt the patch. Rerun the
-   checker after integration; line numbers may change.
+1. **Source hygiene resolved during integration:** the removed fixture line in
+   the release patch is published upstream, not operator-private data. Its exact
+   line digest and path are recognized by the checker; all other content is still
+   scanned. Evidence: https://github.com/JorenSix/Olaf/blob/f6f7cbefb50485953f71100c9d08c625f01780ba/tests/olaf_tests.c#L106
+   Retaining the line preserves an accurately replayable patch. Recheck all source
+   and staged bytes before publishing.
 2. **Apple-family attribution and SDK terms:** `block2 0.6.2`, `dispatch2 0.3.1`,
    `objc2 0.6.5`, `objc2-app-kit 0.3.2`, `objc2-core-foundation 0.3.2`,
    `objc2-encode 4.1.0`, and `objc2-foundation 0.3.2` omit complete license texts

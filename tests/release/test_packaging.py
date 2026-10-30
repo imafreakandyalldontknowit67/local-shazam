@@ -279,7 +279,7 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(release.staging("build/release/native", self.root), self.root / "build/release/native")
 
     def test_safe_archive_paths(self):
-        for name in ("../escape", "/absolute", "a\\b", "C:/absolute", "a//b", "a/./b", "a\nfile"):
+        for name in ("../escape", "/absolute", "a\\b", "C:/tmp", "a//b", "a/./b", "a\nfile"):
             with self.assertRaises(release.ReleaseError):
                 release.safe_name(name)
 
