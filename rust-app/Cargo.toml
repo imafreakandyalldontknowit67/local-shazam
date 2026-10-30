@@ -1,0 +1,23 @@
+﻿[package]
+name = "local-shazam"
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+crossbeam-channel = "0.5"
+rfd = "0.17"
+rusqlite = { version = "0.41", features = ["bundled"] }
+rustfft = "6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+walkdir = "2"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
