@@ -163,6 +163,10 @@
     "Python wrapper source/build metadata for the dataset-free constructor regression; not installed or used by the desktop build"
   ],
   "files": {
+    "docs/BUILD_PRIVACY.md": {
+      "origin": "release build/privacy integration (2026-10-30)",
+      "sha256": "94b57cd424d910d42350dc241d61d1ada026ee8a647e0fe64e2086d6da17b379"
+    },
     "patches/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
       "sha256": "a79691a93b46e49ce460c26ef22afcc03d6eca1e63bf2edbc20e96159510f6c9"
@@ -179,21 +183,37 @@
       "origin": "release distribution metadata or component notice",
       "sha256": "3e644a58817c779d87666f12946fafe9b1f96fbbb91f22215c8b52305a73a7e6"
     },
+    "patches/olaf/0004-release-build-privacy.patch": {
+      "origin": "release build/privacy integration (2026-10-30)",
+      "sha256": "6e6ca37f12a2597c9fd5e251b52e2b2041f0631e14d584d315635655b5ad4a02"
+    },
     "patches/olaf/README.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "5a48f3fb2f57d3968fab709b2e30c7bc409820a8dd21f9a51a8128bf377a2e27"
+      "sha256": "f3ccb0462c696f0724aaaba0f995dc6aaad910b55962dbe7192e7f78fa146c5a"
     },
     "patches/olaf/series": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "bafcc9622934d6a017456705f3a66127a033c2442d54092909e9352e384b642f"
+      "sha256": "67303324021e0ea4b1527751a61014950c0e352219d32e85d03473da4a97e3ae"
     },
     "scripts/build_olaf.py": {
       "origin": "release integration",
-      "sha256": "fc9ce18407897ac10cfcc90e78747ab90d63792558717c87fc4aec526449a224"
+      "sha256": "40387e20e1e67ded0511daffa02f903ac0bdc2019d4fb00969066fbc54af0998"
+    },
+    "scripts/check_release_hygiene.py": {
+      "origin": "release build/privacy integration (2026-10-30)",
+      "sha256": "afa15d2778ae2c80ffce9afa50d71dc6aa6c3a29e13e5e56bb1496b977ac523f"
+    },
+    "scripts/release.py": {
+      "origin": "release build/privacy integration (2026-10-30)",
+      "sha256": "7e2883ffa99f344828fe505413a6439158e5bdbfef4ff4828a16788a82ee7bd5"
+    },
+    "tests/release/test_build_privacy.py": {
+      "origin": "release build/privacy integration (2026-10-30)",
+      "sha256": "876b14408305b2e1962be08358c8aa359dbbe4fa231ab2fc51f7dc7b70a53c34"
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "e2b63059614f8d9524f43a2a54670c012680cb3974f013f9ba4bdc7be73841e6"
+      "sha256": "3e8cb4d3e27c0ac0f010a3b10f8bbf00a5300c8b0617e9795ec628768826f117"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -208,7 +228,7 @@
     },
     "vendor/olaf/BUILDING.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "3e9a575e567e0749d85452d19f3e02774480e863efcad8cffb22d432e930acf9"
+      "sha256": "2c043d20db710aeb1612f3219353657a6dea17cea688106fca023c96a3a340db"
     },
     "vendor/olaf/LICENSE": {
       "captured_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
@@ -231,7 +251,7 @@
     "vendor/olaf/build.zig": {
       "captured_sha256": "9a70bc664483b4601a6035c32b5f7c09dafc5c667f6137d808b12dfceaea9e2d",
       "source_lf_sha256": "eb90038aeee51844eabd59880dce0da0b5305d2ca0fcef0e5ced70506f4ce913",
-      "sha256": "79a29bed3325696e32d830150ffbd0af62427a30095e9c8e0ab5fd9703312397",
+      "sha256": "f0f7ebe4f3b35791405a12a563282f92b59292b2ddff75f930596f2aa01074eb",
       "upstream_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407",
       "fork_head_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407"
     },
@@ -1642,7 +1662,8 @@
   "patch_series": [
     "patches/olaf/0001-windows-lmdb-paths.patch",
     "patches/olaf/0002-working-matcher-config-db.patch",
-    "patches/olaf/0003-release-local-source-build.patch"
+    "patches/olaf/0003-release-local-source-build.patch",
+    "patches/olaf/0004-release-build-privacy.patch"
   ],
   "release_modified_files": [
     "build.zig",
@@ -1663,6 +1684,10 @@
     {
       "patch": "patches/olaf/0003-release-local-source-build.patch",
       "summary": "Local Zigzag path; packaging source inventory; opt-in audio suite with no automatic downloads; explicit missing-fixture errors; release test documentation and synthetic legacy test path."
+    },
+    {
+      "patch": "patches/olaf/0004-release-build-privacy.patch",
+      "summary": "Build-only compiler privacy: module debug suppression and generated C file/macro/debug prefix-map response inputs for runtime and regression artifacts; no application engine changes."
     }
   ],
   "build": {
@@ -1676,7 +1701,14 @@
       "macos-arm64": "aarch64-macos.11.0.0-none",
       "macos-x64": "x86_64-macos.11.0.0-none"
     },
-    "native_validation": "Not compiled or executed during source vendoring; all four target builds unverified. Source-only tests and mocked output checks are not native test results."
+    "native_validation": "Not compiled or executed during source vendoring; all four target builds unverified. Source-only tests and mocked output checks are not native test results.",
+    "privacy_policy": "compiler-paths-and-artifacts-v1",
+    "privacy_validation": "Static/mocked Python validation only; actual Zig/Rust/native C response-file handling and all four target rebuilds remain unverified.",
+    "privacy_compiler_source": {
+      "url": "https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz",
+      "sha256": "43186959edc87d5c7a1be7b7d2a25efffd22ce5807c7af99067f86f99641bfdf",
+      "review": "Version-specific interfaces and file hashes documented in docs/BUILD_PRIVACY.md; source archive inspected without executing a compiler."
+    }
   },
   "hash_scope": "Final sha256 values cover UTF-8 text with CRLF normalized to LF, including source, notices, build helper, tests and ordered patches. PROVENANCE.json excludes itself to avoid recursive hashing. Runtime BUILD-INFO.json separately hashes the source manifest and actual binary.",
   "licensing_review_remaining": [

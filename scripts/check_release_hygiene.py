@@ -100,6 +100,7 @@ HOME_PATH = re.compile(
 ROOT_HOME = re.compile(r"(?<![:/\w])/" r"root/(?![<>${])[^\s\"'`]+")
 WINDOWS_PATH = re.compile(r"\b[a-z]:[\\/]+([^\r\n\"'`|;,]+)", re.I)
 UNC_PATH = re.compile(r"(?<![\w\\])\\\\(?![?.]\\)([A-Za-z0-9_.-]+)\\([^\s\"'`]+)")
+UNC_FORWARD = re.compile(r"(?<![:/\w])//(?:\?/UNC/)?([A-Za-z0-9_.-]+)/([^\s\"'`]+)", re.I)
 MOUNT_PATH = re.compile(r"(?<![:/\w])/" r"(?:Volumes|media|mnt)/([^/\s\"'`]+)", re.I)
 PLACEHOLDERS = {
     "", "example", "placeholder", "redacted", "changeme", "change-me", "dummy",
@@ -130,14 +131,18 @@ def public_upstream_fixture(name: str, line: str) -> bool:
     return (name == "patches/olaf/0003-release-local-source-build.patch"
             and hashlib.sha256(line.encode("utf-8")).hexdigest() == "0b007ce062fe1f8f5acbff66c03c6570add2110cd80d1f9c2713b304aaabb1a5")
 
-def personal_path(line: str) -> bool:
+def personal_path(line: str, *, embedded: bool = False) -> bool:
     # URLs, including attribution URLs with /home/ segments, are not local paths.
     local = re.sub(r"\b(?:https?|ftp)://[^\s<>\"']+", "", line, flags=re.I)
     local = re.sub(r"/" r"mnt/([a-z])/", lambda m: m[1] + ':/', local, flags=re.I)
-    for match in MOUNT_PATH.finditer(local):
+    def matches(pattern):
+        if embedded:
+            pattern = re.compile(re.sub(r'\(\?<\!.*?\)', '', pattern.pattern).replace(r'\b', ''), pattern.flags)
+        return pattern.finditer(local)
+    for match in matches(MOUNT_PATH):
         if match[1].lower() not in {'music', 'audio', 'volume', 'drive'} and not placeholder(match[1]):
             return True
-    for match in HOME_PATH.finditer(local):
+    for match in matches(HOME_PATH):
         user = match[1]
         if not placeholder(user) and user.lower() not in HOME_EXAMPLES:
             return True
@@ -147,34 +152,74 @@ def personal_path(line: str) -> bool:
             suffix = re.split(r"[\"'`,;)]", tail[0], maxsplit=1)[0].strip('\\/')
             if suffix and not re.fullmatch(r"(?:music|project|file|test|\.olaf|bla)(?:[\\/](?:example|file|test|config|db|cache|t)(?:\.[a-z0-9]+)?)*", suffix, re.I):
                 return True
-    if ROOT_HOME.search(local):
+    if next(matches(ROOT_HOME), None):
         return True
-    for match in WINDOWS_PATH.finditer(local):
+    for match in matches(WINDOWS_PATH):
         parts = re.split(r"[\\/]+", match[1].strip())
         first = parts[0].lower()
         if first == "users":  # Account names checked above, including placeholders.
             continue
         if first not in GENERIC_DRIVE_DIRS and not placeholder(parts[0]):
             return True
-    for match in UNC_PATH.finditer(local):
-        if match[1].lower() not in {"server", "localhost"} and not placeholder(match[1]):
-            return True
+    for pattern in (UNC_PATH, UNC_FORWARD):
+        for match in matches(pattern):
+            if match[1].lower() not in {"server", "localhost"} and not placeholder(match[1]):
+                return True
     return False
 
 
-def likely_secret(line: str) -> bool:
-    if any(pattern.search(line) for pattern in SECRET_PATTERNS):
+def privacy_lines(data: bytes) -> Iterator[str]:
+    """Strings in arbitrary artifacts, including BOM-less, odd-offset UTF-16.
+
+    Bounded overlapping windows avoid decoding an entire executable five times.
+    NUL/control bytes terminate strings, rather than hiding adjacent credentials.
+    This does NOT make binary files acceptable in the source-only gate.
+    """
+    for start in range(0, len(data), 65536):
+        block = data[max(0, start - 4096):start + 65536]
+        yield from re.split(r'[\x00-\x08\x0b-\x1f\x7f]', block.decode('utf-8', 'replace'))
+        for encoding in ('utf-16-le', 'utf-16-be'):
+            for offset in (0, 1):
+                text = block[offset:len(block) - ((len(block) - offset) % 2)].decode(encoding, 'replace')
+                yield from re.split(r'[\x00-\x08\x0b-\x1f\x7f]', text)
+
+
+def privacy_violations(name: str, data: bytes, *, source: bool = False) -> set[str]:
+    """Reusable content policy; returns rule names, never offending values."""
+    rules = set()
+    # Only exact original UTF-8 source lines qualify for the public patch fixture.
+    lines = data.decode('utf-8-sig', 'replace').splitlines() if source else privacy_lines(data)
+    for text in lines:
+        for line in text.splitlines():
+            if likely_secret(line, embedded=not source):
+                rules.add('likely-credential')
+            if personal_path(line, embedded=not source) and not (source and public_upstream_fixture(name, line)):
+                rules.add('personal-absolute-path')
+            # Concrete build/cache roots are private on hosted runners as well.
+            # Split literals here keep the detector's own source reviewable.
+            boundary = r'(?<![\w:])' if source else ''
+            local = re.sub(r'\b(?:https?|ftp)://[^\s<>"\']+', '', line, flags=re.I)
+            if re.search(boundary + r'/(?:private/var/' r'folders|workspace|workspaces|__w)/[^\s\x00"\'`<>]+/[^\s\x00"\'`<>]+', local) or re.search(
+                    boundary + r'/(?:var/)?' r'tmp/(?:tmp|rustc|cargo|zig|olaf-build-)[^/\s"\'`<>]*/[^\s"\'`<>]+', local):
+                rules.add('build-absolute-path')
+    return rules
+
+
+def likely_secret(line: str, *, embedded: bool = False) -> bool:
+    def pattern_for(pattern):
+        return re.compile(pattern.pattern.replace(r'\b', ''), pattern.flags) if embedded else pattern
+    if any(pattern_for(pattern).search(line) for pattern in SECRET_PATTERNS):
         return True
-    for match in URL_AUTH.finditer(line):
+    for match in pattern_for(URL_AUTH).finditer(line):
         if not placeholder(match[2]):
             return True
-    for match in AUTH.finditer(line):
+    for match in pattern_for(AUTH).finditer(line):
         if not placeholder(match[1]):
             return True
     bare = BARE_ASSIGNMENT.fullmatch(line)
     if bare and not placeholder(bare[1]):
         return True
-    for match in ASSIGNMENT.finditer(line):
+    for match in pattern_for(ASSIGNMENT).finditer(line):
         value = match['quoted'] if match['quote'] else match['bare']
         if placeholder(value):
             continue
@@ -247,9 +292,10 @@ def check_bytes(name: str, data: bytes, findings: Findings) -> None:
         findings.add(name, 'binary-source', 'Media/database signature is forbidden regardless of filename.')
         return
     for number, line in enumerate(text.splitlines(), 1):
-        if likely_secret(line):
+        rules = privacy_violations(name, line.encode('utf-8'), source=True)
+        if 'likely-credential' in rules:
             findings.add(name, 'likely-credential', 'Remove the literal; use an environment reference. Rotate real exposed credentials.', number)
-        if personal_path(line) and not public_upstream_fixture(name, line):
+        if rules & {'personal-absolute-path', 'build-absolute-path'}:
             findings.add(name, 'personal-absolute-path', 'Replace the local path with a generic example or explicit <user> placeholder.', number)
 
 

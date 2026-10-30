@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -19,6 +20,9 @@ import tempfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
+_spec = importlib.util.spec_from_file_location('release_policy', Path(__file__).with_name('release.py'))
+policy = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(policy)
 ZIG_VERSION = "0.16.0"
 TARGETS = {
     "windows-x64": ("x86_64-windows-gnu", "olaf.exe"),
@@ -27,7 +31,8 @@ TARGETS = {
     "macos-x64": ("x86_64-macos.11.0.0-none", "olaf"),
 }
 SOURCE_PREFIXES = ("vendor/olaf/", "vendor/zigzag/", "patches/olaf/")
-INTEGRATION_FILES = {"scripts/build_olaf.py", "tests/release/test_olaf_source.py"}
+INTEGRATION_FILES = {"scripts/build_olaf.py", "scripts/release.py", "scripts/check_release_hygiene.py",
+                     "tests/release/test_olaf_source.py", "tests/release/test_build_privacy.py", "docs/BUILD_PRIVACY.md"}
 REQUIRED_FILES = {
     "vendor/olaf/LICENSE", "vendor/olaf/NOTICES.txt", "vendor/olaf/BUILDING.md",
     "vendor/olaf/build.zig", "vendor/olaf/build.zig.zon",
@@ -45,6 +50,9 @@ REQUIRED_FILES = {
 
 class BuildError(RuntimeError):
     """A prerequisite, source validation or build failed."""
+
+    def __init__(self, message):
+        super().__init__(message.split(':', 1)[0])
 
 
 def sha256(data: bytes) -> str:
@@ -118,7 +126,7 @@ def find_zig() -> str:
     except (OSError, subprocess.CalledProcessError) as exc:
         raise BuildError(f"Could not execute installed Zig: {exc}") from exc
     if result.stdout.strip() != ZIG_VERSION:
-        raise BuildError(f"Expected Zig {ZIG_VERSION}, found {result.stdout.strip()!r}")
+        raise BuildError(f"Expected Zig {ZIG_VERSION}; installed version rejected")
     return executable
 
 
@@ -133,24 +141,30 @@ def build_runtime(target: str, out_dir: Path, root: Path = ROOT) -> Path:
         if runtime.is_relative_to(protected):
             raise BuildError("Output must not be inside source, patch or test directories")
     if runtime.exists():
-        raise BuildError(f"Refusing to replace existing runtime: {runtime}; choose a fresh --out-dir")
+        raise BuildError("Refusing to replace existing runtime; choose a fresh --out-dir")
     zig = find_zig()
     triple, executable = TARGETS[target]
     # A fresh build/install prefix and isolated caches prevent prebuilt reuse.
-    with tempfile.TemporaryDirectory(prefix="olaf-build-") as tmp:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="olaf-build-", dir=out_dir) as tmp:
         work = Path(tmp)
         prefix = work / "install"
         flags = [f"-Dtarget={triple}", "-Dcpu=baseline", "-Doptimize=ReleaseFast", "-j1"]
-        command = [zig, "build", "install", *flags,
+        privacy_flags = policy.olaf_privacy_arguments(root, work, Path(zig))
+        command = [zig, "build", "install", *flags, *privacy_flags,
                    "--prefix", str(prefix), "--cache-dir", str(work / "cache"),
                    "--global-cache-dir", str(work / "global-cache")]
         try:
-            subprocess.run(command, cwd=root / "vendor/olaf", check=True)
+            env = policy.clean_build_environment()
+            env.update(TMP=str(work), TEMP=str(work), TMPDIR=str(work),
+                       ZIG_LOCAL_CACHE_DIR=str(work / 'cache'), ZIG_GLOBAL_CACHE_DIR=str(work / 'global-cache'))
+            subprocess.run(command, cwd=root / "vendor/olaf", env=env, check=True, capture_output=True)
         except (OSError, subprocess.CalledProcessError) as exc:
-            raise BuildError(f"Olaf source build failed for {target}: {exc}") from exc
+            raise BuildError(f"Olaf source build failed for {target}; diagnostic values withheld") from exc
         binary = prefix / "bin" / executable
         if not binary.is_file() or binary.is_symlink() or binary.stat().st_size == 0:
             raise BuildError(f"Zig did not produce the required fresh binary: bin/{executable}")
+        policy.check_privacy(executable, binary.read_bytes(), forbidden_roots=(root, work, Path(zig).resolve().parent))
 
         out_dir.mkdir(parents=True, exist_ok=True)
         # Stage on the output filesystem, then publish the complete directory.
@@ -177,9 +191,13 @@ def build_runtime(target: str, out_dir: Path, root: Path = ROOT) -> Path:
                 "executable": executable, "executable_sha256": sha256(binary.read_bytes()),
                 "source_provenance_sha256": source_hash(root / "vendor/olaf/PROVENANCE.json"),
                 "build_arguments": ["build", "install", *flags],
+                "privacy_policy": policy.PRIVACY_POLICY,
                 "validation": "Source checks only; this helper does not run the runtime or tests.",
             }
             (package / "BUILD-INFO.json").write_text(json.dumps(build_info, indent=2) + "\n", encoding="utf-8", newline="\n")
+            for member in package.rglob('*'):
+                if member.is_file():
+                    policy.check_privacy(member.relative_to(package).as_posix(), member.read_bytes())
             if runtime.exists():
                 raise BuildError(f"Output appeared during build; refusing to overwrite: {runtime}")
             package.rename(runtime)
@@ -199,10 +217,11 @@ def main(argv: list[str] | None = None) -> int:
             provenance = validate_sources()
             print(f"Olaf source/dependency validation passed ({len(provenance['files'])} pinned text files); no compilation or audio tests run.")
         else:
-            print(f"Built Olaf runtime: {build_runtime(args.target, args.out_dir)}")
+            build_runtime(args.target, args.out_dir)
+            print('Built Olaf runtime in requested staging directory')
         return 0
-    except (BuildError, OSError) as exc:
-        print(f"error: {exc}", file=sys.stderr)
+    except Exception as exc:
+        print('error: Olaf build/source gate rejected input; diagnostic values withheld (' + type(exc).__name__ + ')', file=sys.stderr)
         return 1
 
 

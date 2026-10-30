@@ -62,7 +62,9 @@
       "scripts/release.py",
       "scripts/build_olaf.py",
       "scripts/check_release_hygiene.py",
-      "tests/release/test_olaf_source.py"
+      "tests/release/test_olaf_source.py",
+      "docs/BUILD_PRIVACY.md",
+      "tests/release/test_build_privacy.py"
     ],
     "app": [
       "rust-app/Cargo.toml",
@@ -146,7 +148,9 @@
       "vendor/olaf/tests/olaf_config_alloc.h",
       "vendor/olaf/PROVENANCE.json",
       "vendor/olaf/BUILDING.md",
-      "tests/release/test_olaf_source.py"
+      "tests/release/test_olaf_source.py",
+      "docs/BUILD_PRIVACY.md",
+      "tests/release/test_build_privacy.py"
     ],
     "vendor_extensions": [
       ".c",
