@@ -21,7 +21,11 @@ Keep package notices and matching runtime source materials. Use
 [Releasing](../docs/RELEASING.md) for packaging. Windows x64, Linux x64 and macOS arm64/x64 passed the native
 build/package gates for preview commit `92a983a57ff9`. See the root README for
 the draft release; older OS versions and end-to-end snippet accuracy are not
-validated by these gates.
+validated by these gates. Compiler-privacy changes need fresh parent-run hosted
+rebuilds and independent artifact/source verification; clean-host behavior,
+signing/notarization and bit-for-bit reproducibility remain unresolved.
+The Python reference is repository-only at the agreed `legacy/python/README.md`
+location, with relocation verification pending after integration.
 
 Run the prepared executable without arguments for the menu:
 
@@ -114,8 +118,9 @@ rather than editing the index metadata. Details: [Olaf guide](OLAF.md).
   Development system crashes remain unresolved; a six-worker default is not a
   proven stability remedy.
 
-No held-out accuracy or cross-platform release pass is claimed for the integrated
-pipeline. Related recordings are not automatically grouped. Short/noisy clips,
+Historical native build gates are not current-HEAD validation, privacy approval
+or a held-out accuracy result for the integrated pipeline. Related recordings
+are not automatically grouped. Short/noisy clips,
 quiet sections, speed/pitch edits, covers and live performances can fail.
 See the [root limitations](../README.md#limits-to-understand) and
 [changelog](../CHANGELOG.md) for release-evidence boundaries.

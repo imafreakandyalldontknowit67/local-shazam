@@ -14,7 +14,16 @@
 - `RUST_DEPENDENCIES.md`: human-readable version/license/evidence index.
 - `terms/MIT-template.txt`: unfilled standard terms linked by upstream documents;
   not an invented grant or copyright holder for crates missing notices.
-- `RELEASE_REVIEW.md`: unresolved blockers and source-hygiene interface.
+- `RELEASE_REVIEW.md`: factual closures, unresolved/scoped blockers, pending
+  parent rebuilds and final audit, plus the source-hygiene interface.
+- `review/source-records.json`: hashes/URLs/member names for exact published
+  VCS metadata, relevant Cargo manifests and build definitions retained in
+  `review/crates/`. These small evidence copies are not complete dependency source.
+- `review/investigation.json`: immutable Apple/wasm investigation and scoped
+  applicability; no invented or moving-branch license replacement.
+- `review/native-preview.json`: historical archive checksums and sanitized
+  provenance summary plus authenticated read-only GitHub run/draft metadata.
+  Historical success is not current-HEAD validation, privacy or legal approval.
 
 Retain these texts, the root notices, and original file-level notices together in
 any applicable distribution. Copies preserve original bytes; do not run automatic

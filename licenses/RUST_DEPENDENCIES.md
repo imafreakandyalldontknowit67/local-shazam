@@ -9,6 +9,13 @@ The supplied license texts, embedded notices, and explicit review status take
 precedence over a short expression below. The source `license` expressions are
 preserved as published (including historical slash notation).
 
+Review on 2026-10-30 rechecked local hashes/lockfile correspondence and fetched
+11 exact archives, not all 115 anew. [Source records](review/source-records.json)
+retain VCS metadata and selection evidence. Seven Apple attribution/SDK reviews
+remain open. sqlite-wasm-rs remains blocked for applicable source/wasm distribution;
+the exact rusqlite target predicate excludes it on the four native paths inspected.
+No complete resolved feature graph or binary/toolchain license closure is claimed.
+
 | Package | Version | Declared expression | Evidence | Review |
 | --- | --- | --- | --- | --- |
 | [anstream](https://static.crates.io/crates/anstream/anstream-1.0.0.crate) | 1.0.0 | `MIT OR Apache-2.0` | [LICENSE-APACHE](rust/anstream-1.0.0/LICENSE-APACHE), [LICENSE-MIT](rust/anstream-1.0.0/LICENSE-MIT) | Archive evidence |
@@ -96,7 +103,7 @@ preserved as published (including historical slash notation).
 | [shlex](https://static.crates.io/crates/shlex/shlex-2.0.1.crate) | 2.0.1 | `MIT OR Apache-2.0` | [LICENSE-APACHE](rust/shlex-2.0.1/LICENSE-APACHE), [LICENSE-MIT](rust/shlex-2.0.1/LICENSE-MIT), [EMBEDDED-NOTICES.txt](rust/shlex-2.0.1/EMBEDDED-NOTICES.txt) | Archive evidence |
 | [slab](https://static.crates.io/crates/slab/slab-0.4.12.crate) | 0.4.12 | `MIT` | [LICENSE](rust/slab-0.4.12/LICENSE) | Archive evidence |
 | [smallvec](https://static.crates.io/crates/smallvec/smallvec-1.16.4.crate) | 1.16.4 | `MIT OR Apache-2.0` | [LICENSE-APACHE](rust/smallvec-1.16.4/LICENSE-APACHE), [LICENSE-MIT](rust/smallvec-1.16.4/LICENSE-MIT) | Archive evidence |
-| [sqlite-wasm-rs](https://static.crates.io/crates/sqlite-wasm-rs/sqlite-wasm-rs-0.6.2.crate) | 0.6.2 | `MIT` | [LICENSE](rust/sqlite-wasm-rs-0.6.2/LICENSE), [EMBEDDED-NOTICES.txt](rust/sqlite-wasm-rs-0.6.2/EMBEDDED-NOTICES.txt) | **BLOCKED: musl shim provenance / notices** |
+| [sqlite-wasm-rs](https://static.crates.io/crates/sqlite-wasm-rs/sqlite-wasm-rs-0.6.2.crate) | 0.6.2 | `MIT` | [LICENSE](rust/sqlite-wasm-rs-0.6.2/LICENSE), [EMBEDDED-NOTICES.txt](rust/sqlite-wasm-rs-0.6.2/EMBEDDED-NOTICES.txt) | **BLOCKED: source/wasm musl provenance; native predicate excludes** |
 | [strength_reduce](https://static.crates.io/crates/strength_reduce/strength_reduce-0.2.4.crate) | 0.2.4 | `MIT OR Apache-2.0` | [LICENSE-APACHE](rust/strength_reduce-0.2.4/LICENSE-APACHE), [LICENSE-MIT](rust/strength_reduce-0.2.4/LICENSE-MIT) | Archive evidence |
 | [strsim](https://static.crates.io/crates/strsim/strsim-0.11.1.crate) | 0.11.1 | `MIT` | [LICENSE](rust/strsim-0.11.1/LICENSE) | Archive evidence |
 | [syn](https://static.crates.io/crates/syn/syn-3.0.9.crate) | 3.0.9 | `MIT OR Apache-2.0` | [LICENSE-APACHE](rust/syn-3.0.9/LICENSE-APACHE), [LICENSE-MIT](rust/syn-3.0.9/LICENSE-MIT) | Archive evidence |

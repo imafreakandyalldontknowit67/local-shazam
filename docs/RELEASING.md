@@ -1,157 +1,167 @@
-# Private, manually gated draft prereleases
+# Private native preview: release-readiness checklist
 
-## Current state: not release-ready
+## Decision: not release-ready
 
-**windows-x64, linux-x64, macos-arm64 and macos-x64 are all unverified.**
-Only lightweight mocked packaging, archive-content and syntax checks are allowed
-in this tooling task. No compilation, original executable execution, audio
-indexing, CI dispatch, push, tag, release, visibility or remote changes were made.
-The cross-branch source/runtime/legal/hygiene inputs must be integrated and
-reviewed before any real run. Refer to [BUILDING.md](BUILDING.md) for exact build
-commands, inputs, tools, source inventory and distribution limitations.
+This reconciles the existing **Rust 0.2.0** preview, not a new release or legal
+approval. Keep the repository private. No workflows were dispatched, artifacts
+executed, draft edited, tags created/moved, or visibility changed in this review.
+Final release decisions and any later owner visibility change are outside this
+task. Changing visibility alone resolves no source, privacy or legal obligation.
 
-Local review on 2026-10-30: 28 synthetic packaging/manifest/archive tests ran,
-27 passed and the filesystem-symlink test was skipped for missing Windows
-symlink privilege. Python AST, JSON, TOML, YAML, embedded workflow JavaScript
-(`node --check`) and PowerShell parser checks passed. `git diff --check` passed.
-`actionlint` was not installed; YAML parsing is not a GitHub-hosted workflow run.
-Linux/macOS native hosts were unavailable locally; Windows native prerequisites
-were not exercised. These results do not change any target's unverified status.
+### What is actually verified (2026-10-30)
 
-## Permission and event boundary
+Historical preview commit: `92a983a57ff92ad4b9342fb4dd992edf728b5a97`.
+[Native run 41023384988](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988)
+completed successfully on Windows x64, Linux x64, macOS arm64 and macOS x64.
+Authenticated read-only GitHub metadata confirms those four job conclusions.
+This was a **push** run of `portable-build.yml`, not evidence of a successful
+manual draft workflow, environment approval or denial-path test.
 
-`portable-build.yml` has read-only contents permission. It can run for private
-repository branch pushes, pull requests, manual dispatch or as a reusable
-workflow. None of those builds can create a release or push a tag. Its four
-native jobs use full-commit-pinned actions, verified tool downloads, locked
-single-job Cargo compilation and explicit dataset-free tests. Private artifacts
-retain only the three distributable archives and checksums, for seven days;
-toolchains, caches, raw build logs and personal data are not uploaded as assets.
+All four existing local artifact sets in `dist/ci-92a983a` were independently
+read without extraction/execution: all twelve archive checksums, embedded
+source/payload hashes, archive file sets/modes, executable architectures and
+cross-archive provenance passed verification. The four source inventories agree.
+Each manifest records the exact commit and **16 completed dataset-free gates**:
+ten selected Rust tests, three Olaf regression steps, and app help/version plus
+Olaf help. See [Building](BUILDING.md) for the allowlist and
+[the redacted evidence record](../licenses/review/native-preview.json) for hashes.
+A checksum proves consistency, **not publisher authentication**. These are
+historical records, **not current-HEAD validation** or a compatibility, privacy,
+recognition-accuracy, hardware-stability or legal approval.
 
-`private-draft.yml` accepts **workflow_dispatch only**. `create_draft` defaults
-to **false**. Preflight asserts the live repository is private, then invokes
-all native build jobs and a separate read-only archive verification job. Only
-after all jobs succeed can its separate `draft` job receive `contents: write`.
-That write-token job does **not** check out or execute repository scripts. It
-rechecks asset hashes, source/archive presence, private visibility and tag/SHA
-identity before creating a release and while attaching each asset.
+Authenticated release listing confirms private draft **`v0.2.0-native.1`**,
+release ID `428787114`, with `draft: true`, `prerelease: true`, no publication
+timestamp, and `target_commitish` equal to the preview commit. Its twelve archive
+and combined `SHA256SUMS` API digests/sizes match the local files. Remote asset
+bytes were not downloaded; uploader identity/signature was not authenticated.
+The release-by-tag/commit lookup did not resolve and the authenticated tag list
+had no matching ref: the draft's `tag_name` is **not a verified existing tag**.
+Do not rename or recreate this release to resolve that distinction here.
 
-The release API request always sets **both `draft: true` and `prerelease: true`**,
-plus `make_latest: false`. No code path publishes/promotes a release, edits an
-existing release, auto-creates/pushes a tag, changes visibility or needs private
-Olaf checkout secrets. The only credential is GitHub's scoped ephemeral token.
-Action pins follow [GitHub's full-SHA security guidance](https://docs.github.com/en/actions/reference/security/secure-use).
+The [baseline privacy audit](PRIVACY_AUDIT.md) records hosted-build paths in
+Linux/macOS executables. That prior finding was not rerun as a binary privacy
+audit here. Existing artifacts cannot be promoted as compiler-sanitized merely
+because source hygiene or checksum verification passes. Source vendoring notes
+that say builds were unverified describe that earlier capture phase; the native
+run above supersedes only their build-status uncertainty, not their legal limits.
 
-## Human gates before a future dispatch
+## Completed factual checks
 
-1. Integrate and review application source/manifests, runtime provider, vendored
-   Olaf/Zigzag, modifications/patches, complete dependency notices/licenses and
-   hygiene checker. Update the explicit inventory narrowly if necessary. Review
-   the provider's Zig 0.16.0 pin, verified provisioning, `-j1`, local dependency
-   wiring and license/notices/provenance output. Nothing can be borrowed from
-   an ignored developer checkout.
-2. Review the workflow and all pinned action commits. Confirm native runner
-   availability, account billing and build prerequisites for this **private**
-   repository. Do not make it public to gain a runner or environment feature.
-3. Confirm every allowlisted Rust test and the three Olaf regression steps remain
-   dataset-free. Verify app `--help`/`--version` and Olaf `--help` without audio
-   indexing in the sandbox HOME. Olaf has no `--version` CLI in the inspected
-   source; verify its recorded source-manifest version and runtime/source hashes.
-   Run the actual native CI gates in an authorized future session. Retain their
-   run links and results; a green mocked archive test is not native success.
-4. Review actual DLL/shared-library requirements, dependency licenses, source
-   correspondence and source inventory for each target. Validate new clean-host
-   behavior before promising OS/glibc minimums or publishing compatibility claims.
-   Reconfirm unsigned Windows and non-notarized macOS warnings. These are not
-   bit-for-bit reproducibility or recognition-accuracy gates.
-5. Use an **existing, reviewed tag** matching the exact tested 40-character commit.
-   This workflow will not create it. Protect that tag against update/deletion and
-   coordinate against concurrent administrators: GitHub tag lookup and release
-   creation are separate API requests, not an atomic transaction. Do not dispatch
-   while tag/visibility changes are in flight. Branch protection/review of workflow
-   changes is an essential trust boundary; YAML is not protection from an admin
-   replacing the workflow.
-6. Configure the `private-prerelease` environment and permitted deployment refs
-   before enabling draft creation. Where the private repository plan supports it,
-   require a separate reviewer, prevent self-review and disallow bypass. The
-   workflow's dispatch/typed confirmation is mandatory even without this extra
-   environment protection. Environment existence alone is **not** an approval
-   rule; available private environment/reviewer features depend on the
-   [GitHub plan](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
-   If the needed policy cannot be enforced, leave draft creation off.
-7. A reviewer must explicitly approve the complete corresponding source/legal
-   materials and all four native gate results for this exact commit. The typed
-   confirmation is a human attestation of review, not an automated legal opinion.
+- [x] Integrated Rust app, vendored Olaf/Zigzag, provider, inventory, hygiene
+  checker and build workflows inspected; Rust **1.99.0**, Zig **0.16.0**, and
+  Rustup **1.28.2** pins agree with the build configuration.
+- [x] Historical native results and artifact/source correspondence checked as
+  scoped above; minimum OS and broader compatibility remain unverified.
+- [x] Private draft flags and API asset digests/sizes checked read-only; no
+  claim of a preexisting tag or manual draft-workflow approval.
+- [x] Full 115-registry-package inventory compared with Cargo.lock; notice
+  hashes checked. Exact archives/VCS metadata for seven Apple-family blockers,
+  sqlite-wasm-rs and their rfd/rusqlite/libsqlite3-sys selection evidence reviewed
+  without Cargo. [License review](../licenses/RELEASE_REVIEW.md) records limits.
+- [x] Wasm shim applicability narrowed by exact manifests: not selected by the
+  inspected rusqlite dependency predicate for the four native triples. This is
+  not complete target-feature/link closure or permission to ship shim source.
+- [x] Historical app-source archives contain no vendored Cargo dependency
+  implementations and no legacy Python app. Notices for other targets are
+  inventory evidence, not evidence that their implementations were shipped.
+- [x] Owned documentation and evidence checked for operator paths/private
+  details, retaining original public attribution. See the license review for
+  static-check scope; no new history/private-blob audit is claimed.
 
-## Future commands (not executed during implementation)
+## Outstanding gates — parent and maintainers
 
-First, dispatch builds **without** any draft creation. Replace `REVIEWED_REF` with
-the authorized branch/commit selection on a repository that already contains the
-reviewed workflows. Do not copy these commands into an automated release hook.
+### Parent-owned post-integration validation (pending)
 
-```sh
-gh workflow run portable-build.yml --ref REVIEWED_REF
-# Or exercise the entire private pipeline with draft creation explicitly OFF:
-gh workflow run private-draft.yml --ref REVIEWED_REF -F create_draft=false
-```
+- [ ] Integrate separately owned compiler-privacy work and inspect its
+  `docs/BUILD_PRIVACY.md` implementation notes. This review did **not** inspect
+  or approve that implementation. Verify the final source inventory and source
+  snapshot/provider behavior after integration, including required docs/assets.
+- [ ] Verify the repository-only Python relocation to `legacy/python/README.md`
+  and all owned links after integration. Preserve historical Python tags and
+  changelog entries. Native packages must not acquire Python app/runtime inputs.
+- [ ] With explicit parent authorization, perform **fresh hosted native rebuilds**
+  for all four targets at the exact integrated commit. Re-run the explicit
+  dataset-free gates; do not reuse the historical run as current approval.
+- [ ] Independently verify every rebuilt binary and both source archives:
+  checksums, commit/source/payload hashes, complete source inventory, matching
+  provenance, notices, architecture/modes, archive headers/metadata and compiler
+  path/privacy policy. Verify extracted source with the source-only checker;
+  do not apply it blindly to executables or weaken it to allow binaries.
+- [ ] Retain sanitized per-target selected-feature/link/toolchain/SDK evidence.
+  Existing provenance has no resolved target feature graph or complete emitted
+  compiler-runtime inventory. Do not infer these from Cargo.lock alone.
+- [ ] Perform the **final history/publication-surface audit** after integration:
+  newly reachable commits/refs and metadata, tags, release descriptions/assets,
+  workflow logs, remote branches, Pages/wiki and other publication surfaces.
+  Recheck private visibility. Report findings redacted, retain public attribution,
+  and leave any sensitive history remediation to an explicitly authorized task.
+  Moving Python files does not erase their history.
 
-For a later authorized private draft only, an existing tag (example
-`v0.2.0-rc.1`) must resolve to `REVIEWED_SHA`, the full 40-character commit:
+### Maintainer/legal and distribution decisions (open)
 
-```sh
-gh workflow run private-draft.yml --ref v0.2.0-rc.1 \
-  -F create_draft=true \
-  -f reviewed_tag=v0.2.0-rc.1 \
-  -f reviewed_commit=REVIEWED_SHA \
-  -f 'confirmation=DRAFT PRERELEASE v0.2.0-rc.1 AT REVIEWED_SHA'
-```
+- [ ] Resolve seven Apple-family attribution/SDK reviews for applicable native
+  and source distributions. No generic MIT template or author list closes them.
+- [ ] Resolve sqlite-wasm-rs musl provenance/notices **if** its shim source or
+  wasm binary is distributed; retain this lockfile concern, without calling it
+  an established blocker for the current native binaries. Re-evaluate changed
+  features/targets/source-bundling decisions.
+- [ ] Approve AGPL integration/combined-work and corresponding-source plan,
+  including runtime/dependency source, modifications/dates, build/install inputs,
+  recipient access and any installation/network-service obligations. A private
+  source URL, subprocess boundary or green CI run is not sufficient approval.
+- [ ] Close target-specific Rust std/compiler runtime, Zig/CRT, system-library
+  and SDK obligations. Review original-app rights and the upstream patent warning.
+- [ ] Establish clean-host behavior and minimum OS/glibc support before making
+  support claims. The historical Linux app records `GLIBC_2.39` and Wayland needs;
+  Olaf's musl recipe does not remove the app's glibc requirements.
+- [ ] Decide acceptable unsigned Windows / non-Developer-ID-signed,
+  non-notarized macOS distribution policy. Do not advise disabling OS security.
+  Signing/notarization and bit-for-bit reproducibility remain unverified, not
+  silently supplied by normalized tar/ZIP metadata.
 
-The workflow must already be registered on the default branch for manual
-dispatch. Selecting the tag does not trigger a tag-push release; it selects the
-commit to test in a manual run. If the ref, reviewed SHA, existing tag, exact
-confirmation string or private visibility disagree, preflight fails before
-builds. All four builds are rerun at the selected commit; a different historical
-green run is not substituted. A missing runner or any failed/skipped build blocks
-the aggregate verifier and the write job.
+FFmpeg and FFprobe stay external, user-installed tools. Any bundling change needs
+a new build-specific license/source audit. Accuracy/stability claims need separate
+validation; dataset-free gates do not establish them.
 
-## Required assets and final review
+## Existing workflow boundaries (not authorization to run them)
 
-Each native job produces one platform binary archive, its matching app-source
-archive, its complete corresponding Olaf-source archive and `SHA256SUMS`.
-The read-only aggregate verifier checks all four targets, commit equality and
-identical source inventories across native hosts. The writer rechecks exactly
-these files and emits one combined `SHA256SUMS` covering all **12 archives**.
-Sources may appear once per target because each embeds the matching target's
-compiler/runtime provenance. None may be omitted to save space.
+`portable-build.yml` uses `contents: read`; private branch pushes, pull requests,
+manual dispatch and reusable calls can build, but cannot create a release/tag.
+Native jobs use pinned actions, verified tool downloads and locked single-job
+Cargo builds. Only three archives plus checksums per target are uploaded, with
+seven-day artifact retention. No toolchains/caches/raw logs are release assets.
 
-Binary archives must contain the app, **separate** `olaf-runtime/olaf[.exe]`, setup
-instructions, root license/notices, dependency licenses, runtime legal/provenance
-files and `BUILD-PROVENANCE.json`. FFmpeg/FFprobe binaries never accompany them.
-App-source includes the lockfile, build tooling and instructions; Olaf-source
-includes native runtime source, Zigzag and embedded dependency source, patches,
-required tests, instructions and legal materials. No audio/database/evidence,
-credentials, handoffs, diagnostics, downloaded toolchains or caches are assets.
+`private-draft.yml` is manual-only, with `create_draft` defaulting to **false**.
+Preflight requires a private repository. For draft creation it also requires an
+**existing reviewed tag** resolving to the selected full commit, an exact typed
+confirmation, all four fresh native builds and independent aggregate verification.
+The historical draft's name does not satisfy that tag prerequisite by itself.
+Before any future authorized run, review action pins, runner availability/billing,
+workflow trust, protected refs and concurrency with administrators. Configure
+`private-prerelease` environment protections and reviewer rules where supported;
+an environment name alone is not approval. If policy cannot be enforced, leave
+draft creation off. This task does not create the tag or enable those settings.
 
-Creation and asset uploads are not transactional. If an upload fails, an
-incomplete **private draft prerelease** may remain; leave it unpublished and have
-an authorized maintainer inspect/remove it. The workflow refuses to overwrite
-an existing release on rerun. It does not silently repair, publish or promote.
-Verify every expected asset and both draft/prerelease flags in the UI after a
-successful authorized future run. Any decision to publish requires a separate
-future task and policy review; this pipeline contains no publishing mechanism.
+Only the separate `draft` job has `contents: write`. It does not check out or run
+repository scripts. It rechecks private visibility, tag/commit identity and
+asset hashes. Creation always requests `draft: true`, `prerelease: true` and
+`make_latest: false`; there is no publish/promote, tag creation, visibility change
+or existing-release modification path. A typed confirmation is an attestation,
+not an automated legal opinion. These static properties do not prove live
+permissions, approval rules or denial cases were exercised.
 
-## Deferred integration checks
+## Asset and final owner review
 
-* Real Rust 1.99.0 compilation of the integrated lockfile on all four hosts.
-* Provider output filenames/schema, Zig pin/job control and complete local source
-  build, without private checkout credentials or unsupported external dependencies.
-* Hygiene checker behavior with reviewed sources and ignored staging directories.
-* Native selected Rust tests, Olaf regression builds and both CLI smoke interfaces.
-* Actual PE imports, Unix execute modes, ELF symbol/glibc requirements and Mach-O
-  dependencies/minimum-OS load commands; clean-host runtime availability.
-* GitHub reusable-workflow/event behavior, private runner/environment availability,
-  authorization gates, denied-tag/confirmation cases and asset upload behavior.
+Each target needs its binary archive, matching app-source archive, matching
+Olaf-source archive and checksums. The writer consolidates checksums for all
+**12 archives**; per-target sources include target-specific provenance and must
+not be omitted. Binary packages contain the separate app/Olaf executables,
+setup, licenses/notices and provenance. App source contains the locked app and
+build tooling; Olaf source includes native runtime/Zigzag/embedded C code,
+patches and build/test inputs. Source obligations still need the review above.
 
-Do not change a target's `status: unverified` in `release/targets.json` based only
-on this tooling implementation. A real run records its narrowly scoped native
-gate result in provenance; broader compatibility remains unverified.
+Uploads are not transactional. Failure can leave an incomplete private draft;
+leave it unpublished for an authorized maintainer to inspect. Do not mutate the
+existing draft in this task. Verify expected assets and both flags before any
+future owner decision. `release/targets.json` retains conservative `unverified`
+support/minimum-OS labels; historical native-gate success does not upgrade them.
