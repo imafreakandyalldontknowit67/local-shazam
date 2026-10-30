@@ -5,7 +5,7 @@ The paired-corner mark represents two fragments brought into alignment. It is no
 the official Shazam symbol; do not imply affiliation with Apple or Shazam.
 
 ## Core assets
-- Repository hero: [banner](../assets/banner.svg).
+- Optional standalone hero: [banner](../assets/banner.svg). The README uses a compact, centered, theme-aware mark instead.
 - Transparent marks: [black](../assets/brand/mark-black.svg), [white](../assets/brand/mark-white.svg).
 - Transparent wordmarks: [black](../assets/brand/wordmark-black.svg), [white](../assets/brand/wordmark-white.svg).
 - Square icon tiles: [black mark / white tile](../assets/brand/icon-black.svg),
