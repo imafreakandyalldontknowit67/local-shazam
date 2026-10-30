@@ -38,7 +38,7 @@ class PackagingTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.cfg = release.config(REPO)
         self.names = set()
         for pattern in self.cfg["source_inventory"]["required"]:
