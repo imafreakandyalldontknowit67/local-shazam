@@ -1,0 +1,22 @@
+# Textual source and scripts only. Do not normalize unknown assets or binaries.
+*.py text eol=lf
+*.rs text eol=lf
+*.c text eol=lf
+*.h text eol=lf
+*.zig text eol=lf
+*.zon text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.toml text eol=lf
+Cargo.lock text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+# Leave patch bytes untouched here; nested patch attributes may override this.
+# Third-party license copies retain their original formatting.
+*.patch -text
+licenses/olaf/** -text
+licenses/rust/** -text
+/THIRD_PARTY_NOTICES.md text eol=lf
+/licenses/*.md text eol=lf
+/licenses/*-inventory.json text eol=lf
+/licenses/terms/*.txt text eol=lf

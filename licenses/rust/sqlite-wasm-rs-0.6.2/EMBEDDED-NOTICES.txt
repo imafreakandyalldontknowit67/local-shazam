@@ -1,0 +1,173 @@
+--- shim/musl/stdlib/qsort.c ---
+/* Copyright (C) 2011 by Valentin Ochs
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
+--- shim/printf/printf.c ---
+/**
+ * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
+ *             2021-2024, Haifa, Palestine/Israel
+ * @author (c) Marco Paland (info@paland.com)
+ *             2014-2019, PALANDesign Hannover, Germany
+ *
+ * @note Others have made smaller contributions to this file: see the
+ * contributors page at https://github.com/eyalroz/printf/graphs/contributors
+ * or ask one of the authors. The original code for exponential specifiers was
+ * contributed by Martijn Jasperse <m.jasperse@gmail.com>.
+ *
+ * @brief Small stand-alone implementation of the printf family of functions
+ * (`(v)printf`, `(v)s(n)printf` etc., geared towards use on embedded systems with
+ * limited resources.
+ *
+ * @note the implementations are thread-safe; re-entrant; use no functions from
+ * the standard library; and do not dynamically allocate any memory.
+ *
+ * @license The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+--- shim/printf/printf.h ---
+/**
+ * @author (c) Eyal Rozenberg <eyalroz1@gmx.com>
+ *             2021-2024, Haifa, Palestine/Israel
+ * @author (c) Marco Paland (info@paland.com)
+ *             2014-2019, PALANDesign Hannover, Germany
+ *
+ * @note Others have made smaller contributions to this file: see the
+ * contributors page at https://github.com/eyalroz/printf/graphs/contributors
+ * or ask one of the authors.
+ *
+ * @brief Small stand-alone implementation of the printf family of functions
+ * (`(v)printf`, `(v)s(n)printf` etc., geared towards use on embedded systems
+ * with a very limited resources.
+ *
+ * @note the implementations are thread-safe; re-entrant; use no functions from
+ * the standard library; and do not dynamically allocate any memory.
+ *
+ * @license The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+--- sqlite3/sqlite3.c ---
+/*
+** 2001 September 15
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** Internal interface definitions for SQLite.
+**
+*/
+
+--- sqlite3/sqlite3.h ---
+/*
+** 2001-09-15
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** This header file defines the interface that the SQLite library
+** presents to client programs.  If a C-function, structure, datatype,
+** or constant definition does not appear in this file, then it is
+** not a published API of SQLite, is subject to change without
+** notice, and should not be referenced by programs that use SQLite.
+**
+** Some of the definitions that are in this file are marked as
+** "experimental".  Experimental interfaces are normally new
+** features recently added to SQLite.  We do not anticipate changes
+** to experimental interfaces but reserve the right to make minor changes
+** if experience from use "in the wild" suggest such changes are prudent.
+**
+** The official C-language API documentation for SQLite is derived
+** from comments in this file.  This file is the authoritative source
+** on how SQLite interfaces are supposed to operate.
+**
+** The name of this file under configuration management is "sqlite.h.in".
+** The makefile makes some minor changes to this file (such as inserting
+** the version number) and changes its name to "sqlite3.h" as
+** part of the build process.
+*/
+
+--- sqlite3/sqlite3ext.h ---
+/*
+** 2006 June 7
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** This header file defines the SQLite interface for use by
+** shared libraries that want to be imported as extensions into
+** an SQLite instance.  Shared libraries that intend to be loaded
+** as extensions by SQLite should #include this file instead of 
+** sqlite3.h.
+*/
+
+
+--- shim/musl/stdlib/qsort.c (modification notice) ---
+/* Minor changes by Rich Felker for integration in musl, 2011-04-27. */

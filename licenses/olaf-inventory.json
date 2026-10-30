@@ -1,0 +1,61 @@
+{
+  "format": 1,
+  "copies": [
+    {
+      "path": "licenses/olaf/AGPL-3.0.txt",
+      "source": "vendor/olaf/LICENSE",
+      "sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f"
+    },
+    {
+      "path": "licenses/olaf/c-algorithms-NOTICE.txt",
+      "source": "vendor/olaf/notices/c-algorithms-NOTICE.txt",
+      "sha256": "c35803e2fbad226800ef39e4548b288991f295cf5fcb5c72fa5bff8134f2a82b"
+    },
+    {
+      "path": "licenses/olaf/LMDB-mdb-NOTICE.txt",
+      "source": "vendor/olaf/notices/LMDB-mdb-NOTICE.txt",
+      "sha256": "5971498c119f59cb4e336da88db78fb2f81d9467d6ccf057d886b954270a3ae5"
+    },
+    {
+      "path": "licenses/olaf/LMDB-midl-NOTICE.txt",
+      "source": "vendor/olaf/notices/LMDB-midl-NOTICE.txt",
+      "sha256": "327953dc6d2c833d188583294061bec70f4ab98b9452167041dd516adb3d9a1e"
+    },
+    {
+      "path": "licenses/olaf/mingw-w64-COPYING.txt",
+      "source": "vendor/olaf/notices/mingw-w64-COPYING.txt",
+      "sha256": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f"
+    },
+    {
+      "path": "licenses/olaf/musl-COPYRIGHT.txt",
+      "source": "vendor/olaf/notices/musl-COPYRIGHT.txt",
+      "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+    },
+    {
+      "path": "licenses/olaf/OpenLDAP-LICENSE.txt",
+      "source": "vendor/olaf/notices/OpenLDAP-LICENSE.txt",
+      "sha256": "310fe25c858a9515fc8c8d7d1f24a67c9496f84a91e0a0e41ea9975b1371e569"
+    },
+    {
+      "path": "licenses/olaf/PFFFT-header-NOTICE.txt",
+      "source": "vendor/olaf/notices/PFFFT-header-NOTICE.txt",
+      "sha256": "92a4573f319c1a5384ff57cad8ff1e04b3035b80e8923539994d9f9ed0f3f7e5"
+    },
+    {
+      "path": "licenses/olaf/PFFFT-NOTICE.txt",
+      "source": "vendor/olaf/notices/PFFFT-NOTICE.txt",
+      "sha256": "5e5bcdb710616235d35523b1542483c643e839177cd80f1dd4d1aa07f2976b57"
+    },
+    {
+      "path": "licenses/olaf/Zig-LICENSE.txt",
+      "source": "vendor/olaf/notices/Zig-LICENSE.txt",
+      "sha256": "5c537d6853e005298a285d508cff9ac7192cea23576c840d485b2b586a7ff177"
+    },
+    {
+      "path": "licenses/olaf/Zigzag-LICENSE.txt",
+      "source": "vendor/zigzag/LICENSE",
+      "sha256": "8bad9f873488b3011193754eff43032e78fbf4771f0f7eefb0394b4a5c34a474"
+    }
+  ],
+  "verification": "Olaf license, Zigzag license and embedded C headers compared to the provided pinned development source; OpenLDAP text verified against https://www.openldap.org/software/release/license.html. Toolchain notice copies inherited from vendor provenance; emitted binary coverage still requires review."
+}
