@@ -12,6 +12,10 @@ needed. Do not run the old setup helper over a working checkout.
 3. `0003-release-local-source-build.patch`: local dependency/build inventory,
    offline fixture handling, full-suite opt-in gate and release test notes.
 
+4. `0004-release-build-privacy.patch`: build-only compiler privacy controls,
+   module debug suppression and generated C prefix-map response-file integration
+   for runtime and regression artifacts (2026-10-30). No engine source change.
+
 After patching, select only the explicit source inventory in
 `vendor/olaf/PROVENANCE.json`; this source distribution intentionally omits
 upstream audio, binaries and other non-desktop material. Supply the unchanged

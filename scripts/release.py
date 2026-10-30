@@ -10,12 +10,14 @@ import argparse
 import gzip
 import hashlib
 import io
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
 import platform
 import re
 import shutil
+import shlex
 import stat
 import struct
 import subprocess
@@ -24,8 +26,13 @@ import tarfile
 import tomllib
 import urllib.request
 import zipfile
+import zlib
 
 ROOT = Path(__file__).resolve().parents[1]
+_spec = importlib.util.spec_from_file_location('release_hygiene', Path(__file__).with_name('check_release_hygiene.py'))
+hygiene = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(hygiene)
+PRIVACY_POLICY = 'compiler-paths-and-artifacts-v1'
 PROVENANCE = "BUILD-PROVENANCE.json"
 TARGETS = ("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
 FORBIDDEN_PARTS = {
@@ -69,7 +76,9 @@ class ReleaseError(RuntimeError):
 
 def require(condition, message):
     if not condition:
-        raise ReleaseError(message)
+        # Callers historically include a path/member after a colon. Retain the
+        # useful rule, never the untrusted value (including tokens in filenames).
+        raise ReleaseError(message.split(':', 1)[0])
 
 
 def encoded(value):
@@ -139,8 +148,8 @@ def run(args, *, cwd=ROOT, env=None):
     result = subprocess.run([str(x) for x in args], cwd=cwd, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if result.returncode:
-        raise ReleaseError(f"Command failed ({Path(str(args[0])).name}, exit {result.returncode}):\n"
-                           + result.stdout[-12000:] + result.stderr[-12000:])
+        # Compiler output/commands may contain source paths, usernames or tokens.
+        raise ReleaseError(f"Build command failed (exit {result.returncode}); output withheld for privacy")
     return result.stdout.strip()
 
 
@@ -173,6 +182,7 @@ def inventory(root, cfg, names=None):
         require(not private_name(name), f"Private/unsafe source input: {name}")
         p = root / name
         regular(p)
+        check_privacy(name, p.read_bytes(), source=True)
         if name.startswith("licenses/") or any(token in p.name.lower() for token in ("license", "copying", "notice")):
             content = p.read_bytes()
             require(content.strip(), f"Empty legal input: {name}")
@@ -249,11 +259,25 @@ def extract_tool(archive, destination):
                 dest.chmod(item.mode & 0o755)
 
 
-def build_env(out):
-    env = os.environ.copy()
+def clean_build_environment(inherited=None):
+    env = dict(os.environ if inherited is None else inherited)
+    prefixes = ('CARGO', 'RUST', 'ZIG', 'CC', 'CXX', 'CFLAGS', 'CPPFLAGS',
+                'LDFLAGS', 'AR', 'RANLIB', 'HOST_', 'TARGET_', 'CMAKE', 'GIT_',
+                'SQLITE', 'LIBSQLITE3', 'BINDGEN', 'LLVM', 'CLANG', 'SCCACHE',
+                'DISTCC', 'CRATE_CC', 'PKG_CONFIG', 'DYLD_', 'LD_')
     for key in list(env):
-        if key.startswith(("CARGO_", "RUSTUP_", "RUSTFLAGS", "RUSTC", "ZIG_")):
+        if key.upper().startswith(prefixes) or key.upper() in {
+            'CL', '_CL_', 'LINK', '_LINK_', 'C_INCLUDE_PATH', 'CPLUS_INCLUDE_PATH',
+            'CPATH', 'LIBRARY_PATH', 'COMPILER_PATH', 'GCC_EXEC_PREFIX', 'MAKEFLAGS',
+            'MFLAGS', 'RUSTDOCFLAGS', 'DEVELOPER_DIR', 'DESTDIR', 'MACOSX_DEPLOYMENT_TARGET',
+            'LD', 'AS', 'ASFLAGS', 'RC', 'RCFLAGS', 'NM', 'STRIP', 'OBJC', 'OBJCXX', 'OBJCFLAGS',
+        }:
             env.pop(key)
+    return env
+
+
+def build_env(out):
+    env = clean_build_environment()
     for key, rel in {
         "CARGO_HOME": "cargo-home", "RUSTUP_HOME": "rustup-home",
         "CARGO_TARGET_DIR": "cargo-target", "ZIG_GLOBAL_CACHE_DIR": "zig-global-cache",
@@ -266,6 +290,150 @@ def build_env(out):
                RUSTUP_DIST_SERVER="https://static.rust-lang.org",
                RUSTUP_UPDATE_ROOT="https://static.rust-lang.org/rustup")
     return env
+
+
+def path_variants(path):
+    """Rust prefix replacement is textual, not a filesystem comparison."""
+    value = str(path)
+    require(not any(c in value for c in '\x00\x1f\r\n='), 'Unsupported build path character')
+    variants = {value, value.replace('\\', '/')}
+    if re.match(r'^(?:[A-Za-z]:|\\\\|//)', value):
+        plain = value.replace('\\', '/')
+        if plain.startswith('//?/UNC/'):
+            plain = '//' + plain[8:]
+        elif plain.startswith('//?/'):
+            plain = plain[4:]
+        variants.update((plain, plain.replace('/', '\\')))
+        if plain.startswith('//'):
+            variants.update(('//?/UNC/' + plain[2:], '\\\\?\\' + 'UNC\\' + plain[2:].replace('/', '\\')))
+        if re.match(r'^[A-Za-z]:', plain):
+            for drive in (plain[0].lower(), plain[0].upper()):
+                variant = drive + plain[1:]
+                variants.update((variant, variant.replace('/', '\\'),
+                                 '\\\\?\\' + variant.replace('/', '\\'), '//?/' + variant))
+    return variants
+
+
+def privacy_maps(out, snapshot, env, root=ROOT):
+    pairs = {}
+    def add(path, label):
+        if not path:
+            return
+        for spelling in path_variants(path):
+            pairs[spelling.rstrip('/\\')] = label
+        # realpath handles e.g. macOS temporary-directory aliases; Windows
+        # extended/slash spellings above are needed even when resolve omits them.
+        if Path(path).is_absolute():
+            for spelling in path_variants(Path(path).resolve()):
+                pairs[spelling.rstrip('/\\')] = label
+    # Never map a filesystem root: retain useful logical filenames and avoid
+    # converting unrelated system/runtime paths into misleading source paths.
+    for key in ('HOME', 'USERPROFILE', 'TMP', 'TEMP', 'TMPDIR', 'LOCALAPPDATA',
+                'APPDATA', 'RUNNER_TEMP', 'RUNNER_WORKSPACE', 'GITHUB_WORKSPACE',
+                'CARGO_HOME', 'RUSTUP_HOME', 'XDG_CACHE_HOME', 'SDKROOT',
+                'VCToolsInstallDir', 'WindowsSdkDir'):
+        add(os.environ.get(key), '/build/host')
+        add(env.get(key), '/build/host')
+    for parent in reversed(root.resolve().parents):
+        if parent != Path(parent.anchor):
+            add(parent, '/build/host')
+    add(root, '/source/checkout')
+    add(out, '/build/stage')
+    add(out / 'work', '/build/work')
+    add(out / 'work/regression-source', '/source')
+    for key, label in {
+        'CARGO_HOME': '/build/cargo', 'CARGO_TARGET_DIR': '/build/target',
+        'RUSTUP_HOME': '/toolchain/rust', 'ZIG_GLOBAL_CACHE_DIR': '/build/zig-global',
+        'ZIG_LOCAL_CACHE_DIR': '/build/zig-local', 'TMP': '/build/tmp',
+        'TEMP': '/build/tmp', 'TMPDIR': '/build/tmp',
+    }.items():
+        add(env.get(key), label)
+    add(out / 'work/tools', '/toolchain')
+    add(snapshot, '/source')
+    add(snapshot / 'rust-app', '/source/rust-app')
+    # Last match wins in rustc/Clang: enclosing paths MUST precede children.
+    return sorted(((p, v) for p, v in pairs.items() if p and p not in ('/', '\\')
+                   and not re.fullmatch(r'[A-Za-z]:', p)), key=lambda pair: (len(pair[0]), pair[0]))
+
+
+def apply_compiler_privacy(env, out, snapshot, target, root=ROOT):
+    maps = privacy_maps(out, snapshot, env, root)
+    flags = [f'--remap-path-prefix={old}={new}' for old, new in maps]
+    flags += ['-Cdebuginfo=0', '-Cstrip=debuginfo']
+    windows = target == 'windows-x64'
+    if windows:
+        flags += ['-Clink-arg=/DEBUG:NONE', '-Clink-arg=/INCREMENTAL:NO',
+                  '-Clink-arg=/PDBALTPATH:local-shazam.pdb']
+    # Windows command lines are limited to 32767 UTF-16 code units. The complete
+    # maps can exceed that, especially after native macro/debug duplication.
+    # rustc response files contain one argument per line, without shell quoting.
+    rust_args = ['@' + str(privacy_response(out, 'rust', '\n'.join(flags) + '\n'))] if windows else flags
+    env['CARGO_ENCODED_RUSTFLAGS'] = '\x1f'.join(rust_args)
+    env['CARGO_ENCODED_RUSTDOCFLAGS'] = '\x1f'.join(rust_args)
+    # cc 1.10.0 (Cargo.lock) supports shell-escaped flags on all hosts.
+    # Use clang-cl for bundled SQLite on MSVC: cl.exe has no supported equivalent
+    # of Clang's file/macro/debug prefix maps. Missing clang-cl fails closed.
+    compiler = 'clang-cl' if windows else ('clang' if target.startswith('macos') else 'cc')
+    cxx = 'clang-cl' if windows else ('clang++' if target.startswith('macos') else 'c++')
+    for key, tool in (('CC', compiler), ('CXX', cxx)):
+        found = shutil.which(tool, path=env.get('PATH'))
+        require(found, 'Required privacy-capable native C/C++ compiler unavailable')
+        env[key] = found
+    native = [f'-{kind}-prefix-map={old}={new}' for old, new in maps
+              for kind in ('ffile', 'fmacro', 'fdebug')]
+    native += ['-g0']
+    if windows:
+        native = ['/clang:' + flag for flag in native]
+    env['CC_SHELL_ESCAPED_FLAGS'] = '1'
+    response = subprocess.list2cmdline(native) if windows else shlex.join(native)
+    native_args = ['@' + str(privacy_response(out, 'native', response + '\n'))]
+    env['CFLAGS'] = env['CXXFLAGS'] = shlex.join(native_args)
+    env['CARGO_PROFILE_RELEASE_DEBUG'] = '0'
+    env['CARGO_PROFILE_RELEASE_STRIP'] = 'debuginfo'
+    return env
+
+
+def privacy_response(out, kind, content):
+    path = out / 'work/privacy-flags' / (kind + '.rsp')
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = content.encode('utf-8')
+    if path.exists():
+        regular(path)
+        require(path.read_bytes() == data, 'Compiler privacy response changed; fresh build required')
+    else:
+        with path.open('xb') as stream:
+            stream.write(data)
+    return path
+
+
+def check_privacy(name, data, *, source=False, forbidden_roots=()):
+    require(not hygiene.privacy_violations('', name.encode('utf-8')), 'Privacy gate: unsafe member name')
+    require(not hygiene.privacy_violations(name, data, source=source), 'Privacy gate: private content (values withheld)')
+    for root in forbidden_roots:
+        for spelling in path_variants(root):
+            for encoding in ('utf-8', 'utf-16-le', 'utf-16-be'):
+                require(spelling.encode(encoding) not in data, 'Privacy gate: build root in artifact (value withheld)')
+    if source:
+        findings = hygiene.Findings()
+        hygiene.check_bytes(name, data, findings)
+        require(not findings.count, 'Privacy gate: source hygiene failed')
+
+
+def olaf_privacy_arguments(root, work, zig):
+    env = {'ZIG_GLOBAL_CACHE_DIR': str(work / 'global-cache'),
+           'ZIG_LOCAL_CACHE_DIR': str(work / 'cache')}
+    maps = dict(privacy_maps(work, root, env, root))
+    for spelling in path_variants(zig.resolve().parent):
+        maps[spelling] = '/toolchain/zig'
+    flags = [f'-{kind}-prefix-map={old}={new}' for old, new in
+             sorted(maps.items(), key=lambda row: (len(row[0]), row[0]))
+             for kind in ('ffile', 'fmacro', 'fdebug')]
+    flags += ['-g0']
+    # Zig's Clang driver uses GNU response tokenization (not clang-cl mode),
+    # including on Windows. Do not repeat thousands of flags for every C file
+    # in the Zig compiler command; that can exceed the OS command-line limit.
+    response = privacy_response(work, 'olaf-native', shlex.join(flags) + '\n')
+    return ['-Drelease-privacy=true', '-Dprivacy-cflags=' + str(response)]
 
 
 def source_snapshot(root, out, source):
@@ -285,10 +453,18 @@ def check_snapshot(snapshot, source):
             require(file_hash(path) == sha, f"Build snapshot changed: {name}")
     # Cargo's parent-directory configuration must not import local developer
     # overrides into a release, even with a fresh CARGO_HOME.
-    for parent in (snapshot, *snapshot.parents):
+    check_cargo_configuration(snapshot)
+
+
+def check_cargo_configuration(cwd, env=None):
+    for parent in (cwd, *cwd.parents):
         for filename in ("config", "config.toml"):
-            require(not (parent / ".cargo" / filename).exists(),
-                    f"Unreviewed ancestor Cargo configuration: {parent / '.cargo' / filename}")
+            require(not os.path.lexists(parent / ".cargo" / filename),
+                    "Unreviewed ancestor Cargo configuration (path withheld)")
+    if env:
+        for filename in ('config', 'config.toml'):
+            require(not os.path.lexists(Path(env['CARGO_HOME']) / filename),
+                    'Unreviewed Cargo home configuration (path withheld)')
 
 
 def provision(target, out, cfg, env):
@@ -380,6 +556,7 @@ def pe_imports(data):
 
 def inspect_binary(path, target):
     data = path.read_bytes()
+    check_privacy(path.name, data)
     require(architecture(data) == target, f"Architecture mismatch: {path.name}")
     result = {"architecture": target, "sha256": digest(data)}
     if target == "windows-x64":
@@ -450,6 +627,7 @@ def tree_records(directory):
             continue
         regular(p)
         name = p.relative_to(directory).as_posix()
+        check_privacy(name, p.read_bytes())
         require(not private_name(name), f"Unsafe payload: {name}")
         mode = 0o755 if p.name in ("local-shazam", "olaf", "local-shazam.exe", "olaf.exe") else 0o644
         if os.name != "nt" and mode == 0o755:
@@ -469,6 +647,8 @@ def build(target, out, root=ROOT):
     run([sys.executable, root / "scripts/check_release_hygiene.py", "--root", root], cwd=root)
     snapshot = source_snapshot(root, out, source)
     rustup, zig = provision(target, out, cfg, env)
+    apply_compiler_privacy(env, out, snapshot, target, root)
+    check_cargo_configuration(snapshot, env)
     rust = [rustup, "run", cfg["rust"]]
     compiler = run([*rust, "rustc", "-vV"], env=env)
     require(f"release: {cfg['rust']}" in compiler, "Wrong Rust compiler")
@@ -493,6 +673,8 @@ def build(target, out, root=ROOT):
     exe = ".exe" if target == "windows-x64" else ""
     app = Path(env["CARGO_TARGET_DIR"]) / cfg["targets"][target]["rust"] / "release" / ("local-shazam" + exe)
     inspections = {"app": inspect_binary(app, target), "olaf": inspect_binary(runtime["olaf" + exe], target)}
+    for binary in (app, runtime['olaf' + exe]):
+        check_privacy(binary.name, binary.read_bytes(), forbidden_roots=[old for old, _ in privacy_maps(out, snapshot, env, root)])
     check_snapshot(snapshot, source)
     require(source == inventory(root, cfg) and commit == clean_commit(root), "Sources changed during build")
     payload = out / "payload"
@@ -511,6 +693,7 @@ def build(target, out, root=ROOT):
                        "rustup": cfg["rustup"], "downloads": cfg["targets"][target]},
         "olaf_source_version": olaf_source_version((snapshot / "vendor/olaf/build.zig.zon").read_bytes()),
         "build": {"cargo_locked": True, "jobs": 1, "native": True, "profile": "release",
+                  "privacy_policy": PRIVACY_POLICY,
                   "runtime_provider": "python scripts/build_olaf.py --target TARGET --out-dir DIRECTORY"},
         "host": {"system": platform.system(), "release": platform.release(), "machine": platform.machine()},
         "binary_inspections": inspections, "payload": tree_records(payload),
@@ -520,7 +703,7 @@ def build(target, out, root=ROOT):
     }
     (out / "build-manifest.json").write_bytes(encoded(provenance))
     (out / "tool-paths.json").write_bytes(encoded({"rustup": str(rustup), "zig": str(zig)}))
-    print(f"Staged {target} at {out}; release tests and packaging still required")
+    print(f"Staged {target}; release tests and packaging still required")
 
 
 def read_manifest(out):
@@ -550,10 +733,12 @@ def test_build(target, out, root=ROOT):
     env = build_env(out)
     env["PATH"] = str(Path(paths["zig"]).parent) + os.pathsep + env.get("PATH", "")
     env["RUSTUP_TOOLCHAIN"] = cfg["rust"]
+    apply_compiler_privacy(env, out, snapshot, target, root)
     home = out / "work/test-home"
     home.mkdir(exist_ok=True)
     env.update(HOME=str(home), USERPROFILE=str(home), XDG_CONFIG_HOME=str(home / "config"),
                XDG_CACHE_HOME=str(home / "cache"))
+    check_cargo_configuration(home, env)
     cargo = [paths["rustup"], "run", cfg["rust"], "cargo", "test", "--locked", "--release", "-j", "1",
              "--manifest-path", snapshot / "rust-app/Cargo.toml", "--target", cfg["targets"][target]["rust"]]
     completed = []
@@ -570,7 +755,8 @@ def test_build(target, out, root=ROOT):
         copy_file(snapshot / name, regression / name)
     for step in cfg["olaf_regressions"]:
         require(step in ("test-matcher-v3", "test-db-safety", "test-config-safety"), "Unreviewed Zig step")
-        run([paths["zig"], "build", step, "-j1", "-Doptimize=ReleaseSafe",
+        privacy_args = olaf_privacy_arguments(regression, out / 'work', Path(paths['zig']))
+        run([paths["zig"], "build", step, "-j1", "-Doptimize=ReleaseSafe", *privacy_args,
              "--cache-dir", out / "work/regression-cache", "--global-cache-dir", env["ZIG_GLOBAL_CACHE_DIR"]],
             cwd=regression / "vendor/olaf", env=env)
         completed.append(step)
@@ -595,8 +781,9 @@ def test_build(target, out, root=ROOT):
 def write_archive(path, entries):
     """entries: relative path -> (bytes, Unix mode); normalized order/metadata."""
     require(not path.exists(), f"Refusing to replace archive: {path}")
-    for name in entries:
+    for name, (data, _) in entries.items():
         safe_name(name)
+        check_privacy(name, data, source=path.name.endswith('-source.tar.gz'))
     if path.suffix == ".zip":
         with zipfile.ZipFile(path, "x", compression=zipfile.ZIP_DEFLATED) as z:
             for name, (data, mode) in sorted(entries.items()):
@@ -620,6 +807,7 @@ def read_archive(path):
 
     def add(name, data, mode):
         safe_name(name)
+        check_privacy(name, data, source=path.name.endswith('-source.tar.gz'))
         require(not private_name(name), f"Private archive entry: {name}")
         require(name.casefold() not in folded, f"Duplicate/case-colliding archive path: {name}")
         require(mode in (0o644, 0o755), f"Unexpected archive mode: {name}")
@@ -628,14 +816,69 @@ def read_archive(path):
 
     if path.suffix == ".zip":
         with zipfile.ZipFile(path) as z:
+            require(not z.comment, 'Unsafe ZIP archive comment')
+            raw = path.read_bytes()
+            cursor = 0
             for info in z.infolist():
                 require(not info.is_dir() and stat.S_ISREG(info.external_attr >> 16), "Nonregular ZIP entry")
+                require(not info.comment and not info.extra, 'Unsafe ZIP member metadata')
+                require(info.date_time == (1980, 1, 1, 0, 0, 0) and info.create_system == 3
+                        and info.internal_attr == 0 and info.flag_bits in (0, 0x800)
+                        and info.compress_type == zipfile.ZIP_DEFLATED, 'Noncanonical ZIP metadata')
+                # zipfile exposes central metadata only. Inspect local headers too:
+                # a local-only extra field can leak even when the central one is empty.
+                require(info.header_offset == cursor, 'Unsafe ZIP layout')
+                header = struct.unpack_from('<4s5H3I2H', raw, cursor)
+                sig, version, flags, method, time, date, crc, compressed, size, nlen, extra = header
+                name = info.filename.encode('utf-8' if flags & 0x800 else 'ascii')
+                require(sig == b'PK\x03\x04' and version == 20 and flags == info.flag_bits
+                        and method == 8 and time == 0 and date == 33 and crc == info.CRC
+                        and compressed == info.compress_size and size == info.file_size
+                        and extra == 0 and raw[cursor + 30:cursor + 30 + nlen] == name,
+                        'Unsafe ZIP local metadata')
+                cursor += 30 + nlen + compressed
+                compressed_data = raw[cursor - compressed:cursor]
+                inflater = zlib.decompressobj(-15)
+                inflater.decompress(compressed_data)
+                require(inflater.eof and not inflater.unused_data, 'Unsafe ZIP compressed member trailer')
                 add(info.filename, z.read(info), stat.S_IMODE(info.external_attr >> 16))
+            require(cursor == z.start_dir, 'Unsafe ZIP directory layout')
+            for info in z.infolist():
+                require(raw[cursor:cursor + 4] == b'PK\x01\x02', 'Unsafe ZIP central metadata')
+                nlen, extra, comment = struct.unpack_from('<3H', raw, cursor + 28)
+                name = info.filename.encode('utf-8' if info.flag_bits & 0x800 else 'ascii')
+                require(extra == comment == 0 and raw[cursor + 46:cursor + 46 + nlen] == name,
+                        'Unsafe ZIP central metadata')
+                canonical_header = struct.pack('<4s6H3I5H2I', b'PK\x01\x02', (3 << 8) | 20, 20,
+                    info.flag_bits, 8, 0, 33, info.CRC, info.compress_size, info.file_size,
+                    len(name), 0, 0, 0, 0, (stat.S_IFREG | stat.S_IMODE(info.external_attr >> 16)) << 16,
+                    info.header_offset)
+                require(raw[cursor:cursor + 46] == canonical_header, 'Noncanonical ZIP central metadata')
+                cursor += 46 + nlen
+            end = struct.unpack_from('<4s4H2IH', raw, cursor)
+            require(end == (b'PK\x05\x06', 0, 0, len(entries), len(entries), cursor - z.start_dir, z.start_dir, 0)
+                    and cursor + 22 == len(raw), 'Unsafe ZIP trailing metadata')
     else:
-        with tarfile.open(path, "r:gz") as tar:
+        raw = path.read_bytes()
+        require(raw[:10] == b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x02\xff', 'Unsafe gzip header metadata')
+        decompressor = zlib.decompressobj(31)
+        unpacked = decompressor.decompress(raw) + decompressor.flush()
+        require(decompressor.eof and not decompressor.unused_data, 'Unsafe gzip trailing data')
+        with tarfile.open(fileobj=io.BytesIO(unpacked), mode='r:') as tar:
             for info in tar:
                 require(info.isfile() and not info.linkname, "Nonregular tar entry")
+                require(info.uid == info.gid == info.mtime == 0 and not info.uname and not info.gname
+                        and set(info.pax_headers) <= {'path'}, 'Unsafe tar owner/PAX metadata')
                 add(info.name, tar.extractfile(info).read(), info.mode)
+        # Rebuild only metadata, never executables. Byte equality catches hidden
+        # global/duplicate PAX headers, overridden owner fields, padding and links.
+        canonical = io.BytesIO()
+        with tarfile.open(fileobj=canonical, mode='w', format=tarfile.PAX_FORMAT) as tar:
+            for name, (data, mode) in sorted(entries.items()):
+                info = tarfile.TarInfo(name)
+                info.size, info.mode, info.mtime = len(data), mode, 0
+                tar.addfile(info, io.BytesIO(data))
+        require(unpacked == canonical.getvalue(), 'Noncanonical tar metadata or layout')
     return entries
 
 
@@ -656,7 +899,7 @@ def package(target, out, root=ROOT):
     sums = "".join(f"{file_hash(path)}  {path.name}\n" for path in sorted(dist.iterdir()))
     (dist / "SHA256SUMS").write_text(sums, encoding="ascii", newline="\n")
     verify(dist)
-    print(f"Verified distribution: {dist}")
+    print('Verified staged distribution')
 
 
 def verify(out):
@@ -688,6 +931,7 @@ def verify(out):
     require(p["source_inventory_sha256"] == digest(encoded(p["source_inventory"])), "Source inventory hash mismatch")
     require(p["gates"]["dataset_free_tests"] == "passed" and p["gates"].get("completed"), "Native gates incomplete")
     require(p["build"]["cargo_locked"] and p["build"]["jobs"] == 1 and p["build"]["native"], "Build policy mismatch")
+    require(p['build'].get('privacy_policy') == PRIVACY_POLICY, 'Missing compiler privacy policy; rebuild required')
     stem = f"local-shazam-{p['commit'][:12]}-{p['target']}"
     binary_name = stem + (".zip" if p["target"] == "windows-x64" else ".tar.gz")
     require(set(archives) == {binary_name, f"{stem}-app-source.tar.gz", f"{stem}-olaf-source.tar.gz"}, "Archive naming/target mismatch")
@@ -755,11 +999,10 @@ def main():
         else:
             out = staging(args.out_dir)
             {"build": build, "test": test_build, "package": package}[args.command](args.target, out)
-    except (ReleaseError, OSError, ValueError, KeyError, subprocess.CalledProcessError,
-            tarfile.TarError, zipfile.BadZipFile) as exc:
-        print(f"release: {exc}", file=sys.stderr)
-        if isinstance(exc, subprocess.CalledProcessError) and exc.stdout:
-            print(exc.stdout, file=sys.stderr)
+    except Exception as exc:
+        # Malformed untrusted JSON/archives can raise unexpected parser types;
+        # never turn those into tracebacks containing absolute operator paths.
+        print('release: operation rejected; diagnostic values withheld for privacy (' + type(exc).__name__ + ')', file=sys.stderr)
         return 1
     return 0
 
