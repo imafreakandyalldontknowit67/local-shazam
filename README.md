@@ -1,4 +1,4 @@
-![Local Shazam — recognize audio against your own library, illustrated with a waveform and connected fingerprint landmarks.](assets/banner.svg)
+![Local Shazam ? Your library. Recognized. A black-and-white paired-corner identity.](assets/banner.svg)
 
 # Local Shazam
 
