@@ -13,10 +13,11 @@ service or a global catalog, and the application does not upload your audio.
 - **Evidence, not certainty:** experimental Olaf retrieval followed by local
   Rust candidate-window verification; the Rust-only comparison backend remains.
 
-> **Unreleased native preparation.** Native source version: `0.2.0`. Historical
-> `1.0.x` tags refer to Python, not this native application. Windows x64, Linux x64
-> and macOS arm64/x64 are planned CI targets awaiting verification, not supported
-> downloads. No packaged-release or cross-platform test pass is claimed here.
+> **Private native preview.** Windows x64, Linux x64, Apple Silicon and Intel Mac
+> packages passed the [native CI gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988).
+> Review the [draft release and downloads](https://github.com/imafreakandyalldontknowit67/local-shazam/releases).
+> Native source version: `0.2.0`; older `1.0.x` tags are Python releases.
+> Packages are unsigned; distribution/license review remains open before public release.
 
 ## Get ready
 
@@ -24,7 +25,7 @@ The default workflow needs the app, its matching Olaf runtime, and **FFmpeg and
 FFprobe installed separately on `PATH`**. Native users need no Python. Codecs
 depend on the FFmpeg build; SQLite is bundled for the Rust backend.
 
-The planned package layout keeps the runtime beside the app:
+The package layout keeps the runtime beside the app:
 
 ```text
 local-shazam.exe                 # local-shazam on Linux/macOS
@@ -34,7 +35,8 @@ olaf-runtime/
 
 For setup and packaging, see [Building](docs/BUILDING.md),
 [Releasing](docs/RELEASING.md) and [Third-party notices](THIRD_PARTY_NOTICES.md).
-Builds remain unverified until the corresponding CI checks pass.
+The preview packages are verified at source commit `92a983a57ff9`; this is build
+and packaging evidence, not a new snippet-accuracy or hardware-stability claim.
 
 ## Choose a folder, then a clip
 
