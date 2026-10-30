@@ -193,7 +193,7 @@
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "94956edcc4acf7a0600dac854f863723cbdf7d25c69b37032123d6a45a8ae028"
+      "sha256": "e2b63059614f8d9524f43a2a54670c012680cb3974f013f9ba4bdc7be73841e6"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",

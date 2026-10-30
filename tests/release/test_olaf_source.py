@@ -247,7 +247,7 @@ class BuildInterfaceTests(unittest.TestCase):
 
                 with mock.patch.object(builder.shutil, "which", return_value="zig"), mock.patch.object(builder.subprocess, "run", side_effect=fake_run):
                     runtime = builder.build_runtime(target, Path(tmp))
-                self.assertEqual(runtime, Path(tmp) / "olaf-runtime")
+                self.assertEqual(runtime, Path(tmp).resolve() / "olaf-runtime")
                 for name in (executable, "OLAF-LICENSE", "OLAF-NOTICES.txt", "PROVENANCE.json", "BUILD-INFO.json", "notices/Zigzag-LICENSE.txt", "notices/OpenLDAP-LICENSE.txt"):
                     self.assertTrue((runtime / name).is_file(), name)
                 info = json.loads((runtime / "BUILD-INFO.json").read_text())
