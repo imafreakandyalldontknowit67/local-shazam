@@ -1,0 +1,123 @@
+diff --git a/build.zig b/build.zig
+--- a/build.zig
++++ b/build.zig
+@@ -1,6 +1,13 @@
+ const std = @import("std");
+
+ pub fn build(b: *std.Build) void {
++    const release_privacy = b.option(bool, "release-privacy", "Compiler path privacy for release artifacts") orelse false;
++    const privacy_cflags = b.option([]const u8, "privacy-cflags", "Generated Clang response file with file/macro/debug prefix maps");
++    if (release_privacy and privacy_cflags == null) @panic("Release privacy requires explicit prefix maps");
++    var artifacts = std.array_list.Managed(*std.Build.Step.Compile).init(b.allocator);
++    defer if (release_privacy) {
++        for (artifacts.items) |artifact| applyReleasePrivacy(b, artifact, privacy_cflags.?);
++    };
+     const cflags = [_][]const u8{ "-Wall", "-Wextra", "-Werror=return-type", "-std=gnu11", "-O2", "-fPIC" };
+
+     const target = b.standardTargetOptions(.{});
+@@ -10,6 +17,7 @@
+
+     // The browser module (wasm/js/olaf.wasm), used by the demos in wasm/.
+     const web = webModule(b);
++    artifacts.append(web) catch @panic("OOM");
+     const update_web = b.addUpdateSourceFiles();
+     update_web.addCopyFileToSource(web.getEmittedBin(), "wasm/js/olaf.wasm");
+     b.step("web", "Build the browser WebAssembly module into wasm/js/olaf.wasm").dependOn(&update_web.step);
+@@ -27,6 +35,7 @@
+                     .optimize = optimize,
+                 }),
+             });
++            artifacts.append(exe) catch @panic("OOM");
+
+             addCoreSources(exe, b, &cflags, true, true);
+             exe.root_module.link_libc = true;
+@@ -49,6 +58,7 @@
+                     .root_source_file = b.path("./cli/olaf_cli.zig"),
+                 }),
+             });
++            artifacts.append(exe) catch @panic("OOM");
+             exe.root_module.addIncludePath(b.path("cli"));
+             exe.root_module.addIncludePath(b.path("src"));
+             const zigzag = b.dependency("zigzag", .{ .target = target, .optimize = optimize });
+@@ -74,6 +84,7 @@
+         .name = "olaf_matcher_v3_tests",
+         .root_module = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true }),
+     });
++    artifacts.append(matcher_test) catch @panic("OOM");
+     matcher_test.root_module.addIncludePath(b.path("src"));
+     matcher_test.root_module.addCSourceFiles(.{
+         .files = &.{ "tests/olaf_matcher_v3_tests.c", "src/olaf_config.c", "src/hash-table.c" },
+@@ -88,6 +99,7 @@
+         .name = "olaf_writer_safety",
+         .root_module = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true }),
+     });
++    artifacts.append(writer_test) catch @panic("OOM");
+     writer_test.root_module.addIncludePath(b.path("src"));
+     writer_test.root_module.addCSourceFiles(.{
+         .files = &.{ "tests/olaf_fp_db_writer_tests.c", "src/olaf_fp_db_writer.c" },
+@@ -100,6 +112,7 @@
+         .name = "olaf_db_concurrency",
+         .root_module = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true }),
+     });
++    artifacts.append(db_helper) catch @panic("OOM");
+     db_helper.root_module.addIncludePath(b.path("src"));
+     db_helper.root_module.addCSourceFiles(.{
+         .files = &.{ "tests/olaf_db_concurrency_tests.c", "src/olaf_db.c", "src/mdb.c", "src/midl.c" },
+@@ -113,6 +126,7 @@
+             .root_source_file = b.path("tests/olaf_db_safety_tests.zig"),
+         }),
+     });
++    artifacts.append(db_tests) catch @panic("OOM");
+     const db_options = b.addOptions();
+     db_options.addOptionPath("helper", db_helper.getEmittedBin());
+     db_tests.root_module.addOptions("db_test_options", db_options);
+@@ -124,6 +138,7 @@
+         .name = "olaf_config_safety",
+         .root_module = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true }),
+     });
++    artifacts.append(config_test) catch @panic("OOM");
+     config_test.root_module.addIncludePath(b.path("src"));
+     config_test.root_module.addCSourceFile(.{ .file = b.path("tests/olaf_config_tests.c"), .flags = &.{ "-std=gnu11", "-DNDEBUG" } });
+     const config_flags = &.{ "-std=gnu11", "-DNDEBUG", "-include", b.pathFromRoot("tests/olaf_config_alloc.h") };
+@@ -168,6 +183,7 @@
+
+         // REST server, envelope and load balancer (std only, no C core).
+         const rest_tests = b.addTest(.{ .root_module = restModule(b, target, optimize) });
++        artifacts.append(rest_tests) catch @panic("OOM");
+         test_step.dependOn(&b.addRunArtifact(rest_tests).step);
+
+         for (test_files) |test_file| {
+@@ -178,6 +194,7 @@
+                     .root_source_file = b.path(test_file),
+                 }),
+             });
++            artifacts.append(tests) catch @panic("OOM");
+
+             tests.root_module.addIncludePath(b.path("cli"));
+             tests.root_module.addIncludePath(b.path("src"));
+@@ -309,3 +326,25 @@
+         exe.root_module.addCSourceFile(.{ .file = b.path("./src/olaf.c"), .flags = cflags });
+     }
+ }
++
++// Zig 0.16.0 has no general Zig-source prefix-map switch. @src().file is
++// module-relative (Sema.zig); suppress compiler debug paths at generation time,
++// and separately map every C macro/file/debug path. See docs/BUILD_PRIVACY.md.
++fn applyReleasePrivacy(b: *std.Build, artifact: *std.Build.Step.Compile, cflags_file: []const u8) void {
++    for (artifact.root_module.getGraph().modules) |mod| {
++        mod.strip = true;
++        for (mod.link_objects.items) |object| {
++            const flags: *[]const []const u8 = switch (object) {
++                .c_source_file => |file| &file.flags,
++                .c_source_files => |files| &files.flags,
++                else => continue,
++            };
++            var mapped = std.array_list.Managed([]const u8).init(b.allocator);
++            mapped.appendSlice(flags.*) catch @panic("OOM");
++            // zig_clang_driver.cpp expands GNU-style response files. The
++            // Python provider creates and verifies this immutable staging input.
++            mapped.append(b.fmt("@{s}", .{cflags_file})) catch @panic("OOM");
++            flags.* = mapped.toOwnedSlice() catch @panic("OOM");
++        }
++    }
++}
