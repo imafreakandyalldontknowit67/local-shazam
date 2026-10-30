@@ -126,7 +126,10 @@ on a machine with unresolved crashes, and do not assume its index is intact.
   false-positive rate, performance promise or demonstrated accuracy-equivalence
   gate. Historical backend and development smoke results cannot supply these.
 - Windows x64, Linux x64 and macOS arm64/x64 passed native build/package gates
-  for preview commit `92a983a57ff9`; older OS compatibility is not established.
+  for historical preview commit `92a983a57ff9`, not current HEAD; older OS/glibc
+  compatibility and clean-host behavior are not established. Compiler-privacy
+  rebuilds and independent artifact/source verification remain pending; these
+  gates are not a privacy, signing/notarization or bit-for-bit reproducibility pass.
 
 ## Attribution and distribution
 
