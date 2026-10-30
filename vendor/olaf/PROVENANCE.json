@@ -209,7 +209,7 @@
     },
     "tests/release/test_build_privacy.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "9bfa14664385728bed6aada4b6e6ccdbcd893de14d7fd975453282a7ad5c74b3"
+      "sha256": "1c488c84c18fa28f984cd542a88fb0955554e9054ef0ba068081462d94174b8b"
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
