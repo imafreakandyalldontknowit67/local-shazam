@@ -14,13 +14,14 @@ Install FFmpeg and FFprobe separately and make both available on `PATH`.
 Decodable formats depend on that build's codecs. SQLite is bundled for the
 Rust backend; Python is not a native runtime dependency.
 
-The planned package places `local-shazam.exe` beside `olaf-runtime/olaf.exe`
+The package places `local-shazam.exe` beside `olaf-runtime/olaf.exe`
 on Windows, or `local-shazam` beside `olaf-runtime/olaf` on Unix-like targets.
 Keep package notices and matching runtime source materials. Use
 [Building](../docs/BUILDING.md) for source prerequisites and
-[Releasing](../docs/RELEASING.md) for packaging; these are planned cross-branch
-guides. Windows x64, Linux x64 and macOS arm64/x64 are CI targets awaiting
-verification, not a supported-download matrix.
+[Releasing](../docs/RELEASING.md) for packaging. Windows x64, Linux x64 and macOS arm64/x64 passed the native
+build/package gates for preview commit `92a983a57ff9`. See the root README for
+the draft release; older OS versions and end-to-end snippet accuracy are not
+validated by these gates.
 
 Run the prepared executable without arguments for the menu:
 
@@ -122,6 +123,6 @@ See the [root limitations](../README.md#limits-to-understand) and
 ## License scope
 
 Original application code: [MIT](../LICENSE). Separately shipped, modified Olaf
-runtime: **AGPL-3.0-or-later**, not MIT. See the planned
+runtime: **AGPL-3.0-or-later**, not MIT. See the
 [Third-party notices](../THIRD_PARTY_NOTICES.md) for runtime/dependency attribution
 and the release guide for matching source and distribution materials.

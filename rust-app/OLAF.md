@@ -9,7 +9,7 @@ The Rust executable uses a separately shipped, modified Olaf runtime for
 retrieval and its own Rust DSP for verification. Native users need no Python.
 FFmpeg and FFprobe remain external prerequisites; codecs depend on their
 installed build. See the [native guide](README.md) for commands and the
-[building guide](../docs/BUILDING.md) for setup (planned cross-branch addition).
+[building guide](../docs/BUILDING.md) for setup.
 
 ## Recognition, step by step
 
@@ -125,14 +125,14 @@ on a machine with unresolved crashes, and do not assume its index is intact.
 - No held-out estimate for the integrated retrieval/verifier pipeline, general
   false-positive rate, performance promise or demonstrated accuracy-equivalence
   gate. Historical backend and development smoke results cannot supply these.
-- Windows x64, Linux x64 and macOS arm64/x64 remain planned CI targets awaiting
-  verification, not supported downloads.
+- Windows x64, Linux x64 and macOS arm64/x64 passed native build/package gates
+  for preview commit `92a983a57ff9`; older OS compatibility is not established.
 
 ## Attribution and distribution
 
 The original application code is [MIT](../LICENSE). The separate, modified Olaf
-runtime is **AGPL-3.0-or-later**; it must not be presented as MIT. See the planned
+runtime is **AGPL-3.0-or-later**; it must not be presented as MIT. See the
 [Third-party notices](../THIRD_PARTY_NOTICES.md) and
 [release guide](../docs/RELEASING.md) for matching runtime source, patches and
 required notices. This documentation is not a claim that distribution review
-or package verification has passed.
+has passed. Native package verification is recorded in the root README.

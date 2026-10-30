@@ -58,3 +58,12 @@ time and requiring verification after integration:
 - [Third-party notices](../THIRD_PARTY_NOTICES.md)
 
 These placeholders identify companion work, not completed release evidence.
+
+## Integrated preview status (2026-10-30)
+
+The proposed source and presentation work is integrated. All four native CI jobs
+passed for `92a983a57ff92ad4b9342fb4dd992edf728b5a97`. GitHub holds a private draft
+prerelease `v0.2.0-native.1` with 12 binary/source archives and consolidated checksums.
+Earlier planning language above records the proposal, not the current build status.
+Licensing review and unsigned/notarized limitations remain; no public launch or
+new recognition-accuracy claim. Source music and production index were untouched.
