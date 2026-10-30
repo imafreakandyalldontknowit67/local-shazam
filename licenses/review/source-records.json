@@ -1,0 +1,165 @@
+{
+  "format": 1,
+  "copies": [
+    {
+      "path": "licenses/review/crates/block2-0.6.2/Cargo.toml",
+      "sha256": "e325c51f01145af3e11f2ee5ce7c47f10697d936c1d90b9ee81a0cf4f700f6d7",
+      "archive": "https://static.crates.io/crates/block2/block2-0.6.2.crate",
+      "archive_sha256": "cdeb9d870516001442e364c5220d3574d2da8dc765554b4a617230d33fa58ef5",
+      "member": "block2-0.6.2/Cargo.toml",
+      "published_revision": "b4167b582b2f75f9a1be75495c41b765344fd03c"
+    },
+    {
+      "path": "licenses/review/crates/block2-0.6.2/.cargo_vcs_info.json",
+      "sha256": "5b87885cad87999d141e83cc8af4b073192f584b2b92cea77e2d87636621a264",
+      "archive": "https://static.crates.io/crates/block2/block2-0.6.2.crate",
+      "archive_sha256": "cdeb9d870516001442e364c5220d3574d2da8dc765554b4a617230d33fa58ef5",
+      "member": "block2-0.6.2/.cargo_vcs_info.json",
+      "published_revision": "b4167b582b2f75f9a1be75495c41b765344fd03c"
+    },
+    {
+      "path": "licenses/review/crates/dispatch2-0.3.1/Cargo.toml",
+      "sha256": "f246cf8997c346fdcabb8925ad5be967f397fd8b92630ef7bcc9bdce5d33f775",
+      "archive": "https://static.crates.io/crates/dispatch2/dispatch2-0.3.1.crate",
+      "archive_sha256": "1e0e367e4e7da84520dedcac1901e4da967309406d1e51017ae1abfb97adbd38",
+      "member": "dispatch2-0.3.1/Cargo.toml",
+      "published_revision": "8852b424193ca41602281b3d7540d7c8ed51e49a"
+    },
+    {
+      "path": "licenses/review/crates/dispatch2-0.3.1/.cargo_vcs_info.json",
+      "sha256": "26f5e6d699ba3ce13b8eea253ad7a7f7feb9345e9da3c01bb9b9bd911a6a7dba",
+      "archive": "https://static.crates.io/crates/dispatch2/dispatch2-0.3.1.crate",
+      "archive_sha256": "1e0e367e4e7da84520dedcac1901e4da967309406d1e51017ae1abfb97adbd38",
+      "member": "dispatch2-0.3.1/.cargo_vcs_info.json",
+      "published_revision": "8852b424193ca41602281b3d7540d7c8ed51e49a"
+    },
+    {
+      "path": "licenses/review/crates/libsqlite3-sys-0.39.1/Cargo.toml",
+      "sha256": "3fb7e11b7b71251e7e360511000befe692e5aee8d31415d477774f060577bb15",
+      "archive": "https://static.crates.io/crates/libsqlite3-sys/libsqlite3-sys-0.39.1.crate",
+      "archive_sha256": "14a5f01b87b92705d07b433c06f96cbc764637d81a0bffb5734ce17cf0f9a2b3",
+      "member": "libsqlite3-sys-0.39.1/Cargo.toml",
+      "published_revision": "fb7c711f4e988db149f43cac68f7865b25d0b10e"
+    },
+    {
+      "path": "licenses/review/crates/libsqlite3-sys-0.39.1/.cargo_vcs_info.json",
+      "sha256": "f410bda919d68f688b35fb4fe324b8a506dfcfebcc4b5b6a31a1885d806485b7",
+      "archive": "https://static.crates.io/crates/libsqlite3-sys/libsqlite3-sys-0.39.1.crate",
+      "archive_sha256": "14a5f01b87b92705d07b433c06f96cbc764637d81a0bffb5734ce17cf0f9a2b3",
+      "member": "libsqlite3-sys-0.39.1/.cargo_vcs_info.json",
+      "published_revision": "fb7c711f4e988db149f43cac68f7865b25d0b10e"
+    },
+    {
+      "path": "licenses/review/crates/libsqlite3-sys-0.39.1/build.rs",
+      "sha256": "769b31370a41aa722e1d5a530012432c985bb142eab34d095481ffd1a3436e1b",
+      "archive": "https://static.crates.io/crates/libsqlite3-sys/libsqlite3-sys-0.39.1.crate",
+      "archive_sha256": "14a5f01b87b92705d07b433c06f96cbc764637d81a0bffb5734ce17cf0f9a2b3",
+      "member": "libsqlite3-sys-0.39.1/build.rs",
+      "published_revision": "fb7c711f4e988db149f43cac68f7865b25d0b10e"
+    },
+    {
+      "path": "licenses/review/crates/objc2-0.6.5/Cargo.toml",
+      "sha256": "5556dba493fc18e98ebf82f587011f76df6c8c26532613e4c8f904ee586d7cf0",
+      "archive": "https://static.crates.io/crates/objc2/objc2-0.6.5.crate",
+      "archive_sha256": "08849bbd4767dfae9457696856ae1c84fe4e0281bbe4a7abff2d0e06fb7981f8",
+      "member": "objc2-0.6.5/Cargo.toml",
+      "published_revision": "d7d2fa23ceaa5e6096c923b081040e5d81b3b9df"
+    },
+    {
+      "path": "licenses/review/crates/objc2-0.6.5/.cargo_vcs_info.json",
+      "sha256": "5f7c8e095d3933c477ff1f71021b551cbfe497a62346a1dc8615debd9846e257",
+      "archive": "https://static.crates.io/crates/objc2/objc2-0.6.5.crate",
+      "archive_sha256": "08849bbd4767dfae9457696856ae1c84fe4e0281bbe4a7abff2d0e06fb7981f8",
+      "member": "objc2-0.6.5/.cargo_vcs_info.json",
+      "published_revision": "d7d2fa23ceaa5e6096c923b081040e5d81b3b9df"
+    },
+    {
+      "path": "licenses/review/crates/objc2-app-kit-0.3.2/.cargo_vcs_info.json",
+      "sha256": "07762c2a438c287ac124300928c9da0f96cefc1932ff8cadac13716fd1e195eb",
+      "archive": "https://static.crates.io/crates/objc2-app-kit/objc2-app-kit-0.3.2.crate",
+      "archive_sha256": "d49e936b501e5c5bf01fda3a9452ff86dc3ea98ad5f283e1455153142d97518c",
+      "member": "objc2-app-kit-0.3.2/.cargo_vcs_info.json",
+      "published_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b"
+    },
+    {
+      "path": "licenses/review/crates/objc2-core-foundation-0.3.2/.cargo_vcs_info.json",
+      "sha256": "1c1a87985a2bd25015f5e2413f4041379bea0172b2fce88dae3e6482b50aab26",
+      "archive": "https://static.crates.io/crates/objc2-core-foundation/objc2-core-foundation-0.3.2.crate",
+      "archive_sha256": "2a180dd8642fa45cdb7dd721cd4c11b1cadd4929ce112ebd8b9f5803cc79d536",
+      "member": "objc2-core-foundation-0.3.2/.cargo_vcs_info.json",
+      "published_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b"
+    },
+    {
+      "path": "licenses/review/crates/objc2-encode-4.1.0/.cargo_vcs_info.json",
+      "sha256": "b23c761215887d90ac44e18b18c8b386f93139c65a4a14f110e22405830cb3f1",
+      "archive": "https://static.crates.io/crates/objc2-encode/objc2-encode-4.1.0.crate",
+      "archive_sha256": "ef25abbcd74fb2609453eb695bd2f860d389e457f67dc17cafc8b8cbc89d0c33",
+      "member": "objc2-encode-4.1.0/.cargo_vcs_info.json",
+      "published_revision": "8d214f5477365ffcbcbb7de058c86ed9a518efb7"
+    },
+    {
+      "path": "licenses/review/crates/objc2-foundation-0.3.2/.cargo_vcs_info.json",
+      "sha256": "de34f3c84d7cb1cafcedb4e83b7efdd64047872566827477b954f8a853536bb1",
+      "archive": "https://static.crates.io/crates/objc2-foundation/objc2-foundation-0.3.2.crate",
+      "archive_sha256": "e3e0adef53c21f888deb4fa59fc59f7eb17404926ee8a6f59f5df0fd7f9f3272",
+      "member": "objc2-foundation-0.3.2/.cargo_vcs_info.json",
+      "published_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b"
+    },
+    {
+      "path": "licenses/review/crates/rfd-0.17.2/Cargo.toml",
+      "sha256": "b98351241be56428b9e422eab911906b68ec80b77d0e41f0ed1a633b9b12312d",
+      "archive": "https://static.crates.io/crates/rfd/rfd-0.17.2.crate",
+      "archive_sha256": "20dafead71c16a34e1ff357ddefc8afc11e7d51d6d2b9fbd07eaa48e3e540220",
+      "member": "rfd-0.17.2/Cargo.toml",
+      "published_revision": "cca0cfa5fc38c2752c9c98f9f5168904a515fd55"
+    },
+    {
+      "path": "licenses/review/crates/rfd-0.17.2/.cargo_vcs_info.json",
+      "sha256": "69185ac7c46bf3c7825ddc4b1737bd3b0fe831bbc941879269bf542aa65363cf",
+      "archive": "https://static.crates.io/crates/rfd/rfd-0.17.2.crate",
+      "archive_sha256": "20dafead71c16a34e1ff357ddefc8afc11e7d51d6d2b9fbd07eaa48e3e540220",
+      "member": "rfd-0.17.2/.cargo_vcs_info.json",
+      "published_revision": "cca0cfa5fc38c2752c9c98f9f5168904a515fd55"
+    },
+    {
+      "path": "licenses/review/crates/rusqlite-0.41.1/Cargo.toml",
+      "sha256": "8a18d2cfc64f75140c5d23633bbd2bbbc77d719a0c3d844f8929cd6bc319f9ed",
+      "archive": "https://static.crates.io/crates/rusqlite/rusqlite-0.41.1.crate",
+      "archive_sha256": "da9bba6f3506135e120a6586df05be18b48d18896600646a4bec8f993d91a594",
+      "member": "rusqlite-0.41.1/Cargo.toml",
+      "published_revision": "18ee76dbb976d5ef7e37ad5a8fffae678ca21a78"
+    },
+    {
+      "path": "licenses/review/crates/rusqlite-0.41.1/.cargo_vcs_info.json",
+      "sha256": "45d55c9a95adfc19beb24dbab71a919fa58a8a86cd6bd31c9a69b8975017ab31",
+      "archive": "https://static.crates.io/crates/rusqlite/rusqlite-0.41.1.crate",
+      "archive_sha256": "da9bba6f3506135e120a6586df05be18b48d18896600646a4bec8f993d91a594",
+      "member": "rusqlite-0.41.1/.cargo_vcs_info.json",
+      "published_revision": "18ee76dbb976d5ef7e37ad5a8fffae678ca21a78"
+    },
+    {
+      "path": "licenses/review/crates/sqlite-wasm-rs-0.6.2/Cargo.toml",
+      "sha256": "46e15091af4eade0c6b60a72f898401c930779c784d7f07e51edc2130bd85807",
+      "archive": "https://static.crates.io/crates/sqlite-wasm-rs/sqlite-wasm-rs-0.6.2.crate",
+      "archive_sha256": "36bd8e29bf08189a005b2df1df99823aa0861cabe9044e5f31ed54ca292ee618",
+      "member": "sqlite-wasm-rs-0.6.2/Cargo.toml",
+      "published_revision": "4b5c931e88ac09a114bd58368402a74761cec311"
+    },
+    {
+      "path": "licenses/review/crates/sqlite-wasm-rs-0.6.2/.cargo_vcs_info.json",
+      "sha256": "4f0b80b78c7722b73bf2c0ad4bdcb7b22a15b35f7f6621c1f6535b0eff2f9b61",
+      "archive": "https://static.crates.io/crates/sqlite-wasm-rs/sqlite-wasm-rs-0.6.2.crate",
+      "archive_sha256": "36bd8e29bf08189a005b2df1df99823aa0861cabe9044e5f31ed54ca292ee618",
+      "member": "sqlite-wasm-rs-0.6.2/.cargo_vcs_info.json",
+      "published_revision": "4b5c931e88ac09a114bd58368402a74761cec311"
+    },
+    {
+      "path": "licenses/review/crates/sqlite-wasm-rs-0.6.2/build.rs",
+      "sha256": "368c4a7695345c1dc1d56c1a56fbed95d95d84e63c912d9af37ccdd7402fc804",
+      "archive": "https://static.crates.io/crates/sqlite-wasm-rs/sqlite-wasm-rs-0.6.2.crate",
+      "archive_sha256": "36bd8e29bf08189a005b2df1df99823aa0861cabe9044e5f31ed54ca292ee618",
+      "member": "sqlite-wasm-rs-0.6.2/build.rs",
+      "published_revision": "4b5c931e88ac09a114bd58368402a74761cec311"
+    }
+  ]
+}

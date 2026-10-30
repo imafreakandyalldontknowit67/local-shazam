@@ -1,0 +1,500 @@
+{
+  "format": 1,
+  "review_date": "2026-10-30",
+  "commit": "92a983a57ff92ad4b9342fb4dd992edf728b5a97",
+  "app_version": "0.2.0",
+  "scope": "Historical local archive consistency and authenticated read-only GitHub metadata; not current-HEAD validation, publisher authentication, privacy or legal approval.",
+  "local_artifact_set": "dist/ci-92a983a",
+  "targets": {
+    "linux-x64": {
+      "archives": [
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64-app-source.tar.gz",
+          "sha256": "9d928fffbc30019deba768d44e68de260696b9e3260459069b4512319caf53a6",
+          "size": 251643
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64-olaf-source.tar.gz",
+          "sha256": "22600332013bb0b9dad5ab1a5e2190ee56cfb3fc52369d2e9fa639e37c7fc440",
+          "size": 848793
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64.tar.gz",
+          "sha256": "c5a99f404b96bc30a509325ed728b03a43986aa504d91a248213fce0631edc4b",
+          "size": 6520186
+        }
+      ],
+      "local_checksums_sha256": "2c73b0f6bca99298b60f01b8d061a1591b15e693c7acc7f2a01b89710e59b055",
+      "manifest_sha256": "8a6e567417da52891e5cf4d40a5ad2c92b5ea6abc3001685ae7b153c2aa671c6",
+      "source_inventory_sha256": "944a800538ee3174d54a8f8cbcbc979a98734bddc0371a1cb88b139c21c9c42f",
+      "source_counts": {
+        "app": 287,
+        "olaf": 510
+      },
+      "gates": {
+        "completed": [
+          "dsp::tests::extrema_matches_naive",
+          "store::tests::replacement_rollback_match_and_remove",
+          "olaf::tests::mixed_batch_preserves_successful_records",
+          "olaf::tests::atomic_manifest_roundtrip",
+          "olaf::tests::repeated_pairs_are_not_independent_evidence",
+          "olaf::tests::unrelated_offsets_do_not_verify",
+          "olaf::tests::aligned_distinct_anchors_verify",
+          "olaf::tests::ambiguity_and_incomplete_checks_block_strong",
+          "olaf::tests::mismatched_index_version_is_rejected",
+          "tests::worker_selection_bounds_and_cancel",
+          "test-matcher-v3",
+          "test-db-safety",
+          "test-config-safety",
+          "local-shazam --help",
+          "local-shazam --version",
+          "olaf-runtime/olaf --help"
+        ],
+        "dataset_free_tests": "passed"
+      },
+      "support_status": "native gates passed; minimum OS and broader compatibility unverified",
+      "distribution": {
+        "bit_for_bit_reproducibility": "not verified",
+        "ffmpeg_ffprobe": "external; not bundled",
+        "minimum_os": "unverified",
+        "notarized": false,
+        "publisher_signed": false
+      },
+      "binary_inspections": {
+        "app": {
+          "architecture": "linux-x64",
+          "sha256": "6c52265b0950ab3000cfb8e607bda4b46780b222f8ba923b37b112907e3c46c2",
+          "recorded_needed_libraries": [
+            "ld-linux-x86-64.so.2",
+            "libc.so.6",
+            "libgcc_s.so.1",
+            "libm.so.6",
+            "libwayland-client.so.0"
+          ],
+          "recorded_glibc_symbol_versions": [
+            "GLIBC_2.14",
+            "GLIBC_2.15",
+            "GLIBC_2.16",
+            "GLIBC_2.17",
+            "GLIBC_2.18",
+            "GLIBC_2.2.5",
+            "GLIBC_2.25",
+            "GLIBC_2.27",
+            "GLIBC_2.28",
+            "GLIBC_2.29",
+            "GLIBC_2.3",
+            "GLIBC_2.3.4",
+            "GLIBC_2.30",
+            "GLIBC_2.32",
+            "GLIBC_2.33",
+            "GLIBC_2.34",
+            "GLIBC_2.39",
+            "GLIBC_2.4",
+            "GLIBC_2.5",
+            "GLIBC_2.9"
+          ]
+        },
+        "olaf": {
+          "architecture": "linux-x64",
+          "sha256": "dadf7dc89f78228869227f24d1cf311fa5f75d98d455973c3df7c1e80209e04c",
+          "recorded_needed_libraries": [],
+          "recorded_glibc_symbol_versions": []
+        }
+      },
+      "target_feature_graph_available": false,
+      "cargo_dependency_source_bundled": false,
+      "legacy_python_bundled": false
+    },
+    "macos-arm64": {
+      "archives": [
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64-app-source.tar.gz",
+          "sha256": "99c7492138023e37b17b170063c7d6dcdfa272339f6ae1c76a049253775e4aa7",
+          "size": 252307
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64-olaf-source.tar.gz",
+          "sha256": "dbbca446f451fe624f378ecb5e83f48baae0fe6219eb90722abb42024b3bc9d5",
+          "size": 849625
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64.tar.gz",
+          "sha256": "8005044097c61e3ea008d9b65b8a7f2477acc91bc71f1022482571c88f4bea93",
+          "size": 2902020
+        }
+      ],
+      "local_checksums_sha256": "f7143497124de4aaff5f291f4cbdc4a092baa899ac748d8bdfb6335b1d50bdc2",
+      "manifest_sha256": "09be4b4c58b7343de80d6939f19514dc9bc88aafb1a31da16725ca6e1f39439c",
+      "source_inventory_sha256": "944a800538ee3174d54a8f8cbcbc979a98734bddc0371a1cb88b139c21c9c42f",
+      "source_counts": {
+        "app": 287,
+        "olaf": 510
+      },
+      "gates": {
+        "completed": [
+          "dsp::tests::extrema_matches_naive",
+          "store::tests::replacement_rollback_match_and_remove",
+          "olaf::tests::mixed_batch_preserves_successful_records",
+          "olaf::tests::atomic_manifest_roundtrip",
+          "olaf::tests::repeated_pairs_are_not_independent_evidence",
+          "olaf::tests::unrelated_offsets_do_not_verify",
+          "olaf::tests::aligned_distinct_anchors_verify",
+          "olaf::tests::ambiguity_and_incomplete_checks_block_strong",
+          "olaf::tests::mismatched_index_version_is_rejected",
+          "tests::worker_selection_bounds_and_cancel",
+          "test-matcher-v3",
+          "test-db-safety",
+          "test-config-safety",
+          "local-shazam --help",
+          "local-shazam --version",
+          "olaf-runtime/olaf --help"
+        ],
+        "dataset_free_tests": "passed"
+      },
+      "support_status": "native gates passed; minimum OS and broader compatibility unverified",
+      "distribution": {
+        "bit_for_bit_reproducibility": "not verified",
+        "ffmpeg_ffprobe": "external; not bundled",
+        "minimum_os": "unverified",
+        "notarized": false,
+        "publisher_signed": false
+      },
+      "binary_inspections": {
+        "app": {
+          "architecture": "macos-arm64",
+          "sha256": "f53d902879a092addc61eaf470f9cfdd3d6ec3526dcdd35815f5d071fedeb7d0",
+          "recorded_linked_libraries": [
+            "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+            "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+            "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+            "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+            "/usr/lib/libSystem.B.dylib",
+            "/usr/lib/libiconv.2.dylib",
+            "/usr/lib/libobjc.A.dylib"
+          ]
+        },
+        "olaf": {
+          "architecture": "macos-arm64",
+          "sha256": "fbcac2dcb86192fbaba57eae1d16f989c291e5ba2735ee80ecbe93b784fbaab7",
+          "recorded_linked_libraries": [
+            "/usr/lib/libSystem.B.dylib"
+          ]
+        }
+      },
+      "target_feature_graph_available": false,
+      "cargo_dependency_source_bundled": false,
+      "legacy_python_bundled": false
+    },
+    "macos-x64": {
+      "archives": [
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64-app-source.tar.gz",
+          "sha256": "8d7b74966e48cde8a7b049adc8d62ff202bd6429a2636fd96c8719be6b030491",
+          "size": 252270
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64-olaf-source.tar.gz",
+          "sha256": "2ce89d8824f9673ac39541dfeda8348ab97ff5c7844e35353d999feec84c9672",
+          "size": 849592
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64.tar.gz",
+          "sha256": "9c4934219cca045dcfa58f2a34cc7ba9d89081033c36800e349ac8a2724f06ce",
+          "size": 3217665
+        }
+      ],
+      "local_checksums_sha256": "1c67b77b0a9a814be87993aa996b991d2f7608cf3d28f3fe352619b423ecd471",
+      "manifest_sha256": "49e242a24a1337bb6a2f0ebe27348a88eca8929c7b447f600965adc14b633e7c",
+      "source_inventory_sha256": "944a800538ee3174d54a8f8cbcbc979a98734bddc0371a1cb88b139c21c9c42f",
+      "source_counts": {
+        "app": 287,
+        "olaf": 510
+      },
+      "gates": {
+        "completed": [
+          "dsp::tests::extrema_matches_naive",
+          "store::tests::replacement_rollback_match_and_remove",
+          "olaf::tests::mixed_batch_preserves_successful_records",
+          "olaf::tests::atomic_manifest_roundtrip",
+          "olaf::tests::repeated_pairs_are_not_independent_evidence",
+          "olaf::tests::unrelated_offsets_do_not_verify",
+          "olaf::tests::aligned_distinct_anchors_verify",
+          "olaf::tests::ambiguity_and_incomplete_checks_block_strong",
+          "olaf::tests::mismatched_index_version_is_rejected",
+          "tests::worker_selection_bounds_and_cancel",
+          "test-matcher-v3",
+          "test-db-safety",
+          "test-config-safety",
+          "local-shazam --help",
+          "local-shazam --version",
+          "olaf-runtime/olaf --help"
+        ],
+        "dataset_free_tests": "passed"
+      },
+      "support_status": "native gates passed; minimum OS and broader compatibility unverified",
+      "distribution": {
+        "bit_for_bit_reproducibility": "not verified",
+        "ffmpeg_ffprobe": "external; not bundled",
+        "minimum_os": "unverified",
+        "notarized": false,
+        "publisher_signed": false
+      },
+      "binary_inspections": {
+        "app": {
+          "architecture": "macos-x64",
+          "sha256": "385cab725e3d2944d550a1b5c3eeddb789329f6489bd0f5cc6c1d580d9f0f6ca",
+          "recorded_linked_libraries": [
+            "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+            "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+            "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+            "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+            "/usr/lib/libSystem.B.dylib",
+            "/usr/lib/libiconv.2.dylib",
+            "/usr/lib/libobjc.A.dylib"
+          ]
+        },
+        "olaf": {
+          "architecture": "macos-x64",
+          "sha256": "d497aade9c07fe5af14a0cd8a9cbf890a24158b8214a466d70bc85b3a8f86847",
+          "recorded_linked_libraries": [
+            "/usr/lib/libSystem.B.dylib"
+          ]
+        }
+      },
+      "target_feature_graph_available": false,
+      "cargo_dependency_source_bundled": false,
+      "legacy_python_bundled": false
+    },
+    "windows-x64": {
+      "archives": [
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64-app-source.tar.gz",
+          "sha256": "afaca2abd33e0e00fb8ee47fe5d07c177913334285183a9dd59f533bc40c6e8d",
+          "size": 250754
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64-olaf-source.tar.gz",
+          "sha256": "d28850543438f4bfb0bbb5f3e2cd55ba7ceb8f22d48147091d079ab480f6029f",
+          "size": 847385
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64.zip",
+          "sha256": "5691f17e91cb581c8b18b15f088232675316f47da70353268d946aace2094b76",
+          "size": 3685439
+        }
+      ],
+      "local_checksums_sha256": "0a4fdaaa3533e5eeb7d0b855a2c3afd631c1e54298f3afc741b2b03414f5d681",
+      "manifest_sha256": "c99c5b574bbdd3e408f49b8f7faa0f5f8cc4b700137409d4f63bbf0ddbcb19ac",
+      "source_inventory_sha256": "944a800538ee3174d54a8f8cbcbc979a98734bddc0371a1cb88b139c21c9c42f",
+      "source_counts": {
+        "app": 287,
+        "olaf": 510
+      },
+      "gates": {
+        "completed": [
+          "dsp::tests::extrema_matches_naive",
+          "store::tests::replacement_rollback_match_and_remove",
+          "olaf::tests::mixed_batch_preserves_successful_records",
+          "olaf::tests::atomic_manifest_roundtrip",
+          "olaf::tests::repeated_pairs_are_not_independent_evidence",
+          "olaf::tests::unrelated_offsets_do_not_verify",
+          "olaf::tests::aligned_distinct_anchors_verify",
+          "olaf::tests::ambiguity_and_incomplete_checks_block_strong",
+          "olaf::tests::mismatched_index_version_is_rejected",
+          "tests::worker_selection_bounds_and_cancel",
+          "test-matcher-v3",
+          "test-db-safety",
+          "test-config-safety",
+          "local-shazam.exe --help",
+          "local-shazam.exe --version",
+          "olaf-runtime/olaf.exe --help"
+        ],
+        "dataset_free_tests": "passed"
+      },
+      "support_status": "native gates passed; minimum OS and broader compatibility unverified",
+      "distribution": {
+        "bit_for_bit_reproducibility": "not verified",
+        "ffmpeg_ffprobe": "external; not bundled",
+        "minimum_os": "unverified",
+        "notarized": false,
+        "publisher_signed": false
+      },
+      "binary_inspections": {
+        "app": {
+          "architecture": "windows-x64",
+          "imports_and_delay_imports": [
+            "api-ms-win-core-synch-l1-2-0.dll",
+            "api-ms-win-crt-heap-l1-1-0.dll",
+            "api-ms-win-crt-locale-l1-1-0.dll",
+            "api-ms-win-crt-math-l1-1-0.dll",
+            "api-ms-win-crt-runtime-l1-1-0.dll",
+            "api-ms-win-crt-stdio-l1-1-0.dll",
+            "api-ms-win-crt-string-l1-1-0.dll",
+            "api-ms-win-crt-time-l1-1-0.dll",
+            "api-ms-win-crt-utility-l1-1-0.dll",
+            "bcryptprimitives.dll",
+            "combase.dll",
+            "kernel32.dll",
+            "ntdll.dll",
+            "ole32.dll",
+            "shell32.dll",
+            "vcruntime140.dll"
+          ],
+          "sha256": "7e6a669b857bb86627f3f684a6ae0b704bc79673c82bec5f1e8b0f1092be19e5"
+        },
+        "olaf": {
+          "architecture": "windows-x64",
+          "imports_and_delay_imports": [
+            "advapi32.dll",
+            "api-ms-win-crt-convert-l1-1-0.dll",
+            "api-ms-win-crt-environment-l1-1-0.dll",
+            "api-ms-win-crt-heap-l1-1-0.dll",
+            "api-ms-win-crt-locale-l1-1-0.dll",
+            "api-ms-win-crt-math-l1-1-0.dll",
+            "api-ms-win-crt-private-l1-1-0.dll",
+            "api-ms-win-crt-runtime-l1-1-0.dll",
+            "api-ms-win-crt-stdio-l1-1-0.dll",
+            "api-ms-win-crt-string-l1-1-0.dll",
+            "api-ms-win-crt-time-l1-1-0.dll",
+            "api-ms-win-crt-utility-l1-1-0.dll",
+            "crypt32.dll",
+            "kernel32.dll",
+            "ntdll.dll"
+          ],
+          "sha256": "89f7ce4a9e4d8b753d764ead26b58b4217efe5baacd1c395c477aa72dd14abaf"
+        }
+      },
+      "target_feature_graph_available": false,
+      "cargo_dependency_source_bundled": false,
+      "legacy_python_bundled": false
+    }
+  },
+  "cross_target_source_inventories_equal": true,
+  "github": {
+    "repository_private": true,
+    "run": {
+      "id": 41023384988,
+      "head_sha": "92a983a57ff92ad4b9342fb4dd992edf728b5a97",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988",
+      "path": ".github/workflows/portable-build.yml",
+      "run_attempt": 1
+    },
+    "jobs": [
+      {
+        "name": "Native macos-x64 (unverified until successful)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Native macos-arm64 (unverified until successful)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Native linux-x64 (unverified until successful)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Native windows-x64 (unverified until successful)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "release": {
+      "id": 428787114,
+      "tag_name": "v0.2.0-native.1",
+      "target_commitish": "92a983a57ff92ad4b9342fb4dd992edf728b5a97",
+      "draft": true,
+      "prerelease": true,
+      "created_at": "2026-10-30T08:15:56Z",
+      "published_at": null,
+      "assets": [
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64-app-source.tar.gz",
+          "size": 251643,
+          "digest": "sha256:9d928fffbc30019deba768d44e68de260696b9e3260459069b4512319caf53a6",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64-olaf-source.tar.gz",
+          "size": 848793,
+          "digest": "sha256:22600332013bb0b9dad5ab1a5e2190ee56cfb3fc52369d2e9fa639e37c7fc440",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-linux-x64.tar.gz",
+          "size": 6520186,
+          "digest": "sha256:c5a99f404b96bc30a509325ed728b03a43986aa504d91a248213fce0631edc4b",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64-app-source.tar.gz",
+          "size": 252307,
+          "digest": "sha256:99c7492138023e37b17b170063c7d6dcdfa272339f6ae1c76a049253775e4aa7",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64-olaf-source.tar.gz",
+          "size": 849625,
+          "digest": "sha256:dbbca446f451fe624f378ecb5e83f48baae0fe6219eb90722abb42024b3bc9d5",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-arm64.tar.gz",
+          "size": 2902020,
+          "digest": "sha256:8005044097c61e3ea008d9b65b8a7f2477acc91bc71f1022482571c88f4bea93",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64-app-source.tar.gz",
+          "size": 252270,
+          "digest": "sha256:8d7b74966e48cde8a7b049adc8d62ff202bd6429a2636fd96c8719be6b030491",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64-olaf-source.tar.gz",
+          "size": 849592,
+          "digest": "sha256:2ce89d8824f9673ac39541dfeda8348ab97ff5c7844e35353d999feec84c9672",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-macos-x64.tar.gz",
+          "size": 3217665,
+          "digest": "sha256:9c4934219cca045dcfa58f2a34cc7ba9d89081033c36800e349ac8a2724f06ce",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64-app-source.tar.gz",
+          "size": 250754,
+          "digest": "sha256:afaca2abd33e0e00fb8ee47fe5d07c177913334285183a9dd59f533bc40c6e8d",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64-olaf-source.tar.gz",
+          "size": 847385,
+          "digest": "sha256:d28850543438f4bfb0bbb5f3e2cd55ba7ceb8f22d48147091d079ab480f6029f",
+          "state": "uploaded"
+        },
+        {
+          "name": "local-shazam-92a983a57ff9-windows-x64.zip",
+          "size": 3685439,
+          "digest": "sha256:5691f17e91cb581c8b18b15f088232675316f47da70353268d946aace2094b76",
+          "state": "uploaded"
+        },
+        {
+          "name": "SHA256SUMS",
+          "size": 1421,
+          "digest": "sha256:ba586e2389d30905f8518381e164c129969ffea5d2f677d0f89eb8f5c7a8425b",
+          "state": "uploaded"
+        }
+      ],
+      "api_asset_digests_match_local": true
+    },
+    "tag_resolution": "No matching ref in authenticated tags listing; commits/tag and releases/tags endpoints returned unavailable. Draft tag_name is not proof of an existing tag.",
+    "release_lookup": "Authenticated releases listing; no release assets downloaded or draft mutated."
+  }
+}

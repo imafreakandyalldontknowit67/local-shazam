@@ -1,0 +1,102 @@
+{
+  "format": 1,
+  "review_date": "2026-10-30",
+  "method": "Read checksum-verified Cargo archives in memory; inspect immutable published VCS trees and license documents; no Cargo, tool installation or binary execution.",
+  "apple": [
+    {
+      "name": "block2",
+      "version": "0.6.2",
+      "checksum": "cdeb9d870516001442e364c5220d3574d2da8dc765554b4a617230d33fa58ef5",
+      "revision": "b4167b582b2f75f9a1be75495c41b765344fd03c",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/b4167b582b2f75f9a1be75495c41b765344fd03c?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "dispatch2",
+      "version": "0.3.1",
+      "checksum": "1e0e367e4e7da84520dedcac1901e4da967309406d1e51017ae1abfb97adbd38",
+      "revision": "8852b424193ca41602281b3d7540d7c8ed51e49a",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/8852b424193ca41602281b3d7540d7c8ed51e49a?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "objc2",
+      "version": "0.6.5",
+      "checksum": "08849bbd4767dfae9457696856ae1c84fe4e0281bbe4a7abff2d0e06fb7981f8",
+      "revision": "d7d2fa23ceaa5e6096c923b081040e5d81b3b9df",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/d7d2fa23ceaa5e6096c923b081040e5d81b3b9df?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "objc2-app-kit",
+      "version": "0.3.2",
+      "checksum": "d49e936b501e5c5bf01fda3a9452ff86dc3ea98ad5f283e1455153142d97518c",
+      "revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "objc2-core-foundation",
+      "version": "0.3.2",
+      "checksum": "2a180dd8642fa45cdb7dd721cd4c11b1cadd4929ce112ebd8b9f5803cc79d536",
+      "revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "objc2-encode",
+      "version": "4.1.0",
+      "checksum": "ef25abbcd74fb2609453eb695bd2f860d389e457f67dc17cafc8b8cbc89d0c33",
+      "revision": "8d214f5477365ffcbcbb7de058c86ed9a518efb7",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/8d214f5477365ffcbcbb7de058c86ed9a518efb7?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    },
+    {
+      "name": "objc2-foundation",
+      "version": "0.3.2",
+      "checksum": "e3e0adef53c21f888deb4fa59fc59f7eb17404926ee8a6f59f5df0fd7f9f3272",
+      "revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "tree_url": "https://api.github.com/repos/madsmtm/objc2/git/trees/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b?recursive=1",
+      "license_paths": [
+        "LICENSE.md"
+      ],
+      "upstream_license_sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+      "result": "No additional attributed grant located; preserved pinned LICENSE.md still raises SDK-derived-code uncertainty. Maintainer/legal review remains open."
+    }
+  ],
+  "sqlite_wasm": {
+    "name": "sqlite-wasm-rs",
+    "version": "0.6.2",
+    "checksum": "36bd8e29bf08189a005b2df1df99823aa0861cabe9044e5f31ed54ca292ee618",
+    "revision": "4b5c931e88ac09a114bd58368402a74761cec311",
+    "tree_url": "https://api.github.com/repos/Spxg/sqlite-wasm-rs/git/trees/4b5c931e88ac09a114bd58368402a74761cec311?recursive=1",
+    "musl_file_count": 57,
+    "result": "Exact archive/build.rs and immutable tree provide no musl-wide COPYRIGHT or precise musl import revision. Existing qsort/printf notices remain; no unrelated musl copyright substituted.",
+    "native_applicability": "rusqlite 0.41.1 selects this optional dependency only under cfg(all(target_family = \"wasm\", target_os = \"unknown\")); all four native triples are outside that predicate. Full resolved feature/link graph unavailable.",
+    "source_applicability": "Historical app archives do not vendor Cargo dependency implementations. License metadata and selected review manifests/build scripts are not the complete shim source. Reopen source obligations if dependency source is shipped."
+  }
+}

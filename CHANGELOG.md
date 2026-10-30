@@ -22,13 +22,18 @@ release.
 
 ### Evidence and release gates
 
-- Behavior above is documented from source inspection, not a new test or
-  benchmark run. No indexing, audio tests or compilation were performed for
-  this presentation update.
-- Windows x64, Linux x64 and macOS arm64/x64 are planned CI targets awaiting
-  verification. Build, packaging, installation and platform support are not
-  asserted as passing. See [Building](docs/BUILDING.md) and
-  [Releasing](docs/RELEASING.md), planned cross-branch additions.
+- Native CI run `41023384988` passed all four targets at historical preview
+  commit `92a983a57ff92ad4b9342fb4dd992edf728b5a97`. Each embedded manifest
+  records 16 dataset-free gates. Read-only reconciliation verified the twelve
+  local archives and authenticated metadata for private draft `v0.2.0-native.1`;
+  its 13 asset digests/sizes match the local archives and combined checksums.
+  This is not a new release, verified tag, current-HEAD pass or legal approval.
+- Source/provider/build tooling is integrated. Compiler-privacy changes require
+  fresh parent-run hosted rebuilds plus independent binary/source/archive
+  verification. Historical artifacts retain the limitations in
+  [Building](docs/BUILDING.md) and [Releasing](docs/RELEASING.md): unverified
+  minimum OS/glibc and clean-host behavior, unsigned/not-notarized distribution,
+  and no bit-for-bit reproducibility claim.
 - Integrated Olaf/verifier held-out accuracy remains unverified. Development
   smoke checks and older backend measurements do not establish its accuracy,
   throughput or false-positive rate. Labels and scores are not probabilities.
@@ -43,8 +48,10 @@ release.
   source and required distribution materials are a release gate, not a
   compliance claim made by this documentation update.
 
-The legacy Python reference is unchanged and retains its older decoding and
-identity limits.
+The historical Python reference retains its older decoding and identity limits.
+Its agreed repository-only archive location is `legacy/python/README.md`; the
+parent must verify relocation after integration. Historical entries below and
+old tags retain their original identity.
 
 ## v1.0.1 — 2026-09-24 (legacy Python)
 

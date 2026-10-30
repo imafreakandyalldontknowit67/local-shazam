@@ -310,7 +310,9 @@
         },
         "path_in_vcs": "crates/block2"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "bumpalo",
@@ -768,7 +770,9 @@
         },
         "path_in_vcs": "crates/dispatch2"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "dlib",
@@ -1119,7 +1123,7 @@
       "license_file": null,
       "repository": "https://github.com/fizyk20/generic-array.git",
       "authors": [
-        "Bart\u0142omiej Kami\u0144ski <fizyk20@gmail.com>",
+        "Bartłomiej Kamiński <fizyk20@gmail.com>",
         "Aaron Trent <novacrazy@gmail.com>"
       ],
       "status": "archive-verified",
@@ -1697,7 +1701,9 @@
         },
         "path_in_vcs": "crates/objc2"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "objc2-app-kit",
@@ -1722,7 +1728,9 @@
         },
         "path_in_vcs": "framework-crates/objc2-app-kit"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "objc2-core-foundation",
@@ -1747,7 +1755,9 @@
         },
         "path_in_vcs": "framework-crates/objc2-core-foundation"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "objc2-encode",
@@ -1774,7 +1784,9 @@
         },
         "path_in_vcs": "crates/objc2-encode"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "objc2-foundation",
@@ -1799,7 +1811,9 @@
         },
         "path_in_vcs": "framework-crates/objc2-foundation"
       },
-      "review_note": "Published archive omits complete license text. Pinned upstream LICENSE.md links standard terms but gives no explicit copyright notice and raises an unresolved Apple SDK-derived-code issue. Cargo authors are preserved as metadata, not asserted copyright holders. Generic MIT terms are supplied separately; maintainer/legal confirmation is required."
+      "review_note": "Exact Cargo archive and published VCS metadata reverified. Immutable upstream tree has LICENSE.md but no additional attributed license grant located. That preserved document links generic terms and raises Apple SDK-derived-code uncertainty. Authors are not asserted copyright holders; maintainer/legal confirmation remains required.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "macOS dependency path via rfd; source redistribution also relevant. No target-resolved feature graph retained in historical artifacts. Not assumed selected on Windows/Linux."
     },
     {
       "name": "once_cell",
@@ -2749,7 +2763,9 @@
       },
       "bundled_sqlite_version": "3.53.4",
       "license_choice": "MIT where offered; otherwise the supplied ISC or Zlib terms; additional embedded notices and conjunctive Unicode terms still apply.",
-      "review_note": "Archive includes compiled shim/musl source without a musl-wide COPYRIGHT or exact import revision. Root MIT and complete qsort/printf/SQLite notices are preserved, but remaining musl file provenance and required notices must be confirmed before shipping that source or binary. Olaf toolchain musl notices do not automatically cover this crate."
+      "review_note": "Root MIT and qsort/printf/SQLite notices retained. Exact archive and published revision still lack full musl provenance/notices. Source or wasm-shim binary distribution remains blocked; not asserted a blocker for the four native binaries on the inspected rusqlite target predicate alone. No target-resolved graph was available.",
+      "reviewed_date": "2026-10-30",
+      "applicability": "rusqlite 0.41.1 selects this optional dependency only under cfg(all(target_family = \"wasm\", target_os = \"unknown\")); all four native triples are outside that predicate. Full resolved feature/link graph unavailable."
     },
     {
       "name": "strength_reduce",
