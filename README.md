@@ -1,25 +1,87 @@
-![Local Shazam ? Your library. Recognized. A black-and-white paired-corner identity.](assets/banner.svg)
+<div align="center">
 
-# Local Shazam
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/mark-white.svg">
+  <img src="assets/brand/mark-black.svg" alt="Local Shazam" width="96" height="96">
+</picture>
 
-**Find the source of a clip in your own music collection.** Local Shazam indexes
-the audio you choose and compares snippets locally. It does not query the Shazam
-service or a global catalog, and the application does not upload your audio.
+<h1>Local Shazam</h1>
 
-- **Native app, no Python runtime:** a Rust executable with a four-option menu,
-  file/folder pickers and a CLI.
-- **Complete-track indexing:** recognition is not limited to a song's opening
-  two minutes. You explicitly choose what to index.
-- **Evidence, not certainty:** experimental Olaf retrieval followed by local
-  Rust candidate-window verification; the Rust-only comparison backend remains.
+<p><strong>Find the source of a clip in your own music collection.</strong></p>
 
-> **Private native preview.** Windows x64, Linux x64, Apple Silicon and Intel Mac
-> packages passed the [native CI gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988).
-> Review the [draft release and downloads](https://github.com/imafreakandyalldontknowit67/local-shazam/releases).
-> Native source version: `0.2.0`; older `1.0.x` tags are Python releases.
-> Packages are unsigned; distribution/license review remains open before public release.
+<p>Local audio recognition. No uploads. No Shazam API.</p>
 
-## Get ready
+<p>
+  <a href="#download">Download</a> &middot;
+  <a href="#features">Features</a> &middot;
+  <a href="#getting-started">Get started</a> &middot;
+  <a href="#building-from-source">Build from source</a> &middot;
+  <a href="#reporting-a-problem">Report a problem</a>
+</p>
+
+</div>
+
+> [!WARNING]
+> Local Shazam is an experimental native preview. Matches are suggestions, not
+> guarantees. Packages are unsigned and remain in a private draft release;
+> distribution and license review is still open before public release.
+
+## About
+
+Local Shazam recognizes audio snippets against a library you choose. Index a music
+folder, give it a clip, and review the matching files. Recognition runs on your
+machine, without uploading audio or querying a global music catalog.
+
+The native app is built in Rust. Its experimental Olaf backend retrieves candidate
+tracks, then Rust checks the source audio before showing suggestions. The original
+Rust-only backend remains available for comparison.
+
+## Features
+
+**Recognition**
+
+- Index complete tracks, not just their opening minutes.
+- Match clips from anywhere in an indexed track; Olaf analyzes the first 30 seconds of each query.
+- Review up to three candidates, with evidence-based result labels rather than accuracy promises.
+- Keep audio local, including candidate verification.
+
+**Workflow**
+
+- Interactive menu with file/folder pickers, or a command-line interface.
+- Choose how many indexing workers to use.
+- Inspect index statistics and request JSON output.
+- Use separate Olaf and Rust indexes for comparison.
+
+**Native packages**
+
+- Windows x64, Linux x64, Apple Silicon and Intel Mac builds.
+- No Python runtime required for the native app.
+- Matching Olaf runtime and corresponding source archives supplied with preview packages.
+- FFmpeg and FFprobe installed separately.
+
+## Download
+
+Open the [private draft release](https://github.com/imafreakandyalldontknowit67/local-shazam/releases)
+with a repository account that can view drafts. These are not public downloads yet.
+
+| Platform | Preview package |
+| --- | --- |
+| Windows (x64) | Portable ZIP containing `local-shazam.exe` |
+| Linux (x64) | Tar archive containing `local-shazam` |
+| macOS (Apple Silicon) | ARM64 tar archive containing `local-shazam` |
+| macOS (Intel) | x64 tar archive containing `local-shazam` |
+
+All four packages passed the [native CI build and packaging gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988)
+at source commit `92a983a57ff9`. That does not establish minimum OS support,
+snippet accuracy or hardware stability. Source archives and SHA256 checksums are
+included in the draft release. Native source version: `0.2.0`; older `1.0.x` tags
+are Python releases.
+
+Extract the complete package into a writable folder and keep `olaf-runtime/`
+beside the app. These are portable command-line/menu apps, not installers or
+macOS app bundles. Packages are unsigned and macOS builds are not notarized.
+
+## Requirements
 
 The default workflow needs the app, its matching Olaf runtime, and **FFmpeg and
 FFprobe installed separately on `PATH`**. Native users need no Python. Codecs
@@ -38,7 +100,7 @@ For setup and packaging, see [Building](docs/BUILDING.md),
 The preview packages are verified at source commit `92a983a57ff9`; this is build
 and packaging evidence, not a new snippet-accuracy or hardware-stability claim.
 
-## Choose a folder, then a clip
+## Getting started
 
 Run the prepared executable without arguments for the menu:
 
@@ -110,6 +172,20 @@ selected folders separately. `--db` requires `--backend rust`.
   temporary space despite bounded queues. Development crashes have an unresolved
   cause and post-crash index integrity is unverified. The six-worker default cap
   is **not a stability fix**; do not resume work on a machine with unresolved crashes.
+
+## Building from source
+
+See the [native build guide](docs/BUILDING.md) for toolchain pins, platform
+prerequisites and portable packaging. The [native command guide](rust-app/README.md)
+covers development commands and backend selection. Release packaging and source
+obligations are documented in [Releasing](docs/RELEASING.md).
+
+## Reporting a problem
+
+[Open an issue](https://github.com/imafreakandyalldontknowit67/local-shazam/issues/new)
+with your app version, operating system, backend, worker count and the error text.
+Include the command or menu steps that reproduce it. Redact personal paths and
+metadata before sharing logs; do not upload private audio or your index database.
 
 ## Legacy Python reference
 
