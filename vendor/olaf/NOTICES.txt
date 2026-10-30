@@ -1,0 +1,66 @@
+Olaf desktop runtime source distribution
+=======================================
+
+Olaf (Overly Lightweight Acoustic Fingerprinting)
+Copyright (C) 2019-2025 Joren Six (see individual source files).
+https://github.com/JorenSix/Olaf
+License: GNU Affero General Public License version 3 or, at your option, later.
+The full license is LICENSE in source and OLAF-LICENSE in the runtime package.
+All original file-level notices are retained. This component is NOT MIT.
+
+Modifications captured and distributed on 2026-10-29:
+- Windows LMDB path suffix compatibility fix.
+- Experimental saturated-hash skipping and independent-time voting flags,
+  config/CLI/schema parity, safe unsigned matcher bounds, allocation guards,
+  failed LMDB cursor seek guard and corresponding regressions.
+- Local Zigzag dependency; release source inventory/test gates; offline-only
+  dataset fixture validation; synthetic path in a legacy test.
+See PROVENANCE.json and patches/olaf in the matching source distribution for
+exact modified files, revision IDs, hashes and an ordered patch series.
+No extraction algorithm/default changes were introduced by the release patch.
+Process separation is not a blanket conclusion about distribution licensing.
+
+Embedded components (their source notices remain authoritative):
+
+LMDB: src/mdb.c, src/midl.c, src/lmdb.h, src/midl.h
+Copyright 2011-2020 Howard Chu, Symas Corp.
+Copyright 2000-2020 The OpenLDAP Foundation.
+Portions Copyright 2001-2020 Howard Chu, Symas Corp.
+Derived portions Copyright (c) 2009, 2010 Martin Hedenfalk.
+OpenLDAP Public License 2.8 and the embedded permissive btree notice.
+Full texts: notices/OpenLDAP-LICENSE.txt, LMDB-mdb-NOTICE.txt,
+LMDB-midl-NOTICE.txt. The OpenLDAP license was supplied from the license URL
+identified in the embedded source (the original Olaf root LICENSE is AGPL).
+https://www.openldap.org/software/release/license.html
+
+PFFFT / FFTPACK: src/pffft.c, src/pffft.h
+Copyright (c) 2013 Julien Pommier; based on FFTPACKv4 by Paul Swarztrauber,
+NCAR (1985); Copyright (c) 2004 University Corporation for Atmospheric
+Research (UCAR). BSD-style FFTPACK terms, reproduced from both original files
+in notices/PFFFT-NOTICE.txt and notices/PFFFT-header-NOTICE.txt.
+
+c-algorithms: src/hash-table.c/.h and src/queue.c/.h
+Copyright (c) 2005-2008 Simon Howard. ISC terms are reproduced in
+notices/c-algorithms-NOTICE.txt and in all four source files.
+
+Zigzag 0.1.2, revision e16e2523972d174d7ca9783631cc90e2609fa55e
+Copyright (c) 2026 Matthew Meszaros. MIT license.
+https://github.com/meszmate/zigzag
+Source: sibling vendor/zigzag; source license: vendor/zigzag/LICENSE.
+Runtime license copy: notices/Zigzag-LICENSE.txt.
+
+Toolchain-provided code: builds require Zig 0.16.0. The Zig contributor MIT
+license, mingw-w64 COPYING and musl COPYRIGHT shipped with that toolchain are
+reproduced in notices/Zig-LICENSE.txt, mingw-w64-COPYING.txt and
+musl-COPYRIGHT.txt. They are notices, not vendored toolchains. Applicability
+depends on target/linking; the release owner must audit any additional emitted
+CRT/system-library subcomponent terms and SDK requirements. These copies do
+not replace that binary-specific audit.
+
+FFmpeg/FFprobe: external subprocess tools, not linked or included here. Their
+license/build configuration and corresponding source must be handled by any
+distributor that chooses to bundle them.
+
+See BUILDING.md for source boundaries, omitted audio/test fixtures, and the
+unverified-target-build status. No user music, user indexes, prebuilt Olaf
+executables, credentials or machine-specific settings are part of this source.

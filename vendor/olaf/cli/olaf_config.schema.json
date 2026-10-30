@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Olaf Wrapper Config",
+  "type": "object",
+  "properties": {
+    "db_folder": {
+      "type": "string",
+      "description": "Path to the database folder.",
+      "default": "~/.olaf/db/"
+    },
+    "cache_folder": {
+      "type": "string",
+      "description": "Path to the cache folder.",
+      "default": "~/.olaf/cache"
+    },
+    "check_incoming_audio": {
+      "type": "boolean",
+      "description": "Reserved; currently has no effect (kept so existing configs stay valid).",
+      "default": true
+    },
+    "skip_duplicates": {
+      "type": "boolean",
+      "description": "Skip audio files that are already indexed when storing (store, dedup, store_cached). Use `olaf store -f` to re-store anyway.",
+      "default": true
+    },
+    "fragment_duration_in_seconds": {
+      "type": "integer",
+      "description": "Duration of audio fragments in seconds.",
+      "minimum": 1,
+      "default": 30
+    },
+    "target_sample_rate": {
+      "type": "integer",
+      "description": "Target sample rate for audio processing.",
+      "minimum": 4000,
+      "default": 16000,
+      "maximum": 48000
+    },
+    "allowed_audio_file_extensions": {
+      "type": "array",
+      "description": "List of allowed audio file extensions.",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        ".m4a",
+        ".wav",
+        ".mp4",
+        ".wv",
+        ".ape",
+        ".ogg",
+        ".mp3",
+        ".raw",
+        ".flac",
+        ".wma"
+      ]
+    },
+    "rest_listen": {
+      "type": "string",
+      "description": "Address `olaf rest serve` listens on, and that `olaf rest store`, `query` and `has` talk to when no URL is given: `host:port`, or a port alone for 127.0.0.1 (override with --listen). The API has no authentication: use 0.0.0.0 only on a trusted network.",
+      "default": "127.0.0.1:8920"
+    },
+    "rest_append_db_path_with_addr": {
+      "type": "boolean",
+      "description": "`olaf rest serve` keeps its database in a subfolder of db_folder named after its address (`127-0-0-1_8920/`), so several instances on one machine (`olaf rest serve -n 3`) each have their own. False: it serves db_folder itself, the database of the local commands.",
+      "default": true
+    },
+    "rest_max_body_mb": {
+      "type": "integer",
+      "description": "Largest audio upload accepted by /api/store and /api/query, in MB.",
+      "minimum": 1,
+      "default": 512,
+      "maximum": 4096
+    },
+    "rest_workers": {
+      "type": "integer",
+      "description": "How many store/query requests `olaf rest serve` processes at the same time; others wait.",
+      "minimum": 1,
+      "default": 4
+    },
+    "rest_ui": {
+      "type": "boolean",
+      "description": "Serve the web pages at /ui and /ui_live on `olaf rest serve`: upload audio, see the matches and play the query and each match in sync. It plays excerpts of the indexed audio to anyone who reaches the port, so it is off by default.",
+      "default": false
+    },
+    "rest_lb_listen": {
+      "type": "string",
+      "description": "Address `olaf rest serve-lb` listens on: `host:port`, or a port alone for 127.0.0.1 (override with --listen).",
+      "default": "127.0.0.1:9920"
+    },
+    "rest_lb_backends": {
+      "type": "array",
+      "description": "Base URLs of the `olaf rest serve` (or `olaf rest serve-lb`) instances behind `olaf rest serve-lb`.",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "http://127.0.0.1:8921",
+        "http://127.0.0.1:8920"
+      ]
+    },
+    "rest_lb_store_strategy": {
+      "type": "string",
+      "description": "How `olaf rest serve-lb` picks the backend for a store: `random`, or `hash` (the same backend for the same identifier, so duplicates are skipped).",
+      "enum": [
+        "random",
+        "hash"
+      ],
+      "default": "random"
+    },
+    "has_min_match_count": {
+      "type": "integer",
+      "description": "`olaf has` / `olaf rest has`: the best match of a file needs at least this match_count to count as a match (override with --threshold).",
+      "minimum": 1,
+      "default": 20
+    },
+    "microphone_input_format": {
+      "type": "string",
+      "description": "ffmpeg input format of the microphone (the `-f` option). Default depends on the platform: avfoundation on macOS, alsa on Linux, dshow elsewhere."
+    },
+    "microphone_device": {
+      "type": "string",
+      "description": "ffmpeg input device of the microphone (the `-i` option). Default depends on the platform: ':default' on macOS, 'default' on Linux, 'audio=default' elsewhere."
+    },
+    "audio_block_size": {
+      "type": "integer",
+      "description": "The size of a single audio block in samples.",
+      "default": 1024,
+      "minimum": 1024,
+      "maximum": 1024,
+      "const": 1024
+    },
+    "audio_step_size": {
+      "type": "integer",
+      "description": "The size of a step from one block of samples to the next.",
+      "default": 128,
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "bytes_per_audio_sample": {
+      "type": "integer",
+      "description": "The size of a single audio sample in bytes (e.g., 4 for 32-bit float).",
+      "default": 4,
+      "minimum": 4,
+      "maximum": 4,
+      "const": 4
+    },
+    "max_event_points": {
+      "type": "integer",
+      "description": "Max number of event points before they are combined into fingerprints.",
+      "default": 60,
+      "minimum": 1
+    },
+    "event_point_threshold": {
+      "type": "integer",
+      "description": "Once this number of event points is listed, start combining them into fingerprints. Must be strictly below max_event_points.",
+      "default": 30,
+      "minimum": 0
+    },
+    "sqrt_magnitude": {
+      "type": "boolean",
+      "description": "Whether to calculate the square root of the magnitude for event point extraction.",
+      "default": false
+    },
+    "filter_size_frequency": {
+      "type": "integer",
+      "description": "The filter size of the max filter in frequency bins.",
+      "default": 103,
+      "minimum": 1
+    },
+    "filter_size_time": {
+      "type": "integer",
+      "description": "The filter size of the max filter in time (horizontal direction), expressed in blocks. At least 2; odd sizes and sizes not divisible by four are supported.",
+      "default": 24,
+      "minimum": 2
+    },
+    "min_event_point_magnitude": {
+      "type": "number",
+      "description": "To avoid extracting event points of silence, the EP magnitude should be at least this value.",
+      "default": 0.001,
+      "minimum": 0
+    },
+    "max_event_point_usages": {
+      "type": "integer",
+      "description": "The amount each event point is reused. Its sum with max_fingerprints must fit a C int.",
+      "default": 10,
+      "minimum": 1
+    },
+    "min_frequency_bin": {
+      "type": "integer",
+      "description": "Frequency bins below this value are not used in EP extraction.",
+      "default": 9,
+      "minimum": 0,
+      "maximum": 511
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Print debug info and include the per-file table in stats. The stats --verbose flag enables the table for one invocation regardless of this setting.",
+      "default": false
+    },
+    "number_of_eps_per_fp": {
+      "type": "integer",
+      "description": "The number of event points (peaks) per fingerprint.",
+      "default": 3,
+      "minimum": 2,
+      "maximum": 3,
+      "enum": [
+        2,
+        3
+      ]
+    },
+    "use_magnitude_info": {
+      "type": "boolean",
+      "description": "Include magnitude info in fingerprints or not.",
+      "default": false
+    },
+    "min_time_distance": {
+      "type": "integer",
+      "description": "Min time distance between two event points for fingerprint (in time steps).",
+      "default": 2,
+      "minimum": 1
+    },
+    "max_time_distance": {
+      "type": "integer",
+      "description": "Max time distance between two event points for fingerprint (in time steps). Must be at least min_time_distance.",
+      "default": 33,
+      "minimum": 1
+    },
+    "min_freq_distance": {
+      "type": "integer",
+      "description": "Min freq distance between two event points for fingerprint (in bins).",
+      "default": 1,
+      "minimum": 0
+    },
+    "max_freq_distance": {
+      "type": "integer",
+      "description": "Max freq distance between two event points for fingerprint (in bins). Must be at least min_freq_distance.",
+      "default": 128,
+      "minimum": 0
+    },
+    "max_fingerprints": {
+      "type": "integer",
+      "description": "The maximum number of fingerprints to keep in memory during fingerprint extraction.",
+      "default": 300,
+      "minimum": 1
+    },
+    "max_results": {
+      "type": "integer",
+      "description": "The maximum number of results in the matching step.",
+      "default": 50,
+      "minimum": 1
+    },
+    "search_range": {
+      "type": "integer",
+      "description": "The range around a hash to search.",
+      "default": 5,
+      "minimum": 0
+    },
+    "min_match_count": {
+      "type": "integer",
+      "description": "Minimum aligned matches before reporting match.",
+      "default": 6,
+      "minimum": 1
+    },
+    "min_match_time_diff": {
+      "type": "number",
+      "description": "Duration in seconds before a match is reported. Zero means all matches are reported.",
+      "default": 0,
+      "minimum": 0
+    },
+    "keep_matches_for": {
+      "type": "number",
+      "description": "Forget matches after x seconds, or never when zero. Live queries (microphone) use 10 when zero. Must be finite; seconds * target_sample_rate / audio_step_size must not exceed INT_MAX.",
+      "default": 0,
+      "minimum": 0
+    },
+    "print_result_every": {
+      "type": "number",
+      "description": "Print results after x seconds or only at the end of stream when zero. Live queries (microphone) use 3 when zero. Must be finite; seconds * target_sample_rate / audio_step_size must not exceed INT_MAX.",
+      "default": 0,
+      "minimum": 0
+    },
+    "max_db_collisions": {
+      "type": "integer",
+      "description": "Number of matches (hash collisions) allowed.",
+      "default": 2000,
+      "minimum": 1
+    },
+    "skip_saturated_hashes": {
+      "type": "boolean",
+      "default": false,
+      "description": "Reject the entire lookup when it fills max_db_collisions, rather than vote from a truncated prefix. Query-only experimental setting."
+    },
+    "independent_time_votes": {
+      "type": "boolean",
+      "default": false,
+      "description": "Count only forward-moving query timestamps per file/offset bucket, suppressing repeated pair votes from the same time. Query-only experimental setting."
+    }
+  },
+  "required": [],
+  "patternProperties": {
+    "^\\$": {}
+  },
+  "additionalProperties": false
+}

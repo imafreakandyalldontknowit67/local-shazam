@@ -1,0 +1,230 @@
+Subject: Capture the actual dirty matcher, config and DB working source
+Date: 2026-10-29
+
+Captured from the working source, not HEAD. Includes previously untracked matcher v3 regressions. Experimental flags default false; extraction/index format unchanged. C config ABI changed. Preserve AGPL-3.0-or-later and component terms.
+
+diff --git a/build.zig b/build.zig
+--- a/build.zig
++++ b/build.zig
+@@ -69,6 +69,17 @@
+             }
+         }
+     }
++
++    const matcher_test = b.addExecutable(.{
++        .name = "olaf_matcher_v3_tests",
++        .root_module = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true }),
++    });
++    matcher_test.root_module.addIncludePath(b.path("src"));
++    matcher_test.root_module.addCSourceFiles(.{
++        .files = &.{ "tests/olaf_matcher_v3_tests.c", "src/olaf_config.c", "src/hash-table.c" },
++        .flags = &.{ "-std=gnu11", "-UNDEBUG" },
++    });
++    b.step("test-matcher-v3", "Run isolated matcher voting and lookup boundary regressions").dependOn(&b.addRunArtifact(matcher_test).step);
+ 
+     // Focused C regressions also run without audio tools or a dataset.
+     const safety_step = b.step("test-db-safety", "Test fingerprint buffering and LMDB ownership");
+diff --git a/cli/olaf_cli_config.zig b/cli/olaf_cli_config.zig
+--- a/cli/olaf_cli_config.zig
++++ b/cli/olaf_cli_config.zig
+@@ -121,6 +121,8 @@
+     keep_matches_for: f32 = 0,
+     print_result_every: f32 = 0,
+     max_db_collisions: u32 = 2000,
++    skip_saturated_hashes: bool = false,
++    independent_time_votes: bool = false,
+ 
+     /// Owns every string of a loaded config (null for a `Config{}` literal).
+     arena: ?std.heap.ArenaAllocator = null,
+diff --git a/cli/olaf_cli_core.zig b/cli/olaf_cli_core.zig
+--- a/cli/olaf_cli_core.zig
++++ b/cli/olaf_cli_core.zig
+@@ -102,6 +102,8 @@
+     .{ "keep_matches_for", "keepMatchesFor" },
+     .{ "print_result_every", "printResultEvery" },
+     .{ "max_db_collisions", "maxDBCollisions" },
++    .{ "skip_saturated_hashes", "skipSaturatedHashes" },
++    .{ "independent_time_votes", "independentTimeVotes" },
+ };
+ 
+ /// C fields derived from other settings rather than copied.
+diff --git a/cli/olaf_config.schema.json b/cli/olaf_config.schema.json
+--- a/cli/olaf_config.schema.json
++++ b/cli/olaf_config.schema.json
+@@ -285,6 +285,16 @@
+       "description": "Number of matches (hash collisions) allowed.",
+       "default": 2000,
+       "minimum": 1
++    },
++    "skip_saturated_hashes": {
++      "type": "boolean",
++      "default": false,
++      "description": "Reject the entire lookup when it fills max_db_collisions, rather than vote from a truncated prefix. Query-only experimental setting."
++    },
++    "independent_time_votes": {
++      "type": "boolean",
++      "default": false,
++      "description": "Count only forward-moving query timestamps per file/offset bucket, suppressing repeated pair votes from the same time. Query-only experimental setting."
+     }
+   },
+   "required": [],
+diff --git a/src/olaf_config.c b/src/olaf_config.c
+--- a/src/olaf_config.c
++++ b/src/olaf_config.c
+@@ -104,6 +104,8 @@
+ 	config->printResultEvery = 0;//seconds
+ 	
+ 	//number of matches (hash collisions) 
++	config->skipSaturatedHashes = false;
++	config->independentTimeVotes = false;
+ 	config->maxDBCollisions = 2000;//for larger data sets use around 2000
+ 
+ 	return config;
+diff --git a/src/olaf_config.h b/src/olaf_config.h
+--- a/src/olaf_config.h
++++ b/src/olaf_config.h
+@@ -169,6 +169,10 @@
+ 		 * It can be considered as the number of times a fingerprint hash
+ 		 * is allowed to collide */
+ 		size_t maxDBCollisions;
++
++        /* Query-only v3 experiments; fingerprint/index format unchanged. */
++        bool skipSaturatedHashes;
++        bool independentTimeVotes;
+ 	};
+ 
+ 	/**
+diff --git a/src/olaf_db.c b/src/olaf_db.c
+--- a/src/olaf_db.c
++++ b/src/olaf_db.c
+@@ -538,8 +538,8 @@
+ 	//Position at first key greater than or equal to specified key.
+ 	rc = mdb_cursor_get(cursor, &mdb_key, &mdb_value, MDB_SET_RANGE );
+ 
+-	//query
+-	do {
++	// A failed seek has no valid key/value to dereference.
++	while (rc == 0) {
+ 
+ 		uint64_t keyInt = *((uint64_t *) (mdb_key.mv_data));
+ 		uint64_t valueInt = *((uint64_t *) (mdb_value.mv_data));
+@@ -571,7 +571,7 @@
+ 			rc = mdb_cursor_get(cursor, &mdb_key, &mdb_value, MDB_NEXT);
+ 		}
+ 
+-	} while (rc == 0);
++	}
+ 
+ 	mdb_cursor_close(cursor);
+ 
+diff --git a/src/olaf_fp_matcher.c b/src/olaf_fp_matcher.c
+--- a/src/olaf_fp_matcher.c
++++ b/src/olaf_fp_matcher.c
+@@ -156,7 +156,12 @@
+ 	struct match_result * match = (struct match_result *) hash_table_lookup(fp_matcher->result_hash_table,&result_hash_table_key);
+ 
+ 	if(match!=NULL){
+-		//Update match when found
++		// A conservative independent-time vote: repeated or reordered evidence
++        // cannot inflate a bucket. The extractor may revisit older anchors.
++        // Reject those instead of allocating an unbounded per-bucket timestamp set.
++        if(fp_matcher->config->independentTimeVotes &&
++           queryFingerprintT1 <= match->queryFingerprintT1) return;
++        //Update match when found
+ 		match->referenceFingerprintT1 = referenceFingerprintT1;
+ 		match->queryFingerprintT1 = queryFingerprintT1;
+ 		match->matchCount = match->matchCount + 1;
+@@ -167,6 +172,7 @@
+ 		//Create new hashtable entry if not found
+ 
+ 		match = (struct match_result *) malloc(sizeof(struct match_result));
++        if(!match) { fprintf(stderr,"Matcher allocation failed\n"); abort(); }
+ 
+ 		match->referenceFingerprintT1 = referenceFingerprintT1;
+ 		match->firstReferenceFingerprintT1 = referenceFingerprintT1;
+@@ -178,7 +184,9 @@
+ 	
+ 		//printf("INSERT  %llu hash table size: %d \n",result_hash_table_key,hash_table_num_entries(fp_matcher->result_hash_table));
+ 
+-		hash_table_insert(fp_matcher->result_hash_table, &match->result_hash_table_key, match);
++		if(!hash_table_insert(fp_matcher->result_hash_table, &match->result_hash_table_key, match)){
++            free(match); fprintf(stderr,"Matcher hash allocation failed\n"); abort();
++        }
+ 	}
+ }
+ 
+@@ -186,7 +194,16 @@
+ void olaf_fp_matcher_match_single_fingerprint(Olaf_FP_Matcher * fp_matcher,uint32_t queryFingerprintT1,uint64_t queryFingerprintHash){
+ 
+ 	int range = fp_matcher->config->searchRange;
+-	size_t number_of_results = olaf_db_find(fp_matcher->db,queryFingerprintHash-range,queryFingerprintHash+range,fp_matcher->db_results,fp_matcher->config->maxDBCollisions);
++	// Saturating arithmetic also makes boundary hashes safe.
++    uint64_t lo = queryFingerprintHash < (uint64_t)range ? 0 : queryFingerprintHash-range;
++    uint64_t hi = UINT64_MAX-queryFingerprintHash < (uint64_t)range ? UINT64_MAX : queryFingerprintHash+range;
++    size_t number_of_results = olaf_db_find(fp_matcher->db,lo,hi,fp_matcher->db_results,fp_matcher->config->maxDBCollisions);
++    // Bounded work and memory. Never score a database-order-biased prefix in
++    // this mode. Exactly-full lookups are conservatively rejected too.
++    if(fp_matcher->config->skipSaturatedHashes && number_of_results >= fp_matcher->config->maxDBCollisions){
++        if(fp_matcher->config->verbose) fprintf(stderr,"Skipped saturated fingerprint lookup\n");
++        return;
++    }
+ 
+ 	if(fp_matcher->config->verbose){
+ 		fprintf(stderr,"Matched fp hash %" PRIu64 " with database at q t1 %u, search range %d.\n\tNumber of results: %zu \n\tMax num results: %zu \n",queryFingerprintHash,queryFingerprintT1,range,number_of_results,fp_matcher->config->maxDBCollisions);
+diff --git a/tests/olaf_db_concurrency_tests.c b/tests/olaf_db_concurrency_tests.c
+--- a/tests/olaf_db_concurrency_tests.c
++++ b/tests/olaf_db_concurrency_tests.c
+@@ -54,7 +54,12 @@
+ 
+ static void seed(const char *path){
+ 	Olaf_DB *db = olaf_db_new(path,false);
++    uint64_t result = 123;
++    assert(olaf_db_find(db,0,UINT64_MAX,&result,1)==0);
++    assert(result==123);
+ 	put(db,1);
++    assert(olaf_db_find(db,UINT64_MAX-5,UINT64_MAX,&result,1)==0);
++
+ 	olaf_db_destroy(db);
+ 	assert(olaf_db_test_environment_count() == 0);
+ }
+diff --git a/tests/olaf_matcher_v3_tests.c b/tests/olaf_matcher_v3_tests.c
+new file mode 100644
+--- /dev/null
++++ b/tests/olaf_matcher_v3_tests.c
+@@ -0,0 +1,36 @@
++/* AGPL-3.0-or-later; regression tests for the Olaf matcher fork. */
++#include <assert.h>
++#include <string.h>
++#include "../src/olaf_fp_matcher.c"
++static size_t hits;
++static uint64_t seen_lo, seen_hi;
++size_t olaf_db_find(Olaf_DB *db,uint64_t lo,uint64_t hi,uint64_t *out,size_t cap){
++ (void)db;seen_lo=lo;seen_hi=hi;
++ size_t n=hits<cap?hits:cap;
++ for(size_t i=0;i<n;i++) out[i]=((uint64_t)100<<32)|7;
++ return n;
++}
++void olaf_db_find_meta_data(Olaf_DB *db,uint32_t *id,Olaf_Resource_Meta_data *m){
++ (void)db;(void)id;memset(m,0,sizeof(*m));
++}
++uint64_t olaf_fp_extractor_hash(struct fingerprint f){(void)f;return 42;}
++int main(void){
++ Olaf_Config *c=olaf_config_default();assert(c);
++ c->maxDBCollisions=4;c->independentTimeVotes=true;c->skipSaturatedHashes=true;
++ Olaf_FP_Matcher *m=olaf_fp_matcher_new(c,NULL,NULL);assert(m);
++ hits=4;olaf_fp_matcher_match_single_fingerprint(m,200,42);
++ assert(hash_table_num_entries(m->result_hash_table)==0);
++ hits=3;olaf_fp_matcher_match_single_fingerprint(m,200,0);
++ assert(seen_lo==0 && seen_hi==(uint64_t)c->searchRange);
++ uint64_t key=((uint64_t)25<<32)|7;
++ struct match_result *v=hash_table_lookup(m->result_hash_table,&key);assert(v && v->matchCount==1);
++ olaf_fp_matcher_match_single_fingerprint(m,201,UINT64_MAX);
++ assert(seen_hi==UINT64_MAX && v->matchCount==2);
++ olaf_fp_matcher_match_single_fingerprint(m,200,42);assert(v->matchCount==2);
++ c->independentTimeVotes=false;
++ olaf_fp_matcher_match_single_fingerprint(m,201,42);assert(v->matchCount==5);
++ c->skipSaturatedHashes=false;hits=4;
++ olaf_fp_matcher_match_single_fingerprint(m,201,42);assert(v->matchCount==9);
++ olaf_fp_matcher_destroy(m);olaf_config_destroy(c);
++ puts("matcher v3 regressions passed");return 0;
++}

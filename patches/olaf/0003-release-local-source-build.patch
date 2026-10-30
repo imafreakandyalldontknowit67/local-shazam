@@ -1,0 +1,223 @@
+Subject: Make release builds local and audio-test behavior explicit
+Date: 2026-10-29
+
+Use sibling Zigzag source and include distribution inputs in the package inventory. Block broad tests unless explicitly enabled; replace audio downloads with required-fixture checks. Retain dataset-free steps, document omissions, and replace an upstream personal test path with a synthetic path. No desktop recognition logic/default changes.
+
+diff --git a/build.zig b/build.zig
+--- a/build.zig
++++ b/build.zig
+@@ -79,7 +79,8 @@
+         .files = &.{ "tests/olaf_matcher_v3_tests.c", "src/olaf_config.c", "src/hash-table.c" },
+         .flags = &.{ "-std=gnu11", "-UNDEBUG" },
+     });
+-    b.step("test-matcher-v3", "Run isolated matcher voting and lookup boundary regressions").dependOn(&b.addRunArtifact(matcher_test).step);
++    const matcher_step = b.step("test-matcher-v3", "Run isolated matcher voting and lookup boundary regressions");
++    matcher_step.dependOn(&b.addRunArtifact(matcher_test).step);
+ 
+     // Focused C regressions also run without audio tools or a dataset.
+     const safety_step = b.step("test-db-safety", "Test fingerprint buffering and LMDB ownership");
+@@ -133,8 +134,15 @@
+     run_config.addFileArg(b.path("tests/golden/output_snapshot.txt"));
+     config_step.dependOn(&run_config.step);
+ 
+-    // Test step
++    // Release source archives intentionally contain no audio. The broad suite
++    // must not silently skip missing fixtures or download them on a build host.
+     const test_step = b.step("test", "Run Olaf tests");
++    const audio_tests = b.option(bool, "audio-tests", "Enable upstream tests with manually supplied audio fixtures (never downloaded)") orelse false;
++    if (!audio_tests) {
++        test_step.dependOn(&b.addFail("Audio fixtures are excluded from this source distribution. Use test-matcher-v3, test-db-safety or test-config-safety; see BUILDING.md before enabling -Daudio-tests=true.").step);
++        return;
++    }
++    test_step.dependOn(matcher_step);
+     test_step.dependOn(safety_step);
+     test_step.dependOn(config_step);
+ 
+diff --git a/build.zig.zon b/build.zig.zon
+--- a/build.zig.zon
++++ b/build.zig.zon
+@@ -9,11 +9,20 @@
+         "cli",
+         "src",
+         "tests",
++        "wasm",
++        "python-wrapper",
++        "LICENSE",
++        "BUILDING.md",
++        "PROVENANCE.json",
++        "NOTICES.txt",
++        "notices",
++        "Makefile",
++        ".zigversion",
++        ".gitattributes",
+     },
+     .dependencies = .{
+         .zigzag = .{
+-            .url = "git+https://github.com/meszmate/zigzag#e16e2523972d174d7ca9783631cc90e2609fa55e",
+-            .hash = "zigzag-0.1.2-YXwYS9_qEQDBkc3k9-gNIC3mcONlH4N_RxxgcxM7Bhxt",
++            .path = "../zigzag",
+         },
+     },
+ }
+diff --git a/tests/README.md b/tests/README.md
+--- a/tests/README.md
++++ b/tests/README.md
+@@ -1,4 +1,13 @@
+ # Olaf Tests
++
++## Release source distribution override
++
++Audio fixtures are deliberately excluded. `zig build test` fails by default,
++not passes or skips: see `../BUILDING.md`. The dataset helper now only validates
++manually supplied files and never downloads anything. The upstream instructions
++below are retained as historical test documentation, not release validation.
++Use the separate `test-matcher-v3`, `test-db-safety`, and `test-config-safety`
++steps for dataset-free CI. No compiled tests were run during source vendoring.
+ 
+ ## Test files
+ 
+diff --git a/tests/dataset_download.zig b/tests/dataset_download.zig
+--- a/tests/dataset_download.zig
++++ b/tests/dataset_download.zig
+@@ -1,8 +1,6 @@
+ const std = @import("std");
+ const Io = std.Io;
+-const http = std.http;
+ 
+-const REF_URL = "https://0110.be/releases/Panako/Panako-test-dataset/reference/";
+ const REF_FILES = [_][]const u8{
+     "1051039.mp3",
+     "1071559.mp3",
+@@ -17,7 +15,6 @@
+ };
+ const REF_TARGET_FOLDER = "dataset/ref";
+ 
+-const QUERY_URL = "https://0110.be/releases/Panako/Panako-test-dataset/queries/";
+ const QUERY_FILES = [_][]const u8{
+     "1024035_55s-75s.mp3",
+     "1051039_34s-54s.mp3",
+@@ -47,7 +44,6 @@
+ };
+ const QUERY_TARGET_FOLDER = "dataset/queries";
+ 
+-const QUERY_OTA_URL = "https://0110.be/releases/Panako/Panako-test-dataset/queries_ota/";
+ const QUERY_OTA_FILES = [_][]const u8{
+     "1024035_55s-75s_ota.mp3",
+     "1051039_34s-54s_ota.mp3",
+@@ -83,90 +79,27 @@
+     all, // includes OTA queries
+ };
+ 
+-/// Ensures the dataset files are downloaded and valid.
+-/// Skips files that are already cached locally.
++/// Release override: fixtures must be supplied explicitly; never use the network.
++/// Missing fixtures are errors, not an assertion that dataset tests passed.
+ pub fn ensureDataset(io: Io, allocator: std.mem.Allocator, kind: DatasetKind) !void {
+-    var client = http.Client{ .allocator = allocator, .io = io };
+-    defer client.deinit();
+-
+-    try downloadFiles(io, allocator, &client, REF_URL, REF_TARGET_FOLDER, &REF_FILES);
+-    try checkFiles(io, REF_TARGET_FOLDER, 100 * 1024);
+-
++    try checkFiles(io, allocator, REF_TARGET_FOLDER, &REF_FILES, 100 * 1024);
+     if (kind == .ref_only) return;
+-
+-    try downloadFiles(io, allocator, &client, QUERY_URL, QUERY_TARGET_FOLDER, &QUERY_FILES);
+-    try checkFiles(io, QUERY_TARGET_FOLDER, 100 * 1024);
+-
++    try checkFiles(io, allocator, QUERY_TARGET_FOLDER, &QUERY_FILES, 100 * 1024);
+     if (kind == .ref_and_queries) return;
+-
+-    try downloadFiles(io, allocator, &client, QUERY_OTA_URL, QUERY_OTA_TARGET_FOLDER, &QUERY_OTA_FILES);
+-    try checkFiles(io, QUERY_OTA_TARGET_FOLDER, 50 * 1024);
++    try checkFiles(io, allocator, QUERY_OTA_TARGET_FOLDER, &QUERY_OTA_FILES, 50 * 1024);
+ }
+ 
+-fn downloadFiles(
+-    io: Io,
+-    allocator: std.mem.Allocator,
+-    client: *http.Client,
+-    base_url: []const u8,
+-    target_folder: []const u8,
+-    files: []const []const u8,
+-) !void {
+-    Io.Dir.cwd().createDirPath(io, target_folder) catch {};
+-
++fn checkFiles(io: Io, allocator: std.mem.Allocator, folder: []const u8, files: []const []const u8, min_size: u64) !void {
+     for (files) |file| {
+-        const target = try std.fmt.allocPrint(allocator, "{s}/{s}", .{ target_folder, file });
+-        defer allocator.free(target);
+-
+-        // Skip if already cached
+-        if (Io.Dir.cwd().statFile(io, target, .{})) |_| {
+-            std.debug.print("Found cached file {s}\n", .{target});
+-            continue;
+-        } else |_| {}
+-
+-        const url = try std.fmt.allocPrint(allocator, "{s}{s}", .{ base_url, file });
+-        defer allocator.free(url);
+-
+-        std.debug.print("Downloading {s}\n", .{target});
+-        try downloadFile(io, client, url, target);
+-        std.debug.print("Downloaded {s}\n", .{target});
+-    }
+-}
+-
+-fn downloadFile(io: Io, client: *http.Client, url: []const u8, target: []const u8) !void {
+-    var out_file = try Io.Dir.cwd().createFile(io, target, .{});
+-    defer out_file.close(io);
+-
+-    var write_buf: [8192]u8 = undefined;
+-    var file_writer = out_file.writer(io, &write_buf);
+-
+-    const result = try client.fetch(.{
+-        .location = .{ .url = url },
+-        .response_writer = &file_writer.interface,
+-    });
+-
+-    try file_writer.interface.flush();
+-
+-    if (result.status != .ok) {
+-        std.debug.print("HTTP {d} for {s}\n", .{ @intFromEnum(result.status), url });
+-        return error.DownloadFailed;
+-    }
+-}
+-
+-fn checkFiles(io: Io, folder: []const u8, min_size: u64) !void {
+-    var dir = Io.Dir.cwd().openDir(io, folder, .{ .iterate = true }) catch |err| {
+-        std.debug.print("Cannot open {s}: {}\n", .{ folder, err });
+-        return error.DatasetCheckFailed;
+-    };
+-    defer dir.close(io);
+-
+-    var iter = dir.iterate();
+-    while (try iter.next(io)) |entry| {
+-        if (!std.mem.endsWith(u8, entry.name, ".mp3")) continue;
+-
+-        const stat = try dir.statFile(io, entry.name, .{});
++        const path = try std.fmt.allocPrint(allocator, "{s}/{s}", .{ folder, file });
++        defer allocator.free(path);
++        const stat = Io.Dir.cwd().statFile(io, path, .{}) catch {
++            std.debug.print("Missing audio fixture {s}; no download attempted. See BUILDING.md.\n", .{path});
++            return error.MissingAudioFixture;
++        };
+         if (stat.size < min_size) {
+-            std.debug.print("{s}/{s} too small: {d} bytes\n", .{ folder, entry.name, stat.size });
+-            return error.DatasetCheckFailed;
++            std.debug.print("Invalid audio fixture {s}: {d} bytes\n", .{ path, stat.size });
++            return error.InvalidAudioFixture;
+         }
+     }
+ }
+diff --git a/tests/olaf_tests.c b/tests/olaf_tests.c
+--- a/tests/olaf_tests.c
++++ b/tests/olaf_tests.c
+@@ -110,7 +110,7 @@
+ 
+ 	Olaf_Resource_Meta_data d;
+ 	d.duration = 415.153f;
+-	strcpy(d.path,"/home/joren/bla/t.mp3");
++	strcpy(d.path,"/home/test-user/bla/t.mp3");
+ 	d.fingerprints = 3645;
+ 
+ 	uint32_t key = 100;
