@@ -223,7 +223,11 @@ def main(argv: list[str] | None = None) -> int:
             print('Built Olaf runtime in requested staging directory')
         return 0
     except Exception as exc:
-        print('error: Olaf build/source gate rejected input; diagnostic values withheld (' + type(exc).__name__ + ')', file=sys.stderr)
+        message = str(exc)
+        if isinstance(exc, (BuildError, policy.ReleaseError)) and len(message) <= 250 and not policy.hygiene.privacy_violations('', message.encode('utf-8')):
+            print('error: ' + message, file=sys.stderr)
+        else:
+            print('error: Olaf build/source gate rejected input; diagnostic values withheld (' + type(exc).__name__ + ')', file=sys.stderr)
         return 1
 
 

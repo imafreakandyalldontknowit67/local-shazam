@@ -1015,7 +1015,11 @@ def main():
     except Exception as exc:
         # Malformed untrusted JSON/archives can raise unexpected parser types;
         # never turn those into tracebacks containing absolute operator paths.
-        print('release: operation rejected; diagnostic values withheld for privacy (' + type(exc).__name__ + ')', file=sys.stderr)
+        message = str(exc)
+        if isinstance(exc, ReleaseError) and len(message) <= 250 and not hygiene.privacy_violations('', message.encode('utf-8')):
+            print('release: ' + message, file=sys.stderr)
+        else:
+            print('release: operation rejected; diagnostic values withheld for privacy (' + type(exc).__name__ + ')', file=sys.stderr)
         return 1
     return 0
 

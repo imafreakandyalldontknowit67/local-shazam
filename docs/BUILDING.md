@@ -13,9 +13,9 @@ archives, source/payload hashes, checksums and embedded gate records; see
 
 That is **historical evidence, not current-HEAD validation** or a general
 compatibility, privacy, accuracy or legal approval. The recorded baseline
-[privacy audit](PRIVACY_AUDIT.md) reports hosted-build paths in Linux/macOS
-binaries. Compiler-privacy implementation is separately owned in
-`docs/BUILD_PRIVACY.md`; its post-integration verification is **pending**.
+[privacy audit](PRIVACY_AUDIT.md) reports hosted-build paths in Windows, Linux and macOS
+binaries. Compiler-privacy implementation is integrated and documented in
+`docs/BUILD_PRIVACY.md`; fresh hosted binary verification is **pending**.
 Fresh parent-run hosted rebuilds and independent binary/source/archive privacy
 and correspondence checks are required. No compilation, native execution,
 audio/index access or CI dispatch was performed in this reconciliation.

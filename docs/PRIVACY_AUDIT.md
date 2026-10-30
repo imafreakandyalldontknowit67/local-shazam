@@ -56,6 +56,21 @@ diagnostic dump, or development executable was read or bundled for this review.
 
 ## Required final pass
 
+After integration, the remote-history check covered 32 reachable commits and
+677 distinct path/blob pairs through `755a194`. The two heuristic flags were
+synthetic tests: the historical invalid-path fixture and a short string fragment
+assigned to a test variable. Neither was an exposed credential or personal path.
+The current source gate passes. Owned GitHub URLs in the reviewed history refer
+only to the intended release repository, not private sibling repositories.
+
+The integrated checkout passes 108 lightweight tests (three Windows symlink
+skips). A combined native-source snapshot passes 96 (four skips, including the
+repository-only legacy checks). Scanner regressions cover instruction bytes,
+URL fragments, Unicode paths, credential encodings and native diagnostic
+templates; the historical Windows Olaf code section was also scanned read-only
+without the previously reproduced instruction-byte false positive. These checks
+do not replace hosted rebuilds or validation of their resulting artifacts.
+
 Re-run the source policy and inspect all newly reachable commits, tags, release
 bodies, assets, workflow logs, and remote branches after integration. Verify
 repository visibility again. Publish only the exact verified artifact set with
