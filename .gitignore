@@ -7,3 +7,9 @@ build/
 *.db-shm
 .venv/
 /test snippets/
+
+# Orchestrator
+.worktrees/
+tasks.json
+tasks.results.json
+tasks.review.json
