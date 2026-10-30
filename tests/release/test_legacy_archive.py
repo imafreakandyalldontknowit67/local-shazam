@@ -51,6 +51,8 @@ def assignment(tree, name):
 class LegacyArchiveTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if not ARCHIVE.exists() and not (REPO / '.git').exists():
+            raise unittest.SkipTest('Repository-only legacy checks; native source archives intentionally exclude legacy code')
         cls.manifest = tomllib.loads(source("pyproject.toml"))
         cls.project = cls.manifest["project"]
         cls.cfg = release.config(REPO)

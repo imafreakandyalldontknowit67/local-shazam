@@ -26,7 +26,7 @@ All twelve archives associated with preview commit
 `92a983a57ff92ad4b9342fb4dd992edf728b5a97` were inventoried locally: four binary
 packages and eight source archives. An operator-account check found no hits.
 Binary inspection nevertheless found hosted-build home/workspace paths in
-Linux and macOS executables. Those artifacts are **not** evidence of successful
+Windows, Linux and macOS executables. Those artifacts are **not** evidence of successful
 compiler path sanitization. Rebuild from source with the new privacy policy;
 do not patch executable strings or merely rename the archives.
 

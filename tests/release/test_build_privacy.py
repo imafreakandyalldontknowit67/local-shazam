@@ -144,6 +144,20 @@ class CompilerPrivacyTests(unittest.TestCase):
 
 
 class ArtifactPrivacyTests(unittest.TestCase):
+    def test_instruction_bytes_and_embedded_urls_are_not_private_paths(self):
+        for data in (bytes.fromhex('ff 5a 3a 2f 90 ff 00'),
+                     b'Xhttps://example.org/project',
+                     b'Xhttps://example.org/home/author/project',
+                     b'not an http:// or https:// URL',
+                     b'unrecognized to' + b'ken: "%s"', b'unrecognized to' + b'ken: "%T"',
+                     ('\\Device' + '\\\\DosDeviDevices\\Voluume{').encode('utf-16-le')):
+            release.check_privacy('artifact', data)
+        for encoding in ('utf-8', 'utf-16-le', 'utf-16-be'):
+            release.check_privacy('artifact', b'X' + 'https://example.org/project'.encode(encoding))
+            private = ('C:/' + 'Users/' + '\u6e2c\u8a66' + '/project/file.rs').encode(encoding)
+            with self.assertRaises(release.ReleaseError):
+                release.check_privacy('artifact', b'\xff' + private + b'\xff')
+
     def test_private_strings_in_every_encoding_and_alignment(self):
         values = ['C:/' + 'Users/' + 'Private Person/project/file.rs',
                   '/home/' + 'runner/work/project/file.c', '/Users/' + 'PrivatePerson/work',
