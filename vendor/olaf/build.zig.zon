@@ -1,0 +1,28 @@
+.{
+    .name = .olaf,
+    .version = "3.3.3",
+    .fingerprint = 0xdbfb9486fc04d895,
+    .minimum_zig_version = "0.16.0",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "cli",
+        "src",
+        "tests",
+        "wasm",
+        "python-wrapper",
+        "LICENSE",
+        "BUILDING.md",
+        "PROVENANCE.json",
+        "NOTICES.txt",
+        "notices",
+        "Makefile",
+        ".zigversion",
+        ".gitattributes",
+    },
+    .dependencies = .{
+        .zigzag = .{
+            .path = "../zigzag",
+        },
+    },
+}

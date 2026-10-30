@@ -1,0 +1,182 @@
+PREFIX ?= /usr/local
+BINDIR ?= $(PREFIX)/bin
+
+compile:
+	zig build -Doptimize=ReleaseFast
+
+#Installs olaf on its default location
+install:
+	mkdir -p $(DESTDIR)$(BINDIR)
+	install -m 755 zig-out/bin/olaf $(DESTDIR)$(BINDIR)/olaf
+
+#removes the installed binary; the index and cache in ~/.olaf are kept
+#(remove them with 'olaf clear' or by deleting ~/.olaf)
+uninstall:
+	rm -f $(DESTDIR)$(BINDIR)/olaf
+	@echo "Kept ~/.olaf (database and cache); remove it yourself if no longer needed."
+
+clean:
+	rm -rf .zig-cache zig-out
+	-rm -f *.o
+
+#Cleans the temporary files
+clean_core:
+	-rm -f *.o
+	-rm -f bin/*
+	-rm -f wasm/js/olaf.js
+	-rm -f wasm/js/olaf.html
+	-rm -f wasm/js/olaf.wasm
+	-rm -f olaf_cffi*
+
+
+#Compiles the default olaf version for use on traditional computers
+compile_core:
+	gcc -c src/pffft.c 					-W -Wall -std=gnu11 -pedantic -O2 #pfft needs M_PI and other constants not in the ANSI c standard
+	gcc -c src/midl.c 					-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/mdb.c 					-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/hash-table.c     		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/queue.c  		   		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_deque.c  	   		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_max_filter_perceptual_van_herk.c	-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf.c 					-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_file_writer.c 	-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db.c 				-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db_id.c 			-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer.c 		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer_cache.c -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_ep_extractor.c 		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_extractor.c 		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_reader_stream.c 	-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_runner.c 			-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_stream_processor.c 	-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_matcher.c 		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_config.c 			-W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	mkdir -p bin
+	gcc -o bin/olaf_core *.o 			-lc -lm -ffast-math -pthread
+
+
+	
+
+lib:
+	rm -f *.o #avoid linking leftover .o files from other GCC targets
+	gcc -c src/pffft.c 					-W -Wall -fPIC -std=gnu11 -pedantic -O2 #pfft needs M_PI and other constants not in the ANSI c standard
+	gcc -c src/midl.c 					-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/mdb.c 					-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/hash-table.c     		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/queue.c  		   		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_deque.c  	   		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_max_filter_perceptual_van_herk.c	-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf.c 					-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_file_writer.c 	-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_db.c 				-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_db_id.c 			-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer.c 		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer_cache.c -W -Wall -fPIC -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_ep_extractor.c 		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_extractor.c 		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_reader_stream.c 	-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_runner.c 			-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_stream_processor.c 	-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_matcher.c 		-W -Wall -fPIC -std=c11 -pedantic -O2
+	gcc -c src/olaf_config.c 			-W -Wall -fPIC -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_fft.c 				-W -Wall -fPIC -std=c11 -pedantic -O2
+	mkdir -p bin
+	gcc -o bin/libolaf.so *.o 			-lc -lm -fPIC -ffast-math -pthread -shared
+
+#A compilation with support for profiling
+compile_gprof:
+	gcc -c src/pffft.c 					-pg -W -Wall -std=gnu11 -pedantic -O2 #pfft needs M_PI and other constants not in the ANSI c standard
+	gcc -c src/midl.c 					-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/mdb.c 					-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/hash-table.c     		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/queue.c  		   		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_deque.c  	   		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_max_filter_perceptual_van_herk.c	-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf.c 					-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_file_writer.c 	-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db.c 				-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db_id.c 			-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer.c 		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer_cache.c -pg -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_ep_extractor.c 		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_extractor.c 		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_reader_stream.c 	-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_runner.c 			-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_stream_processor.c 	-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_matcher.c 		-pg -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_config.c 			-pg -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	mkdir -p bin
+	gcc -o bin/olaf_core *.o 			-pg -lc -lm -ffast-math -pthread
+
+#The memory database version is equal to the embedded version
+#pass the -D to load the correct 
+mem:
+	gcc -c src/pffft.c 					 -Dmem -W -Wall -std=gnu11 -pedantic -O2 #pfft needs M_PI and other constants not in the ANSI c standard
+	gcc -c src/hash-table.c     	 	 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/queue.c  		   		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_deque.c  	   		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_max_filter_perceptual_van_herk.c  -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf.c 					 -Dmem -W -Wall -std=gnu11 -pedantic -O2
+	gcc -c src/olaf_db_mem.c 			 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db_id.c 			 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer_mem.c 	 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_file_writer.c 	 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_db_writer_cache.c -Dmem -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_runner.c 			 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_stream_processor.c 	 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_ep_extractor.c 		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_extractor.c 		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_reader_stream.c		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_fp_matcher.c 		 -Dmem -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_config.c 			 -Dmem -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	mkdir -p bin
+	gcc -o bin/olaf_mem *.o 			-lc -lm -ffast-math
+
+#Compiles the webassembly version (wasm/js/olaf.wasm): it is similar to the mem version
+web:
+	zig build web
+
+
+
+#Deletes the database, check your configuration for the database location
+destroy_db:
+	rm ~/.olaf/db/*
+
+
+
+#Compile unit tests and run the unit tests
+#The functional tests are run via `zig build test`, see readme
+test:
+	rm -f *.o #avoid linker collisions with leftover .o from other GCC targets
+	gcc -c src/olaf_config.c -W -Wall -std=c11 -D_POSIX_C_SOURCE=200809L -pedantic -O2
+	gcc -c src/olaf_reader_stream.c -W -Wall -std=c11 -pedantic -O2
+	gcc -c src/queue.c  		   		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_deque.c  	   		-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_max_filter_naive.c -W -Wall -std=c11 -pedantic -O2
+	gcc -c tests/olaf_tests.c	-Isrc	-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/midl.c 					-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/mdb.c 					-W -Wall -std=c11 -pedantic -O2
+	gcc -c src/olaf_db.c 			-W -Wall -std=c11 -pedantic -O2
+	mkdir -p bin
+	gcc -o bin/olaf_tests *.o		-lc -lm -ffast-math
+	mkdir -p tests/olaf_test_db
+	- rm tests/olaf_test_db/*
+	./bin/olaf_tests
+
+#Generate doxygen API documentation
+docs:
+	doxygen
+
+zig_linux:
+	zig build -Dtarget=x86_64-linux-gnu -Doptimize=ReleaseFast
+
+zig_mac_arm:
+	zig build -Dtarget=aarch64-macos.11.0.0-none -Doptimize=ReleaseFast
+
+zig_mac_x86:
+	zig build -Dtarget=x86_64-macos-gnu -Doptimize=ReleaseFast
+
+#Compile a windows exe using Zig
+zig_win:
+	zig build -Dtarget=x86_64-windows-gnu -Doptimize=ReleaseFast
+
