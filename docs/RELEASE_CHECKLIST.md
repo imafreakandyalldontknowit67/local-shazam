@@ -1,11 +1,10 @@
 # Existing private draft refresh checklist
 
-Parent-owned procedure for the Rust **0.2.0 native terminal/menu app** and its
+Maintainer-owned procedure for the Rust **0.2.0 native terminal/menu app** and its
 separate Olaf runtime, not a web UI. There is no root `package.json` workflow.
-This document records no fresh builds, execution, screenshots or remote checks.
-Only the parent may perform the operational steps below on appropriate safe
-hosts; do not execute native/audio workloads on the crash-affected review host.
-Mark an item complete only with explicit parent-supplied evidence.
+This checklist is not evidence that its steps have passed. Use a healthy native
+build host and stop if tool downloads fail integrity checks. Mark an item complete
+only with recorded verification evidence.
 
 ## Historical baseline only
 
@@ -15,22 +14,24 @@ Mark an item complete only with explicit parent-supplied evidence.
   `41023384988`: historical four-target build/artifact evidence, **not current
   HEAD verification** or evidence of compiler-path privacy in fresh binaries.
 - Existing draft `v0.2.0-native.1`, release ID `428787114`: **recorded baseline
-  identifiers requiring parent reconfirmation**, not newly checked remote facts.
+  identifiers requiring maintainer reconfirmation**, not newly checked remote facts.
   The draft name / `tag_name` is not proof that a Git tag exists.
 - Historical API asset digest/size comparisons did not download release asset
   bytes. They do not satisfy the post-upload check below.
 
 ## 1. Freeze scope and record current evidence
 
-- [ ] Parent reconfirms repository identity and private visibility, the existing
+- [ ] Maintainer reconfirms repository identity and private visibility, the existing
   release ID/name, `draft=true`, `prerelease=true` and no publication timestamp.
   Stop on any mismatch; do not create, rename or recreate a release or tag.
 - [ ] Record the exact **40-character post-integration source commit**, clean
   reviewed checkout, date, reviewer and selected refresh targets. Neither this
   task branch's commit nor the historical commit substitutes for integrated HEAD.
-- [ ] Parent authorizes fresh native CI at that exact commit after reviewing
-  workflow trust, runner availability and billing; record run URL/ID, attempt,
-  tested SHA, per-target job conclusion and retained artifact IDs.
+- [ ] Build the exact commit on the matching native host, either in reviewed CI
+  or an isolated local staging directory. For CI, review runner availability and
+  billing first; record run URL/ID, attempt, tested SHA, job conclusion and artifact
+  IDs. For local builds, record host/tool versions, exact commands and gate results.
+  Use the same locked one-job build/test/package/verify pipeline in either case.
 
 The existing [portable workflow](../.github/workflows/portable-build.yml) uses
 all four targets; it has **no Windows-only dispatch input**. Do not change the
@@ -39,7 +40,7 @@ upload only the newly verified Windows set; it does not require presenting other
 targets as newly verified. Record their actual results and keep historical assets
 clearly identified by old commit, or mark replacement assets pending/absent.
 
-| Target | Native runner from [targets.json](../release/targets.json) | Current-commit CI / independent verification |
+| Target | Native runner from [targets.json](../release/targets.json) | Current-commit native build / independent verification |
 | --- | --- | --- |
 | `windows-x64` | `windows-2025` x64 | Pending / pending |
 | `linux-x64` | `ubuntu-24.04` x64 | Pending; historical evidence only / pending |
@@ -52,7 +53,7 @@ clearly identified by old commit, or mark replacement assets pending/absent.
   dataset-free tests, app help/version and Olaf help gates, packaging and
   verification from [Building](BUILDING.md). Record all gate results; do not use
   music, indexing, matching, personal databases, unrestricted tests or benchmarks.
-- [ ] Download the CI artifacts and independently verify the complete target
+- [ ] Collect the native artifacts and independently verify the complete target
   set: binary archive, **matching app-source and Olaf-source archives**, and
   `SHA256SUMS`. Never pair new binaries with historical source archives or omit
   per-target sources. Check source inventory equality across fresh targets.
@@ -78,15 +79,15 @@ Checksums prove byte correspondence, not publisher authentication. Successful
 gates do not establish minimum OS support, accuracy, stability, reproducibility,
 signing/notarization or legal approval. Keep those limitations in the draft.
 
-## 3. Parent-only real terminal screenshot
+## 3. Maintainer-only real terminal screenshot
 
-- [ ] On an appropriate safe native host, the parent uses the **verified fresh
+- [ ] On an appropriate safe native host, the maintainer uses the **verified fresh
   package** (complete adjacent `olaf-runtime/`) and records its commit, target,
   executable SHA-256 and capture date. This manual capture is separate from CI
-  gates; no agent captures screenshots or executes the app for this task.
+  gates; capture only after the fresh package passes verification.
 - [ ] Prepare a neutral demonstration directory, for example
-  `C:\LocalShazamDemo`, with a new, unused index path
-  `C:\LocalShazamDemo\empty-index`. Launch the verified app with
+  `LocalShazamDemo/`, with a new, unused relative index path
+  `./empty-index`. Launch the verified app with
   `--olaf-index` pointing there and **no subcommand**, solely to display its menu.
   The [menu code](../rust-app/src/main.rs) prints the index path. Do not use a
   personal directory/database or choose options 1, 2 or 3; exit with option 4.
@@ -99,14 +100,14 @@ signing/notarization or legal approval. Keep those limitations in the draft.
   too. Recapture safely or remove sensitive metadata before sharing, then retain
   the approved image's filename/hash and capture record. Do not falsify app output.
 
-## 4. Parent-only refresh and byte-for-byte confirmation
+## 4. Maintainer-only refresh and byte-for-byte confirmation
 
 The [private-draft workflow](../.github/workflows/private-draft.yml) **creates**
 drafts and refuses existing releases; it is **not an update mechanism**. Do not
 dispatch it to refresh this draft or bypass its existing-tag, confirmation,
 four-target verification, private-repository or approval safeguards.
 
-- [ ] Parent reviews and authorizes the exact existing-release edit/asset plan,
+- [ ] Maintainer reviews and authorizes the exact existing-release edit/asset plan,
   then refreshes only the reconfirmed draft. Retain private repository visibility,
   `draft=true` and `prerelease=true` throughout; no publish/promote, tag creation
   or movement, visibility change, or new release. Stop if identity/flags change.
@@ -115,7 +116,7 @@ four-target verification, private-repository or approval safeguards.
   their own exact hashes). Do not confuse per-target files with the same checksum
   filename. Preserve the verified pre-upload files and ledger.
 - [ ] Upload only verified replacement sets and reviewed supporting assets.
-  Record the new full commit, per-target CI/verification evidence, Windows-first
+  Record the new full commit, per-target native-build/verification evidence, Windows-first
   scope if applicable, and historical/pending targets in the draft notes. Keep
   retained old binary/source trios grouped by their historical commit; never
   describe them as rebuilt or combine old sources with a new binary. Record all
@@ -134,7 +135,7 @@ four-target verification, private-repository or approval safeguards.
 ## 5. Cleanup and open public-release gate
 
 - [ ] Only after downloaded-byte/hash verification succeeds and evidence is
-  retained, parent reviews [Build cleanup](BUILD_CLEANUP.md) before any separately
+  retained, maintainer reviews [Build cleanup](BUILD_CLEANUP.md) before any separately
   authorized cleanup. That companion document is integrated separately; if
   unavailable, defer cleanup. This checklist authorizes no deletion.
 - [ ] **OPEN / DEFERRED: licensing review and public-release approval.** Keep the
