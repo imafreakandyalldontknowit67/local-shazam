@@ -169,6 +169,12 @@ def personal_path(line: str, *, embedded: bool = False) -> bool:
     for match in matches(WINDOWS_PATH):
         parts = re.split(r"[\\/]+", match[1].strip())
         first = parts[0].lower()
+        # Packed instruction bytes can decode to an adjacent drive prefix plus
+        # one character (e.g. an immediate operand). This is not enough evidence
+        # of a private path. Standalone strings and multi-component paths still
+        # fail, and the release layer separately checks exact known build roots.
+        if embedded and match.start() > 0 and len(parts) == 1 and len(parts[0]) == 1:
+            continue
         if first == "users":  # Account names checked above, including placeholders.
             continue
         if first not in GENERIC_DRIVE_DIRS and not placeholder(parts[0]):

@@ -165,7 +165,7 @@
   "files": {
     "docs/BUILD_PRIVACY.md": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "f912f8572e05773f1c24cd027a4029605e479708cd5badeda802daa2cfe4dd81"
+      "sha256": "6c11da701181eff042eca321f4412c45216c3dcf11cc71e640c5e8c80142eaad"
     },
     "patches/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -201,7 +201,7 @@
     },
     "scripts/check_release_hygiene.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "8595a4d4d2e938418e40b36d631a5efb82951d84b2b0e5af47feaeab11c19075"
+      "sha256": "d750cb353c584139d6ead3ea25ce740699ef7d483b606f4d105ccb2c2138acf9"
     },
     "scripts/release.py": {
       "origin": "release build/privacy integration (2026-10-30)",
@@ -209,7 +209,7 @@
     },
     "tests/release/test_build_privacy.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "63f2748b9b0498fc9f3782228cff00e6bc463c917e4009bed37ce5d71fd705ae"
+      "sha256": "69d60a1fb2446c2de58ec44fe2660506994bc3037b8acfe481b98bb6bd148640"
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
