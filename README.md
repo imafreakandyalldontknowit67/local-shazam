@@ -27,7 +27,9 @@
 > distribution and license review is still open before public release.
 
 The existing draft still contains the baseline build. Replacement packages with
-compiler path remapping are awaiting fresh native CI and artifact verification.
+compiler path remapping are awaiting fresh native builds and artifact verification.
+See the [release checklist](docs/RELEASE_CHECKLIST.md) and
+[verified-upload cleanup procedure](docs/BUILD_CLEANUP.md).
 
 ## About
 
@@ -80,7 +82,7 @@ Read-only [artifact and draft metadata review](licenses/review/native-preview.js
 confirmed the historical set. Checksums are not publisher authentication; these
 gates do not establish minimum OS support, privacy, snippet accuracy or hardware
 stability. Source archives and SHA256 checksums accompany the private draft
-`v0.2.0-native.1` (a draft name, not a verified existing tag). Native source
+(planned version `v0.2.0-native.1`; no release tag has been verified). Native source
 version: `0.2.0`; older `1.0.x` tags are Python releases.
 
 Extract the complete package into a writable folder and keep `olaf-runtime/`
