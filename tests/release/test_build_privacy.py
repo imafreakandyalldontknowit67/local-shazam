@@ -17,6 +17,18 @@ SPEC.loader.exec_module(release)
 
 
 class CompilerPrivacyTests(unittest.TestCase):
+    def test_olaf_strip_is_set_before_install_registration(self):
+        source = (ROOT / 'vendor/olaf/build.zig').read_text()
+        installs = 0
+        for index, line in enumerate(source.splitlines()):
+            if 'b.installArtifact(' not in line:
+                continue
+            artifact = line.split('b.installArtifact(')[1].split(')')[0]
+            self.assertEqual(source.splitlines()[index - 1].strip(),
+                             f'if (release_privacy) {artifact}.root_module.strip = true;')
+            installs += 1
+        self.assertEqual(installs, 3)
+
     def test_safe_compiler_diagnostic_headers_only(self):
         private = 'C:/' + 'Users/' + 'PrivatePerson/source.rs'
         marker = 'gh' + 'p_' + 'Q' * 36

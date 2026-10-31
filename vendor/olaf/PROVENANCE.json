@@ -165,7 +165,7 @@
   "files": {
     "docs/BUILD_PRIVACY.md": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "94b57cd424d910d42350dc241d61d1ada026ee8a647e0fe64e2086d6da17b379"
+      "sha256": "f912f8572e05773f1c24cd027a4029605e479708cd5badeda802daa2cfe4dd81"
     },
     "patches/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -189,11 +189,11 @@
     },
     "patches/olaf/README.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "f3ccb0462c696f0724aaaba0f995dc6aaad910b55962dbe7192e7f78fa146c5a"
+      "sha256": "bf8c7ca853c35bc16a3e0082c67a83a59cba6732cf7b70253621e8dc884ff1a3"
     },
     "patches/olaf/series": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "67303324021e0ea4b1527751a61014950c0e352219d32e85d03473da4a97e3ae"
+      "sha256": "0b3f3584ac138f073e1c735639c590f42cce50768bd048b2c8e7d6be031afa69"
     },
     "scripts/build_olaf.py": {
       "origin": "release integration",
@@ -209,11 +209,11 @@
     },
     "tests/release/test_build_privacy.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "1c488c84c18fa28f984cd542a88fb0955554e9054ef0ba068081462d94174b8b"
+      "sha256": "63f2748b9b0498fc9f3782228cff00e6bc463c917e4009bed37ce5d71fd705ae"
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "3e8cb4d3e27c0ac0f010a3b10f8bbf00a5300c8b0617e9795ec628768826f117"
+      "sha256": "14a2fdba01017d7367b560aa33930217658f4ab44d2aa0b2188693ea3acbc999"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -251,7 +251,7 @@
     "vendor/olaf/build.zig": {
       "captured_sha256": "9a70bc664483b4601a6035c32b5f7c09dafc5c667f6137d808b12dfceaea9e2d",
       "source_lf_sha256": "eb90038aeee51844eabd59880dce0da0b5305d2ca0fcef0e5ced70506f4ce913",
-      "sha256": "f0f7ebe4f3b35791405a12a563282f92b59292b2ddff75f930596f2aa01074eb",
+      "sha256": "a9251ee7fb03f8a12a353db5ed6537231d931abdbf454706bd76c21cd29827cd",
       "upstream_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407",
       "fork_head_sha256": "55eb652f8695d2b0e953a4f9609fb1315ba8e7a2e66ab2918490ca38f080e407"
     },
@@ -1634,6 +1634,10 @@
       "captured_sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f",
       "source_lf_sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f",
       "sha256": "21db2159817d24c4fedc5292a918800d26d89e6075463ab7255ff3d5193b271f"
+    },
+    "patches/olaf/0005-release-install-debug-policy.patch": {
+      "origin": "release install-step privacy correction (2026-10-31)",
+      "sha256": "99bddfd78eb052033c4674f8d9b657d7aa33d549029ab570cd1177de52599663"
     }
   },
   "additional_notice_sources": {
@@ -1663,7 +1667,8 @@
     "patches/olaf/0001-windows-lmdb-paths.patch",
     "patches/olaf/0002-working-matcher-config-db.patch",
     "patches/olaf/0003-release-local-source-build.patch",
-    "patches/olaf/0004-release-build-privacy.patch"
+    "patches/olaf/0004-release-build-privacy.patch",
+    "patches/olaf/0005-release-install-debug-policy.patch"
   ],
   "release_modified_files": [
     "build.zig",
@@ -1688,6 +1693,10 @@
     {
       "patch": "patches/olaf/0004-release-build-privacy.patch",
       "summary": "Build-only compiler privacy: module debug suppression and generated C file/macro/debug prefix-map response inputs for runtime and regression artifacts; no application engine changes."
+    },
+    {
+      "patch": "patches/olaf/0005-release-install-debug-policy.patch",
+      "summary": "Set stripping before install-step registration so Windows release installation does not request a suppressed PDB (2026-10-31); build-only fix."
     }
   ],
   "build": {
