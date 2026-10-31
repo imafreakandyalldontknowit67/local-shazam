@@ -149,3 +149,9 @@ pass disabled PDB generation but left installation requesting that missing file.
 The deferred graph-wide prefix maps and debug suppression remain unchanged.
 A static regression checks every install registration; native verification is
 required independently. No engine code or matching policy changes.
+
+Binary heuristics ignore an adjacent drive-prefix fragment with exactly one
+character and no further path component: packed instruction bytes produced this
+false positive in the native app. Standalone drive paths, multi-character or
+multi-component paths, strict source checks and exact known-root byte checks
+remain enforced. This narrow heuristic is not a proof of zero private data.

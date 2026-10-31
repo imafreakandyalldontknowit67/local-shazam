@@ -183,6 +183,17 @@ class ArtifactPrivacyTests(unittest.TestCase):
             with self.assertRaises(release.ReleaseError):
                 release.check_privacy('artifact', b'\xff' + private + b'\xff')
 
+    def test_adjacent_single_character_drive_instruction_fragments(self):
+        for data in (bytes.fromhex('3b443a5c3d'), bytes.fromhex('3b463a5c3d'),
+                     bytes.fromhex('33453a5c35'), bytes.fromhex('2c76433a5c3d'),
+                     bytes.fromhex('23463a5c25')):
+            release.check_privacy('artifact', data)
+        for value in ('Q:' + '/x', 'Q:' + '/private', 'prefixQ:' + '/x/y'):
+            with self.assertRaises(release.ReleaseError):
+                release.check_privacy('artifact', value.encode())
+        with self.assertRaises(release.ReleaseError):
+            release.check_privacy('artifact', bytes.fromhex('3b443a5c3d'), source=True)
+
     def test_private_strings_in_every_encoding_and_alignment(self):
         values = ['C:/' + 'Users/' + 'Private Person/project/file.rs',
                   '/home/' + 'runner/work/project/file.c', '/Users/' + 'PrivatePerson/work',
