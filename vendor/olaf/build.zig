@@ -23,6 +23,7 @@ pub fn build(b: *std.Build) void {
     b.step("web", "Build the browser WebAssembly module into wasm/js/olaf.wasm").dependOn(&update_web.step);
 
     if (target.result.cpu.arch == .wasm32) {
+        if (release_privacy) web.root_module.strip = true;
         b.installArtifact(web);
     } else {
 
@@ -39,6 +40,8 @@ pub fn build(b: *std.Build) void {
 
             addCoreSources(exe, b, &cflags, true, true);
             exe.root_module.link_libc = true;
+            // InstallArtifact snapshots PDB emission before the deferred privacy pass.
+            if (release_privacy) exe.root_module.strip = true;
             b.installArtifact(exe);
 
             // run step
@@ -67,6 +70,8 @@ pub fn build(b: *std.Build) void {
             exe.root_module.addImport("olaf_rest", restModule(b, target, optimize));
             addCoreSources(exe, b, &cflags, true, false); // true = include LMDB sources
             exe.root_module.link_libc = true;
+            // InstallArtifact snapshots PDB emission before the deferred privacy pass.
+            if (release_privacy) exe.root_module.strip = true;
             b.installArtifact(exe);
 
             // run step

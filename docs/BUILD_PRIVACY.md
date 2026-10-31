@@ -139,3 +139,13 @@ private data; review remaining findings without erasing legitimate attribution
 or widening exemptions. Licensing/source-offer and clean-host portability review
 remain separate gates. Historical audit inputs and old artifacts were not read,
 modified, relabeled sanitized or committed.
+
+## Windows install-step ordering fix (2026-10-31)
+
+Patch `0005-release-install-debug-policy.patch` sets the artifact strip flag before
+registering its install step. Zig 0.16.0 InstallArtifact snapshots whether a PDB
+is expected when the step is created; setting strip only in the deferred privacy
+pass disabled PDB generation but left installation requesting that missing file.
+The deferred graph-wide prefix maps and debug suppression remain unchanged.
+A static regression checks every install registration; native verification is
+required independently. No engine code or matching policy changes.

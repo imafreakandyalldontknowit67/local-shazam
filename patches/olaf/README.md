@@ -16,6 +16,10 @@ needed. Do not run the old setup helper over a working checkout.
    module debug suppression and generated C prefix-map response-file integration
    for runtime and regression artifacts (2026-10-30). No engine source change.
 
+5. `0005-release-install-debug-policy.patch`: set release stripping before Zig
+   registers installation steps so Windows does not request a nonexistent PDB
+   (2026-10-31). No engine source change.
+
 After patching, select only the explicit source inventory in
 `vendor/olaf/PROVENANCE.json`; this source distribution intentionally omits
 upstream audio, binaries and other non-desktop material. Supply the unchanged
