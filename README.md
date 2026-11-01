@@ -20,6 +20,8 @@
 
 </div>
 
+![Local Shazam interactive menu on Windows](assets/screenshots/windows-menu.png)
+
 Know the clip, but can't find the file? Local Shazam searches your music collection
 and helps you find where it came from. Your audio stays on your computer.
 

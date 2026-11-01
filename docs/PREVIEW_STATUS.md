@@ -110,6 +110,5 @@ Recognition behavior and confidence labels are unchanged.
 The updated Windows executable was compiled in release mode with one Cargo job,
 using the existing pinned toolchain/cache. Eight native CLI tests and a menu/exit
 smoke test passed without indexing or accessing music. This is a local UI build,
-not a replacement for the packaged draft artifacts recorded above. The current
-README screenshot is pending recapture: Windows window capture timed out, so the
-old menu image is no longer embedded. No release was published.
+not a replacement for the packaged draft artifacts recorded above. The README now shows the owner-supplied screenshot of the updated menu, reviewed
+for visible personal information and PNG metadata. No release was published.

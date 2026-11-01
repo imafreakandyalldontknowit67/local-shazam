@@ -31,10 +31,10 @@ import sys
 from typing import Iterator
 
 
-# Reviewed user-supplied UI screenshot: neutral demo path, no personal data;
+# Reviewed user-supplied UI screenshot: no visible paths or personal data;
 # PNG contains only IHDR/IDAT/IEND chunks (no metadata). Not executable code.
 REVIEWED_DOCUMENTATION_IMAGES = {
-    'assets/screenshots/windows-menu.png': 'ecfbbd47af43facd8b462d7a632d2542d97a2303cf89940e5882ec02746dd75d',
+    'assets/screenshots/windows-menu.png': 'c1f53c6a52f1bb8f6bd39752a72bb350457978ca0b8d74d2d7f82b78f483efa2',
 }
 
 MAX_BYTES = 32 * 1024 * 1024
