@@ -100,3 +100,16 @@ draft, source archives or successful build does not close those reviews.
 - [Verified-upload cleanup procedure](BUILD_CLEANUP.md): separate authorization
   and retained evidence required; this page authorizes no cleanup or publication
 - [Proposed repository metadata](REPOSITORY_METADATA.md)
+
+## Menu presentation update (2026-11-01)
+
+The current menu uses a plain Local Shazam heading and four user-facing options.
+The backend name, index path and development banner no longer appear at startup.
+Recognition behavior and confidence labels are unchanged.
+
+The updated Windows executable was compiled in release mode with one Cargo job,
+using the existing pinned toolchain/cache. Eight native CLI tests and a menu/exit
+smoke test passed without indexing or accessing music. This is a local UI build,
+not a replacement for the packaged draft artifacts recorded above. The current
+README screenshot is pending recapture: Windows window capture timed out, so the
+old menu image is no longer embedded. No release was published.
