@@ -23,3 +23,6 @@ licenses/rust/** -text
 
 # Preserve official Rust runtime notice bytes, including upstream whitespace.
 /licenses/runtime/** -text -whitespace
+
+# Exclude bundled licenses and notices from GitHub language statistics.
+licenses/** linguist-vendored
