@@ -36,6 +36,14 @@ class CompilerPrivacyTests(unittest.TestCase):
             installs += 1
         self.assertEqual(installs, 3)
 
+    def test_relocation_bytes_are_not_windows_path_components(self):
+        # Colon cannot start a Windows filename; stop at it, including ADS syntax.
+        noise = ':#:9:>:F:U:' + chr(92) + ':n:s:{:'
+        for encoding in ('utf-8', 'utf-16-le', 'utf-16-be'):
+            self.assertFalse(release.hygiene.privacy_violations('', noise.encode(encoding)))
+            private = noise + 'C:/' + 'Users/' + 'PrivatePerson/song.wav:stream'
+            self.assertIn('personal-absolute-path', release.hygiene.privacy_violations('', private.encode(encoding)))
+
     def test_safe_compiler_diagnostic_headers_only(self):
         private = 'C:/' + 'Users/' + 'PrivatePerson/source.rs'
         marker = 'gh' + 'p_' + 'Q' * 36
