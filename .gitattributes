@@ -20,3 +20,6 @@ licenses/rust/** -text
 /licenses/*.md text eol=lf
 /licenses/*-inventory.json text eol=lf
 /licenses/terms/*.txt text eol=lf
+
+# Preserve official Rust runtime notice bytes, including upstream whitespace.
+/licenses/runtime/** -text -whitespace
