@@ -190,7 +190,7 @@ class SourceDistributionTests(unittest.TestCase):
 
     def test_patch_series_reproduces_base_working_and_final_source(self):
         series = (ROOT / "patches/olaf/series").read_text().splitlines()
-        self.assertEqual(len(series), 6)
+        self.assertEqual(len(series), 7)
         self.assertEqual(self.provenance['patch_series'], ['patches/olaf/' + name for name in series])
         fourth = (ROOT / 'patches/olaf' / series[3]).read_text()
         self.assertEqual(re.findall(r'^diff --git (.*)$', fourth, re.M), ['a/build.zig b/build.zig'])

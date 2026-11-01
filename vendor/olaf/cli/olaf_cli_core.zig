@@ -8,6 +8,10 @@ const olaf_cli_config = @import("olaf_cli_config.zig");
 const olaf_cli_util = @import("olaf_cli_util.zig");
 
 pub const c = @cImport({
+    // 2026-11-01: Zig 0.16 translate-c omits this MinGW architecture macro.
+    // malloc.h needs it to select the 32-bit stack-allocation marker layout.
+    if (@import("builtin").os.tag == .windows and @import("builtin").cpu.arch == .x86)
+        @cDefine("_X86_", "1");
     @cInclude("stdio.h");
     @cInclude("stdlib.h");
 
