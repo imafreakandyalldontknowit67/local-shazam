@@ -7,7 +7,7 @@
 
 <h1>Local Shazam</h1>
 
-<p><strong>Find the source of a clip in your own music collection.</strong></p>
+<p><strong>Find the song on your PC from a short audio clip.</strong></p>
 
 <p>Local audio recognition. No uploads. No Shazam API.</p>
 
@@ -22,8 +22,14 @@
 
 ![Local Shazam interactive menu on Windows](assets/screenshots/windows-menu.png)
 
-Know the clip, but can't find the file? Local Shazam searches your music collection
-and helps you find where it came from. Your audio stays on your computer.
+Got thousands of music files scattered across folders and a short clip you
+recognize? Index your music folders, choose the clip as a local audio file, and
+Local Shazam looks for matching audio in your collection.
+
+You don't need the full song: a seven-second clip, for example, can be enough
+to find the full track if it's in your indexed folders. When there isn't a clear
+match, the app can show possible matches for you to check. Your audio stays on
+your computer.
 
 ## Download
 
@@ -36,7 +42,7 @@ You can [build from source](docs/BUILDING.md) in the meantime.
 2. Extract the app and keep the included `olaf-runtime` folder beside it.
 3. Open **Local Shazam**.
 4. Choose **Add a music folder** and let it index your collection.
-5. Choose **Identify audio clips** to find a clip's source file.
+5. Choose **Identify audio clips**, select a local audio file, and review the matches.
 
 You can choose how many files to index at once. Start with a few workers if you
 want to keep using your computer while it runs. No Python required.
@@ -45,8 +51,10 @@ want to keep using your computer while it runs. No Python required.
 
 - Searches **your library**, not an online music catalog. No uploads or Shazam API.
 - Shows up to **three possible matches**. Listen and check when a result is uncertain.
-- Short, noisy or heavily edited clips can be harder to recognize.
-- Checks the first **30 seconds** of a clip against the full indexed tracks.
+- Clips can be shorter than 30 seconds; there is **no 30-second requirement**.
+  For longer files, only the first 30 seconds are searched against the full indexed tracks.
+- Very short, noisy or heavily edited clips can be harder to recognize.
+- Looks for matching audio, not similar-sounding songs. Different versions may not match.
 - Keep the original music files available after indexing.
 
 ## Documentation
