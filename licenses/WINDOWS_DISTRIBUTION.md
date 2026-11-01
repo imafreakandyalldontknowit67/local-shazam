@@ -67,4 +67,3 @@ minimum supported OS, a clean-host install, signing or hardware stability.
 
 The owner requested a private Windows release, not a public readiness certification.
 A future public launch still needs its own publication-surface and deployment review.
-

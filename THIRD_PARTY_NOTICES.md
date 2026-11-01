@@ -171,4 +171,3 @@ For the current Windows-only package review and source delivery, see
 and associated license texts are included as broad runtime attribution evidence,
 not a claim that every listed component is linked. Existing third-party grants
 and the application's MIT license remain unchanged.
-
