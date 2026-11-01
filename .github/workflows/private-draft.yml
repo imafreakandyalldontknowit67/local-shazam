@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       create_draft:
-        description: 'Create a PRIVATE DRAFT PRERELEASE after all four native gates (default OFF)'
+        description: 'Create a PRIVATE DRAFT PRERELEASE after all five target gates (default OFF)'
         type: boolean
         required: true
         default: false
@@ -141,16 +141,18 @@ jobs:
               if ((await github.rest.repos.getCommit({...context.repo, ref: `refs/tags/${tag}`})).data.sha !== sha)
                 throw new Error('Reviewed existing tag moved or is missing');
             }
-            const targets = ['windows-x64', 'linux-x64', 'macos-arm64', 'macos-x64'];
+            const targets = ['windows-x64', 'windows-x86', 'linux-x64', 'macos-arm64', 'macos-x64'];
             const dirs = fs.readdirSync('artifacts').sort();
             if (JSON.stringify(dirs) !== JSON.stringify(targets.map(t => 'portable-' + t).sort())) throw new Error('Missing/extra target');
             const assets = [], checksums = [];
             for (const target of targets) {
               const dir = path.join('artifacts', 'portable-' + target);
-              const stem = `local-shazam-${sha.slice(0,12)}-${target}`;
-              const names = [stem + (target === 'windows-x64' ? '.zip' : '.tar.gz'), stem + '-app-source.tar.gz', stem + '-olaf-source.tar.gz'];
-              if (JSON.stringify(fs.readdirSync(dir).sort()) !== JSON.stringify([...names, 'SHA256SUMS'].sort())) throw new Error('Artifact set incomplete');
-              const lines = fs.readFileSync(path.join(dir, 'SHA256SUMS'), 'utf8').trim().split('\n');
+              const win = target.startsWith('windows-');
+              const stem = win ? `Local-Shazam_${tag.slice(1)}_${target.slice(8)}` : `local-shazam-${sha.slice(0,12)}-${target}`;
+              const sums = win ? 'SHA256SUMS.txt' : 'SHA256SUMS';
+              const names = [stem + (win ? '.zip' : '.tar.gz'), stem + (win ? '_app-source.tar.gz' : '-app-source.tar.gz'), stem + (win ? '_olaf-source.tar.gz' : '-olaf-source.tar.gz')];
+              if (JSON.stringify(fs.readdirSync(dir).sort()) !== JSON.stringify([...names, sums].sort())) throw new Error('Artifact set incomplete');
+              const lines = fs.readFileSync(path.join(dir, sums), 'utf8').trim().split('\n');
               const actualLines = [];
               for (const name of names) {
                 const file = path.join(dir, name);
@@ -162,7 +164,7 @@ jobs:
               }
               if (JSON.stringify(lines.sort()) !== JSON.stringify(actualLines.sort())) throw new Error('Artifact checksum mismatch');
             }
-            assets.push({name: 'SHA256SUMS', data: Buffer.from(checksums.sort().join('\n') + '\n')});
+            assets.push({name: 'SHA256SUMS.txt', data: Buffer.from(checksums.sort().join('\n') + '\n')});
             await assertPrivateTag();
             try {
               await github.rest.repos.getReleaseByTag({...context.repo, tag});
@@ -171,7 +173,7 @@ jobs:
             const created = (await github.rest.repos.createRelease({
               ...context.repo, tag_name: tag, name: `${tag} — private experimental draft`,
               draft: true, prerelease: true, make_latest: 'false', generate_release_notes: false,
-              body: `Private experimental DRAFT PRERELEASE. Tested commit: ${sha}.\nUnsigned/not notarized; OS/glibc minimums unverified. FFmpeg/FFprobe external.\nAll four native dataset-free gates passed in run ${context.runId}; no accuracy or bit-for-bit reproducibility claim.\nApp and complete Olaf corresponding source archives and SHA256SUMS accompany binaries. Never publish or promote using this workflow.`
+              body: `Private experimental DRAFT PRERELEASE. Tested commit: ${sha}.\nUnsigned/not notarized; OS/glibc minimums unverified. FFmpeg/FFprobe external.\nAll five target dataset-free gates passed (Windows x86 via WOW64) in run ${context.runId}; no accuracy or bit-for-bit reproducibility claim.\nApp and complete Olaf corresponding source archives and SHA256SUMS accompany binaries. Never publish or promote using this workflow.`
             })).data;
             if (!created.draft || !created.prerelease) throw new Error('Release flags invariant failed');
             for (const asset of assets) {

@@ -26,3 +26,8 @@ licenses/rust/** -text
 
 # Exclude bundled licenses and notices from GitHub language statistics.
 licenses/** linguist-vendored
+
+# The language bar describes runtime code, not archived Python or build/test tooling.
+legacy/** linguist-vendored
+scripts/** linguist-detectable=false
+tests/** linguist-detectable=false

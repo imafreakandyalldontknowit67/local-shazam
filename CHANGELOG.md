@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.1
+
+- Versioned, readable Windows download filenames and separate x64/x86 packages.
+- 32-bit Olaf database mapping capped at 512 MiB; full-width fingerprint ordering
+  preserved. Failed fingerprint writes are reported instead of silently skipped.
+- Separate 32-bit index marker prevents accidental reuse across architectures.
+- Windows tutorial distinguishes the packages; license notices no longer count
+  toward GitHub language statistics.
+- Recognition settings and the Rust comparison engine are unchanged.
+
+
 ## Unreleased — native application preparation
 
 Native source version is `0.2.0`; historical `1.0.x` tags identify the Python

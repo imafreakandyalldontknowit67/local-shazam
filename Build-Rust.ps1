@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('windows-x64', 'linux-x64', 'macos-arm64', 'macos-x64')]
+    [ValidateSet('windows-x64', 'windows-x86', 'linux-x64', 'macos-arm64', 'macos-x64')]
     [string]$Target = 'windows-x64',
     [string]$OutDir = '',
     [switch]$Package

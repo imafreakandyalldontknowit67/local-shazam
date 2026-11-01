@@ -189,11 +189,11 @@
     },
     "patches/olaf/README.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "bf8c7ca853c35bc16a3e0082c67a83a59cba6732cf7b70253621e8dc884ff1a3"
+      "sha256": "8c93c0529a27395c1c6e0fbc303d7298df9782923def6a58e0373b77c03a4936"
     },
     "patches/olaf/series": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "0b3f3584ac138f073e1c735639c590f42cce50768bd048b2c8e7d6be031afa69"
+      "sha256": "f6ce1521baec425dcef7d6a5547acbd039a12281deba05c0f1f7142e8965a77c"
     },
     "scripts/build_olaf.py": {
       "origin": "release integration",
@@ -213,7 +213,7 @@
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "620d1d9a36caddc8a594cbea3d52213e999e48e443ac5f13ba01ec4ed7a10ad7"
+      "sha256": "6b8efe665baab3b287e56e1d8a6c9c9e6cbe4cbc48dc26fafa9681c0d417846c"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -728,7 +728,7 @@
     "vendor/olaf/src/olaf_db.c": {
       "captured_sha256": "97594cc69cfbf39645258e4dd0ba521067aa45e0c207840b8e0c88a1cd071ddd",
       "source_lf_sha256": "280eaa9df16e77650f7911a400d673fee2157230fa65f06e40260558adb6a54d",
-      "sha256": "280eaa9df16e77650f7911a400d673fee2157230fa65f06e40260558adb6a54d",
+      "sha256": "22e07dd844d1f3ec5a34b2632463a93b7b433364790e46b5f45a60ffe70860d5",
       "upstream_sha256": "e063a1ccb2d65fcdf9c1e78cae2d21aaa679279c8978db3f62a9898f09779756",
       "fork_head_sha256": "e063a1ccb2d65fcdf9c1e78cae2d21aaa679279c8978db3f62a9898f09779756"
     },
@@ -1071,7 +1071,7 @@
     "vendor/olaf/tests/olaf_db_concurrency_tests.c": {
       "captured_sha256": "25bb0f8c235909124b36bf7be47da849efad0d23d4fb9af9129bff44a0a2c5dc",
       "source_lf_sha256": "2711db8fc04b3a332d39056368e214c95206106d112974ea5423996b23d89b62",
-      "sha256": "2711db8fc04b3a332d39056368e214c95206106d112974ea5423996b23d89b62",
+      "sha256": "818aefc77519628ec57673f030a70e352f858f7db6b67316615c2701d92c5765",
       "upstream_sha256": "fe2cb63bec8872346e65f6c79bef41871a4ebdddb9184c5c75f6749fc636ec49",
       "fork_head_sha256": "fe2cb63bec8872346e65f6c79bef41871a4ebdddb9184c5c75f6749fc636ec49"
     },
@@ -1638,6 +1638,10 @@
     "patches/olaf/0005-release-install-debug-policy.patch": {
       "origin": "release install-step privacy correction (2026-10-31)",
       "sha256": "99bddfd78eb052033c4674f8d9b657d7aa33d549029ab570cd1177de52599663"
+    },
+    "patches/olaf/0006-x86-database-width.patch": {
+      "origin": "32-bit database width and error handling correction (2026-11-01)",
+      "sha256": "5a40fd4a29cc1af1292f6652d1bf902888898b63469f400cd711ec4def0043eb"
     }
   },
   "additional_notice_sources": {
@@ -1668,14 +1672,17 @@
     "patches/olaf/0002-working-matcher-config-db.patch",
     "patches/olaf/0003-release-local-source-build.patch",
     "patches/olaf/0004-release-build-privacy.patch",
-    "patches/olaf/0005-release-install-debug-policy.patch"
+    "patches/olaf/0005-release-install-debug-policy.patch",
+    "patches/olaf/0006-x86-database-width.patch"
   ],
   "release_modified_files": [
     "build.zig",
     "build.zig.zon",
     "tests/README.md",
     "tests/dataset_download.zig",
-    "tests/olaf_tests.c"
+    "tests/olaf_tests.c",
+    "src/olaf_db.c",
+    "tests/olaf_db_concurrency_tests.c"
   ],
   "modifications": [
     {
@@ -1697,6 +1704,10 @@
     {
       "patch": "patches/olaf/0005-release-install-debug-policy.patch",
       "summary": "Set stripping before install-step registration so Windows release installation does not request a suppressed PDB (2026-10-31); build-only fix."
+    },
+    {
+      "patch": "patches/olaf/0006-x86-database-width.patch",
+      "summary": "32-bit 512 MiB map, full-width fingerprint comparators, alignment-safe reads, checked writes and synthetic persistence regression. x64 map and ordering unchanged."
     }
   ],
   "build": {

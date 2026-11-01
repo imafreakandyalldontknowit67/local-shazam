@@ -33,8 +33,9 @@ your computer.
 
 ## Download
 
-Get the **Windows x64 ZIP** from [Releases](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/latest).
+Get the **Windows ZIP** from [Releases](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/latest).
 Downloads are currently available to people with access to this private repository.
+Choose **x64** for most PCs. Choose **x86** for 32-bit Windows; it is intended for smaller libraries.
 Linux and macOS packages aren't part of this release.
 
 ## Getting started

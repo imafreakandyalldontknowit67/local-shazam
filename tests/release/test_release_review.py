@@ -64,7 +64,7 @@ class ReleaseReviewTests(unittest.TestCase):
                 self.assertEqual("BLOCKED:" in row, p["status"].startswith("BLOCKED"))
         app = [p for p in lock if "source" not in p]
         self.assertEqual([(p["name"], p["version"]) for p in app],
-                         [("local-shazam", "0.2.0")])
+                         [("local-shazam", tomllib.loads((ROOT / "rust-app/Cargo.toml").read_text(encoding="utf8"))["package"]["version"]) ])
 
     def test_original_notice_hashes(self):
         records = [f for p in self.packages.values() for f in p["files"]]
@@ -140,7 +140,8 @@ class ReleaseReviewTests(unittest.TestCase):
     def test_historical_gates_and_explicit_limitations(self):
         self.assertEqual(self.preview["commit"], PREVIEW)
         cfg = read_json("release/targets.json")
-        self.assertEqual(set(self.preview["targets"]), set(cfg["targets"]))
+        self.assertEqual(set(self.preview["targets"]), {"windows-x64", "linux-x64", "macos-arm64", "macos-x64"})
+        self.assertTrue(set(self.preview["targets"]) <= set(cfg["targets"]))
         for target, entry in self.preview["targets"].items():
             with self.subTest(target=target):
                 exe = ".exe" if target == "windows-x64" else ""
