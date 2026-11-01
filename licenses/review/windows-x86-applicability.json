@@ -1,0 +1,311 @@
+{
+  "schema": 1,
+  "review_date": "2026-11-01",
+  "scope": {
+    "release": "v0.2.1",
+    "source_commit": "d32716df0be1a5ea2d919d0b8ceb560de17bd77c",
+    "review_checkout_baseline": "b89b5eb93b3cc30c0781ed7bf11b60f4e664c7b7",
+    "targets": [
+      "windows-x64",
+      "windows-x86"
+    ],
+    "decision": "Private release recorded by parent; public-release approval pending. Static evidence, not legal approval.",
+    "artifact_location": "Parent-supplied dist/verified-windows-0.2.1; only the six top-level archives and SHA256SUMS.txt were inspected.",
+    "excluded": "No compilers, Cargo metadata, dependency scripts, native execution, installs, archive extraction, network/remote verification, clean-host/audio tests, music/index access, privacy/history scan or publication actions.",
+    "historical_evidence": "windows-selected-dependencies.json is retained x86_64-pc-windows-msvc evidence, not a newly resolved x86 graph. Prior multi-platform/native-preview records were not replayed."
+  },
+  "method": [
+    "Python standard-library pathlib/hashlib/json/tomllib/zipfile/tarfile/struct/re/stat only for artifact and inventory checks; repository scripts read as text, never imported or executed.",
+    "SHA-256 raw archive bytes compared with SHA256SUMS.txt and parent verification size/hash fields. Parent inputs hashed separately.",
+    "ZIP and gzip-tar regular members read in memory; duplicate/unsafe names and members >=32 MiB rejected. Complete member sets, hashes and permission modes compared with embedded payload/source inventories, excluding generated BUILD-PROVENANCE.json from those inventories.",
+    "BUILD-PROVENANCE.json compared byte-for-byte across binary/app/Olaf archives per target; parsed JSON compared with parent manifest, commit and target. source_inventory_sha256 recomputed using JSON sorted keys, indent=2 and final LF.",
+    "Common app/Olaf source members, all licenses/ members and root LICENSE/THIRD_PARTY_NOTICES.md compared byte-for-byte with binary packages. Source groups compared across targets except BUILD-PROVENANCE.json.",
+    "Runtime provenance, license, notice, BUILDING.md and ten notice files compared with source (Zigzag notice maps to vendor/zigzag/LICENSE). BUILD-INFO target, binary digest and LF-normalized source-provenance digest checked.",
+    "All 251 vendor provenance file hashes checked with CRLF-to-LF normalization; seven ordered series entries compared with provenance. Each 0006/0007 unified-diff new-side hunk checked at its declared line offset against archived patched source; no patch application or full-series replay.",
+    "Independent DOS/PE header, COFF machine, PE32/PE32+ and section-backed normal import (directory 1) / RVA delay-import (directory 13) descriptor parsing; DLL-name unions compared with parent/embedded records. No symbol/thunk audit, loader execution, dynamic LoadLibrary tracing or link-map reconstruction.",
+    "Cargo.lock parsed: 115 registry names/versions/checksums and LF lock hash compared with rust-inventory; 240 retained Rust notice hashes, 11 Olaf notice hashes/source copies and 20 source-records copy hashes/archive-checksum-to-lock associations checked. No crates re-fetched.",
+    "Target predicates, feature forwarding, SQLite build branches, release/provider scripts and Olaf subprocess/configuration paths read statically, not treated as resolved features or actual linked objects."
+  ],
+  "input_sha256": {
+    "licenses/WINDOWS_DISTRIBUTION.md": "578a0dd52563e12385b1dfabc968f8f67507b72b0d8722234fd9bf32e77794ed",
+    "licenses/RELEASE_REVIEW.md": "d4c13eabc5fded222782e3659b344887a324c4635ccba0811170f3ae11368338",
+    "licenses/README.md": "e2689426cddd05681b6bf06834ec4e3d4ba69f3ab01efd4cb02f25ddf796a80c",
+    "THIRD_PARTY_NOTICES.md": "4e0916594c511e8d6964036efb9d7d166e14b94aa1dddeb01f9df34a88387022",
+    "LICENSE": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685",
+    "licenses/review/windows-selected-dependencies.json": "13a95d68e9ae9748bc0bee20a9d2199be027390c408fa332bcfa2dd7d63438bd",
+    "licenses/review/source-records.json": "45129f610314b948dc86f187f9d1918d176229a82ce0fb10977866f17f6bd100",
+    "licenses/review/investigation.json": "d33f7159d7550fb1134b0348f8da86b061c9b1157082ef1b63bd0b160fc34fbc",
+    "licenses/rust-inventory.json": "68ea5cd8bcbf399a15f7d18afcb8d749db36acb3c341e14621d82b67d32f6d2b",
+    "licenses/olaf-inventory.json": "9d4b7047a59ecc9775e3d187673da0b78e796c2cf5615d18a99b0e7fba296b2f",
+    "licenses/olaf/AGPL-3.0.txt": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
+    "rust-app/Cargo.toml": "ea034e108bedac436e53d3c9fb7490627568c7d5aa96d5d76e3bc4d37a25c9fd",
+    "rust-app/Cargo.lock": "aa4e5d9cff64a6b27fc5d10a1a2df37d88f261b32609f33aa4be8b92ded4b33f",
+    "rust-toolchain.toml": "515c80a149c1e927d497dbebc399e241822aa0197e8f778c21bf5c136c90afd2",
+    "release/targets.json": "a0bf3d269c5906a38dcc0b582beabc50d0cb0ee2e3da1f27ec5f4efe5e25f3d4",
+    "scripts/release.py": "c1c03edc2ba1ac476acd3b89cceaeacb038c8effc587f039589b00c67b7b23a8",
+    "scripts/build_olaf.py": "15ce85b4b49c39023de54fa3df31e702f42aaf1ecebdc3c0b121d672ea33157c",
+    "rust-app/src/olaf.rs": "667e8392fe0ca95e6c6112b9c8d5a28cd6fc44f088a47f9ffce579d8012bc6ae",
+    "vendor/olaf/build.zig": "a9251ee7fb03f8a12a353db5ed6537231d931abdbf454706bd76c21cd29827cd",
+    "vendor/olaf/build.zig.zon": "c60efad185e6c84d041bfb3af1c9d2b4677ffa1bb5964e44532620b5520087c6",
+    "vendor/olaf/PROVENANCE.json": "ffe00d2851ba562c9d1f41062aac011dbcd817abeed684ae27cc0f74e8b8a7b0",
+    "vendor/olaf/BUILDING.md": "2c043d20db710aeb1612f3219353657a6dea17cea688106fca023c96a3a340db",
+    "vendor/olaf/NOTICES.txt": "0071b5d92dba2ec80bebe6ac054881640cd57fa3223faa23a65783b0554b4052",
+    "vendor/zigzag/build.zig": "febfc998d2f6b296ae9846877b54d04d9f99f6da03765bd748362cfdfbe3f785",
+    "vendor/zigzag/build.zig.zon": "71cdd7bb48e4c40dd434fc92491c22d9576931926731267dad983f82690f022c",
+    "patches/olaf/README.md": "3c5e6d1815340233fc4422e8d4b987a4bdc7ed262f6d4e425629f27b7c590555",
+    "patches/olaf/series": "c72fdfc93d368ee89deee155b1a7e538c0c663077cab152e9fcf54e8b0eed5f8",
+    "patches/olaf/0006-x86-database-width.patch": "5a40fd4a29cc1af1292f6652d1bf902888898b63469f400cd711ec4def0043eb",
+    "patches/olaf/0007-x86-cli-compatibility.patch": "1b7f601f5f662e0346797758127c1705b5c9f29f026514cc24d0400fd1eb2f53",
+    "licenses/runtime/rust-1.99.0/COPYRIGHT-library.html": "5647be074c8edf7339fd863055923a8fc80bc5610a8d4661ec3b767b9d392c27",
+    "licenses/olaf/Zig-LICENSE.txt": "5c537d6853e005298a285d508cff9ac7192cea23576c840d485b2b586a7ff177",
+    "licenses/olaf/mingw-w64-COPYING.txt": "99a69660981156c21336fdb5661f89341b013c94e4bf9e1c7467b4745718397f",
+    "licenses/olaf/musl-COPYRIGHT.txt": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+  },
+  "input_hash_note": "WINDOWS_DISTRIBUTION.md is the pre-review baseline. All listed checkout inputs matched the inspected x86 source archive union before edits; x64 sources were equal except build provenance. Retained crate-copy hashes are enumerated in unchanged source-records.json.",
+  "parent_input_sha256": {
+    "CLAUDE.md": "829a3a2a0886e11daf69fd7efe651d03b057e3463bbe422396a1d81ff67b38c1",
+    "dist/readiness-audit/release-0.2.1-verification.json": "496beef9b4e4c7d0f16bd0fd990aab168fd726cda53725fa48e229ce9b52ae7d",
+    "dist/readiness-audit/0.2.1-x64-manifest.json": "22dc5a09dd3fbc8884100e385c6784b7b0bc33089f92bc0ec95efcdd269d2603",
+    "dist/readiness-audit/0.2.1-x86-manifest.json": "af87b7a4b20eeb6e248bc98b7ade74c4506f084911e2860150eca5d9d68d8e87",
+    "dist/verified-windows-0.2.1/SHA256SUMS.txt": "06d2a313c470ec2a5aeddcc38fe1ee085c6cb59a88ee936438fa1ad426a507ca"
+  },
+  "parent_report_only": {
+    "private": true,
+    "release_id": 430903426,
+    "downloaded_byte_comparison": "passed",
+    "downloaded_archive_verification": "passed for both targets",
+    "menu_exit": "passed for both targets; no index created",
+    "limits": "Remote visibility/download identity, builds, gates and menu execution not repeated. Embedded/parent records say x64 native and x86 WOW64, 16 gates each; WOW64 is not native 32-bit Windows testing."
+  },
+  "artifact_checks": {
+    "artifacts": {
+      "Local-Shazam_0.2.1_x64.zip": {
+        "sha256": "b41dc7022309a3b46e8f53755206ce022ea3bf9cec5920d88a2b79e04608e4e4",
+        "size": 3717800
+      },
+      "Local-Shazam_0.2.1_x64_app-source.tar.gz": {
+        "sha256": "fbb2e29210e73176ab8092bfdc8375c699dbd41cb519c868f1364289f7553ce1",
+        "size": 426512
+      },
+      "Local-Shazam_0.2.1_x64_olaf-source.tar.gz": {
+        "sha256": "ce829b1363f32b975f05418c34ff50992e793185368e17e222fc671f79ac2031",
+        "size": 994061
+      },
+      "Local-Shazam_0.2.1_x86.zip": {
+        "sha256": "9cb7d3400ded8e5acfa9dbec364d811cb1d8d0a33eef998b51b36be29e2ecf27",
+        "size": 3510067
+      },
+      "Local-Shazam_0.2.1_x86_app-source.tar.gz": {
+        "sha256": "2599127405934154ba8d0814a2cccc250348adf0915731cce1ad16846d1b51bd",
+        "size": 426514
+      },
+      "Local-Shazam_0.2.1_x86_olaf-source.tar.gz": {
+        "sha256": "a2e5ce3da1a6f1624f9a74db4dbc20cd626109ffcf610edf0d912807638611cb",
+        "size": 994067
+      }
+    },
+    "targets": {
+      "windows-x64": {
+        "binary_archive": "Local-Shazam_0.2.1_x64.zip",
+        "app_source_archive": "Local-Shazam_0.2.1_x64_app-source.tar.gz",
+        "olaf_source_archive": "Local-Shazam_0.2.1_x64_olaf-source.tar.gz",
+        "rust_target": "x86_64-pc-windows-msvc",
+        "olaf_zig_target": "x86_64-windows-gnu",
+        "embedded_build_provenance_sha256": "22dc5a09dd3fbc8884100e385c6784b7b0bc33089f92bc0ec95efcdd269d2603",
+        "source_inventory_sha256": "c0b1e0f74f591f4a070a3f96eded68d2499b65c0994d995a3d5764784fbc2496",
+        "verified_member_counts": {
+          "binary": 316,
+          "app": 350,
+          "olaf": 557
+        },
+        "verified_legal_members_in_all_three": 297,
+        "verified_shared_app_olaf_members": 311,
+        "verified_olaf_provenance_records": 251,
+        "verified_runtime_notice_members": 10,
+        "pe_descriptor_checks": {
+          "local-shazam.exe": {
+            "sha256": "4a62dcc72f4dc6eaedd0945615f92397f1508040d9d50b6bbe424fca31e97aea",
+            "normal_imports": [
+              "api-ms-win-core-synch-l1-2-0.dll",
+              "api-ms-win-crt-heap-l1-1-0.dll",
+              "api-ms-win-crt-locale-l1-1-0.dll",
+              "api-ms-win-crt-math-l1-1-0.dll",
+              "api-ms-win-crt-runtime-l1-1-0.dll",
+              "api-ms-win-crt-stdio-l1-1-0.dll",
+              "api-ms-win-crt-string-l1-1-0.dll",
+              "api-ms-win-crt-time-l1-1-0.dll",
+              "api-ms-win-crt-utility-l1-1-0.dll",
+              "bcryptprimitives.dll",
+              "combase.dll",
+              "kernel32.dll",
+              "ntdll.dll",
+              "ole32.dll",
+              "shell32.dll",
+              "vcruntime140.dll"
+            ],
+            "delay_imports": [],
+            "machine": "0x8664",
+            "format": "PE32+"
+          },
+          "olaf-runtime/olaf.exe": {
+            "sha256": "1dbfc680d17832c0966ece89865f8202bee4907d3ef451ef0e9e1523ec5db866",
+            "normal_imports": [
+              "advapi32.dll",
+              "api-ms-win-crt-convert-l1-1-0.dll",
+              "api-ms-win-crt-environment-l1-1-0.dll",
+              "api-ms-win-crt-heap-l1-1-0.dll",
+              "api-ms-win-crt-locale-l1-1-0.dll",
+              "api-ms-win-crt-math-l1-1-0.dll",
+              "api-ms-win-crt-private-l1-1-0.dll",
+              "api-ms-win-crt-runtime-l1-1-0.dll",
+              "api-ms-win-crt-stdio-l1-1-0.dll",
+              "api-ms-win-crt-string-l1-1-0.dll",
+              "api-ms-win-crt-time-l1-1-0.dll",
+              "api-ms-win-crt-utility-l1-1-0.dll",
+              "crypt32.dll",
+              "kernel32.dll",
+              "ntdll.dll"
+            ],
+            "delay_imports": [],
+            "machine": "0x8664",
+            "format": "PE32+"
+          }
+        },
+        "parent_recorded_execution_mode": "native",
+        "parent_recorded_gate_count": 16
+      },
+      "windows-x86": {
+        "binary_archive": "Local-Shazam_0.2.1_x86.zip",
+        "app_source_archive": "Local-Shazam_0.2.1_x86_app-source.tar.gz",
+        "olaf_source_archive": "Local-Shazam_0.2.1_x86_olaf-source.tar.gz",
+        "rust_target": "i686-pc-windows-msvc",
+        "olaf_zig_target": "x86-windows-gnu",
+        "embedded_build_provenance_sha256": "af87b7a4b20eeb6e248bc98b7ade74c4506f084911e2860150eca5d9d68d8e87",
+        "source_inventory_sha256": "c0b1e0f74f591f4a070a3f96eded68d2499b65c0994d995a3d5764784fbc2496",
+        "verified_member_counts": {
+          "binary": 316,
+          "app": 350,
+          "olaf": 557
+        },
+        "verified_legal_members_in_all_three": 297,
+        "verified_shared_app_olaf_members": 311,
+        "verified_olaf_provenance_records": 251,
+        "verified_runtime_notice_members": 10,
+        "pe_descriptor_checks": {
+          "local-shazam.exe": {
+            "sha256": "42823c436dfa611096e4b78ae2ae0acb7140bf241cdfb16049a4f34a69be5312",
+            "normal_imports": [
+              "api-ms-win-core-synch-l1-2-0.dll",
+              "api-ms-win-crt-heap-l1-1-0.dll",
+              "api-ms-win-crt-locale-l1-1-0.dll",
+              "api-ms-win-crt-math-l1-1-0.dll",
+              "api-ms-win-crt-runtime-l1-1-0.dll",
+              "api-ms-win-crt-stdio-l1-1-0.dll",
+              "api-ms-win-crt-string-l1-1-0.dll",
+              "api-ms-win-crt-time-l1-1-0.dll",
+              "api-ms-win-crt-utility-l1-1-0.dll",
+              "bcryptprimitives.dll",
+              "combase.dll",
+              "kernel32.dll",
+              "ntdll.dll",
+              "ole32.dll",
+              "shell32.dll",
+              "vcruntime140.dll"
+            ],
+            "delay_imports": [],
+            "machine": "0x014c",
+            "format": "PE32"
+          },
+          "olaf-runtime/olaf.exe": {
+            "sha256": "2edbcfd6de8940e181c9f062b7323d1da87df3fac0d30530781dd1692ab96a18",
+            "normal_imports": [
+              "advapi32.dll",
+              "api-ms-win-crt-convert-l1-1-0.dll",
+              "api-ms-win-crt-environment-l1-1-0.dll",
+              "api-ms-win-crt-heap-l1-1-0.dll",
+              "api-ms-win-crt-locale-l1-1-0.dll",
+              "api-ms-win-crt-math-l1-1-0.dll",
+              "api-ms-win-crt-runtime-l1-1-0.dll",
+              "api-ms-win-crt-stdio-l1-1-0.dll",
+              "api-ms-win-crt-string-l1-1-0.dll",
+              "api-ms-win-crt-time-l1-1-0.dll",
+              "api-ms-win-crt-utility-l1-1-0.dll",
+              "crypt32.dll",
+              "kernel32.dll",
+              "ntdll.dll"
+            ],
+            "delay_imports": [],
+            "machine": "0x014c",
+            "format": "PE32"
+          }
+        },
+        "parent_recorded_execution_mode": "wow64",
+        "parent_recorded_gate_count": 16
+      }
+    },
+    "cross_target_binary_differences": [
+      "BUILD-PROVENANCE.json",
+      "local-shazam.exe",
+      "olaf-runtime/BUILD-INFO.json",
+      "olaf-runtime/olaf.exe"
+    ],
+    "patch_postimages": [
+      {
+        "path": "patches/olaf/0006-x86-database-width.patch",
+        "sha256": "5a40fd4a29cc1af1292f6652d1bf902888898b63469f400cd711ec4def0043eb",
+        "postimage_hunks_matched": 8,
+        "modified_files": [
+          "vendor/olaf/src/olaf_db.c",
+          "vendor/olaf/tests/olaf_db_concurrency_tests.c"
+        ]
+      },
+      {
+        "path": "patches/olaf/0007-x86-cli-compatibility.patch",
+        "sha256": "1b7f601f5f662e0346797758127c1705b5c9f29f026514cc24d0400fd1eb2f53",
+        "postimage_hunks_matched": 5,
+        "modified_files": [
+          "vendor/olaf/cli/olaf_cli_core.zig",
+          "vendor/olaf/cli/olaf_cli_threading.zig",
+          "vendor/olaf/cli/ui/olaf_ui.zig"
+        ]
+      }
+    ],
+    "inventory_checks": {
+      "registry_packages": 115,
+      "rust_notice_records": 240,
+      "olaf_notice_records": 11,
+      "retained_exact_crate_files": 20,
+      "historical_x64_selected_rows": 73
+    }
+  },
+  "established_observations": [
+    "Six archive sizes/hashes and all member sets/modes/hashes match supplied records. This establishes internal byte correspondence, not independent proof that binaries were compiled from those sources.",
+    "Each target has 315 payload files, 349 app-source files and 556 Olaf-source files, each archive plus build provenance. Source inventories are identical across architectures; only generated build provenance differs.",
+    "297 legal/evidence members (295 under licenses/ plus root MIT and third-party notices) match all three archives per target. Ten runtime notices and runtime provenance/legal/build documentation match source. Binary ZIP differences are enumerated above.",
+    "Both source sets contain the seven ordered patches; all eight 0006 and five 0007 new-side hunks match source. README dates both changes 2026-11-01; changed DB/core/threading/UI sources carry that date. Native behavior/full-series reconstruction not established.",
+    "0006 contains 32-bit 512 MiB mapping, full-width comparisons, alignment-safe reads, checked writes and regression source. 0007 contains the MinGW _X86_ C-import define and mutex-protected full-width counters, including UI.",
+    "Relevant Olaf/Zigzag manifests, source, configuration, scripts and attribution are present and match inventory. App source has Cargo.lock and evidence copies, not vendored registry implementations. Outside rust-app/, only the libsqlite3-sys/sqlite-wasm-rs review build scripts are .rs members; no Apple-family or sqlite-wasm-rs implementation bundle is present.",
+    "Cargo.lock has 115 registry packages plus app; historical selected list has 72 dependencies plus app. rfd wayland/xdg-portal and rusqlite ffi-sqlite-wasm-rs feature labels occur there despite excluded platform dependency paths.",
+    "Each binary ZIP has only the app and Olaf executables, with no bundled DLL/installer, FFmpeg/FFprobe, SDK or compiler executable. All four PE DLL descriptor sets match records; delay-import directories are empty. Apps import VCRUNTIME140/UCRT/Windows DLLs; Olaf imports UCRT/Windows DLLs. x64 Olaf additionally imports api-ms-win-crt-private-l1-1-0.dll.",
+    "Rust 1.99.0 COPYRIGHT-library.html plus 12 license texts, Zig 0.16.0 MIT, mingw-w64 COPYING and musl COPYRIGHT match across packages. Installed toolchains were not inspected. No licenses/toolchains directory exists."
+  ],
+  "static_inference": [
+    "Both Windows MSVC targets satisfy rfd cfg(target_os = \"windows\") selecting windows-sys on that path (locked 0.61.2), not its macOS/Linux-BSD/wasm32 predicates. Six Apple-family direct dependencies and objc2 -> objc2-encode are excluded on that rfd path, not proved absent from every possible path.",
+    "Both fail rusqlite cfg(all(target_family = \"wasm\", target_os = \"unknown\")) and satisfy its negation selecting libsqlite3-sys (locked 0.39.1). Default ffi-sqlite-wasm-rs does not override the target predicate.",
+    "App bundled forwards to libsqlite3-sys bundled/modern bindings. Its build script includes SQLite C, MSVC/optional crt-static and environment/feature override branches. release.py strips relevant inherited overrides. These are recipes, not an x86 resolved feature graph or emitted-object proof.",
+    "Olaf native CLI recipe adds LMDB/PFFFT/c-algorithms, local Zigzag and REST and links libc for both architectures. Provider targets x86-windows-gnu versus x86_64-windows-gnu; this is not an exact linker inventory.",
+    "App integration generates index-local config, pins a copied runtime digest, invokes store/query with isolated HOME/USERPROFILE and external FFmpeg verification. This path does not start REST; retained REST/UI and future network deployment still require section 13 review."
+  ],
+  "gaps_and_reviewer_actions": [
+    "Parent: retain actual x86 target-resolved features/build-dependency graph and object/runtime/SDK link evidence. Do not relabel x64 evidence or infer complete closure from selected paths/imports.",
+    "Missing exact evidence: rfd declares build.rs but it is not retained; windows-sys/windows-link manifests/implementations are absent. Four Apple-family crates have VCS metadata only. No replacement inputs were downloaded/generated. CLAUDE.md was absent in worktree and read from the supplied parent.",
+    "Maintainer: reconcile archived Olaf BUILDING.md x86 omissions and NOTICES.txt 2026-10-29 summary with dated 0006/0007 README/source and current targets/provenance. Qualified review must assess prominent modification notices/dates and adequate build/install instructions. No provenance/notice/patch files changed.",
+    "Qualified reviewer: assess AGPL sections 1/5/6 corresponding source, needed dependency/config/build/install material, UI legal notices and applicable installation information. Inventory/hash equality is not legal sufficiency; app-source lacks registry implementations, and Zigzag standalone examples/tests plus optional fixtures/harnesses are deliberately absent.",
+    "Parent: verify both exact source archives alongside each binary under the planned section 6(d) mechanism, equivalent access/no further charge and clear directions for as long as required. Private access is not compliance or permission to restrict recipient modification/redistribution rights.",
+    "Qualified reviewer: resolve combined-work/aggregation and original-app rights without changing MIT or AGPL-3.0-or-later attribution or inventing a holder/grant. Subprocesses, private status, matching sources and packaging success are not exemptions/approval.",
+    "Qualified reviewer: map actual emitted Rust/compiler-builtins/Zig/MinGW/CRT/SDK inputs to exact terms/notices/source duties. Broad copyright inventories/templates are not linked-component proof or replacement grants; MinGW COPYING has component exceptions. No licenses/toolchains record was available.",
+    "Parent: keep Microsoft CRT/UCRT/OS and FFmpeg/FFprobe external; provide official prerequisite guidance and separately assess compatibility. Imports prove neither clean-host availability nor minimum OS. No development DLL copying; WOW64 gates do not establish native 32-bit Windows support.",
+    "Qualified reviewer: retain unresolved upstream patent and future hosted-service/section 13 questions. Historical Linux/macOS/Apple/wasm issues remain conditional on other targets, changed features or implementation-source redistribution, not newly established Windows blockers.",
+    "Public release remains pending a separate decision and parent-owned recipient-access, publication-surface, visibility and deployment checks. This later review is not present in inspected d32716d archives and does not update them."
+  ]
+}
