@@ -11,7 +11,7 @@ Opening the app does **not** automatically index your music.
   checks when an app needs to find a tool; include the folder containing these
   tools. Python is not required.
 - Check the [root README](../README.md) for current download availability.
-  If offered, choose `Local-Shazam_VERSION_x64.zip` for most Intel/AMD 64-bit
+  Choose `Local-Shazam_VERSION_x64.zip` for most Intel/AMD 64-bit
   Windows computers, or `Local-Shazam_VERSION_x86.zip` for 32-bit Windows.
   Use x64 for large libraries: x86 indexes are limited to **512 MiB**.
   Extract the **complete ZIP** to a folder

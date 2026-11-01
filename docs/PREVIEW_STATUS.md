@@ -2,22 +2,29 @@
 
 [Back to the user guide](../README.md)
 
-## Current Windows release ? 2026-11-01
+## Current Windows release - 2026-11-01
 
-[Local Shazam 0.2.0 ? Windows](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.0)
-is published as **Latest inside the private repository**. Tag `v0.2.0` points to
-`d523a71c724c6710e60fdc00224757552f2d58d3`. The repository remains private.
+[Local Shazam v0.2.1](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.1)
+is **Latest inside the private repository**. Tag `v0.2.1` points to
+`d32716df0be1a5ea2d919d0b8ceb560de17bd77c`, the exact commit used for both builds.
+Later documentation commits do not relabel these binaries.
 
-The fresh Windows build passed all 16 dataset-free release gates, package checks,
-and a menu/exit smoke test. The ZIP, matching app-source and Olaf-source archives,
-and SHA256SUMS were uploaded, downloaded, byte-compared and independently verified.
-The release includes the simplified menu and the [tutorial](QUICKSTART.md).
-See the scoped [Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md).
-No music indexing or new accuracy benchmark was run during release preparation.
+- `Local-Shazam_0.2.1_x64.zip`: 64-bit app and Olaf runtime, tested natively.
+- `Local-Shazam_0.2.1_x86.zip`: genuine 32-bit app and Olaf runtime, tested under
+  WOW64 on 64-bit Windows, **not** on a native 32-bit Windows PC.
+- Matching app/Olaf source archives per architecture and `SHA256SUMS.txt`.
 
-Linux/macOS remain pending. The earlier multi-platform draft is retained as
-historical work, not offered as current downloads. Unsigned-package, minimum-OS,
-clean-host and recognition-accuracy limitations still apply.
+Both packages passed all 16 dataset-free release gates, architecture/import and
+privacy checks, archive verification and menu/exit smoke tests. All seven uploaded
+assets were downloaded and byte-compared; both downloaded archive sets passed the
+independent verifier. Static tests: 137 passed, 3 skipped. No private music or
+production index was used and no new snippet-accuracy benchmark was run.
+
+Use x64 for large libraries. x86 indexes have a 512 MiB limit; switching
+architecture requires a fresh index. See [architecture notes](WINDOWS_0.2.1.md)
+and the [tutorial](QUICKSTART.md). Unsigned-package, minimum-OS, clean-host,
+recognition-accuracy and deferred licensing-review limitations remain.
+Linux/macOS are not included. v0.2.0 remains available as release history.
 
 ## Historical records below
 

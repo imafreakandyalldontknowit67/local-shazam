@@ -13,7 +13,7 @@
 
 ## Unreleased — native application preparation
 
-Native source version is `0.2.0`; historical `1.0.x` tags identify the Python
+This historical preparation used source version `0.2.0`; `1.0.x` tags identify the Python
 application. This section does not announce a new version, tag or downloadable
 release.
 
