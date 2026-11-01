@@ -21,13 +21,18 @@
 
 </div>
 
+![Local Shazam interactive menu on Windows](assets/screenshots/windows-menu.png)
+
+*The native Windows app. All recognition runs against your own local library.*
+
 > [!WARNING]
 > Local Shazam is an experimental native preview. Matches are suggestions, not
 > guarantees. Packages are unsigned and remain in a private draft release;
 > distribution and license review is still open before public release.
 
-The existing draft still contains the baseline build. Replacement packages with
-compiler path remapping are awaiting fresh native builds and artifact verification.
+There is no published native release yet. The private draft contains a newly
+built and verified Windows package at `d639ab2a2c49`; Linux and macOS packages
+remain historical builds awaiting replacement and verification.
 See the [release checklist](docs/RELEASE_CHECKLIST.md) and
 [verified-upload cleanup procedure](docs/BUILD_CLEANUP.md).
 
@@ -76,8 +81,11 @@ with a repository account that can view drafts. These are not public downloads y
 | macOS (Apple Silicon) | ARM64 tar archive containing `local-shazam` |
 | macOS (Intel) | x64 tar archive containing `local-shazam` |
 
-All four packages passed the [native CI build and packaging gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988)
+The historical four-platform baseline passed the [native CI build and packaging gates](https://github.com/imafreakandyalldontknowit67/local-shazam/actions/runs/41023384988)
 at source commit `92a983a57ff92ad4b9342fb4dd992edf728b5a97`, not current HEAD.
+The Windows package has since been replaced with a local build at `d639ab2a2c49`,
+with native test/packaging gates and uploaded-download checksum verification passed.
+Linux and macOS remain on the historical baseline.
 Read-only [artifact and draft metadata review](licenses/review/native-preview.json)
 confirmed the historical set. Checksums are not publisher authentication; these
 gates do not establish minimum OS support, privacy, snippet accuracy or hardware
@@ -105,10 +113,10 @@ olaf-runtime/
 
 For setup and packaging, see [Building](docs/BUILDING.md),
 [Releasing](docs/RELEASING.md) and [Third-party notices](THIRD_PARTY_NOTICES.md).
-The preview packages are verified at source commit `92a983a57ff9`; this is build
-and packaging evidence, not a new snippet-accuracy or hardware-stability claim.
-Historical binaries still require a compiler-privacy rebuild and independent
-verification; see the [release-readiness checklist](docs/RELEASING.md).
+Windows is verified at `d639ab2a2c49`; Linux/macOS remain at `92a983a57ff9`.
+This is build and packaging evidence, not a new snippet-accuracy or hardware-stability
+claim. Historical Linux/macOS binaries still require a compiler-privacy rebuild
+and independent verification; see the [release-readiness checklist](docs/RELEASING.md).
 
 ## Getting started
 

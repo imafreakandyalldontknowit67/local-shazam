@@ -52,6 +52,17 @@ class HygieneTests(unittest.TestCase):
         self.assertNotIn(str(self.root), result.stdout + result.stderr)
         return result.stdout + result.stderr
 
+    def test_reviewed_screenshot_requires_exact_path_and_bytes(self):
+        name = 'assets/screenshots/windows-menu.png'
+        data = (REPO / name).read_bytes()
+        self.write(name, data)
+        self.run_check()
+        self.write(name, data + b'unreviewed metadata')
+        self.run_check(expected=1)
+        self.write(name, data)
+        self.write('assets/screenshots/other.png', data)
+        self.run_check(expected=1)
+
     def test_nested_case_variant_artifacts_in_source(self):
         forbidden = ['deep/SONG.Mp3', 'nested/a.FLAC', 'video/clip.MOV', 'deep/clip.F32LE',
                      'nested/state.SQLITE3-WaL', 'db/data.MdB', 'deep/cache.LMDB-lock',

@@ -7,10 +7,11 @@ working-tree bytes. Without a .git entry at ROOT, recursively check all files
 (including ignored/untracked files). A staging directory inside another checkout
 is therefore checked recursively. .git and .worktrees metadata are not traversed.
 
-This is NOT a binary-package validator: there is deliberately no binary bypass.
+This is NOT a binary-package validator: there is no general binary bypass.
 Check the extracted corresponding-source archive here; the packaging workflow
 must separately allowlist and authenticate intentionally generated executables.
-No path, vendor, manifest, notice or patch gets a content-scanning exemption.
+One visually reviewed documentation screenshot is pinned by exact path and SHA256.
+Any change requires renewed review; no other binary receives an exemption.
 Heuristics are defense in depth, not proof that a file contains no private data.
 Exit: 0 clean, 1 policy findings, 2 invocation/inventory failure. Never deletes.
 """
@@ -29,6 +30,12 @@ import subprocess
 import sys
 from typing import Iterator
 
+
+# Reviewed user-supplied UI screenshot: neutral demo path, no personal data;
+# PNG contains only IHDR/IDAT/IEND chunks (no metadata). Not executable code.
+REVIEWED_DOCUMENTATION_IMAGES = {
+    'assets/screenshots/windows-menu.png': 'ecfbbd47af43facd8b462d7a632d2542d97a2303cf89940e5882ec02746dd75d',
+}
 
 MAX_BYTES = 32 * 1024 * 1024
 METADATA = {".git", ".worktrees"}
@@ -316,6 +323,9 @@ class Findings:
 def check_bytes(name: str, data: bytes, findings: Findings) -> None:
     if len(data) > MAX_BYTES:
         findings.add(name, 'oversized-source', 'Review this oversized source candidate; limit is 32 MiB.')
+        return
+    if (name in REVIEWED_DOCUMENTATION_IMAGES
+            and hashlib.sha256(data).hexdigest() == REVIEWED_DOCUMENTATION_IMAGES[name]):
         return
     try:
         text = data.decode('utf-8-sig')
