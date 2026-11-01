@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import struct
 import tempfile
 import unittest
 from unittest import mock
@@ -18,6 +19,29 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("build_olaf", ROOT / "scripts/build_olaf.py")
 builder = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(builder)
+
+
+def synthetic_binary(target):
+    # Valid headers only, never an executable test program.
+    data = bytearray(1024)
+    if target.startswith("windows-"):
+        x86 = target == "windows-x86"
+        size, base = (224, 96) if x86 else (240, 112)
+        data[:2] = b"MZ"
+        struct.pack_into("<I", data, 60, 128)
+        data[128:132] = b"PE\0\0"
+        struct.pack_into("<HH", data, 132, 0x14C if x86 else 0x8664, 1)
+        struct.pack_into("<HHH", data, 148, size, 2, 0x10B if x86 else 0x20B)
+        struct.pack_into("<I", data, 212, 512)
+        struct.pack_into("<I", data, 152 + base - 4, 16)
+        struct.pack_into("<4I", data, 152 + size + 8, 512, 4096, 512, 512)
+    elif target == "linux-x64":
+        data[:6] = b"\x7fELF\x02\x01"
+        struct.pack_into("<H", data, 18, 62)
+    else:
+        data[:4] = b"\xcf\xfa\xed\xfe"
+        struct.pack_into("<I", data, 4, 0x0100000C if target == "macos-arm64" else 0x01000007)
+    return bytes(data)
 
 
 def apply_patch_text(tree: dict[str, str], patch: str, reverse: bool = False) -> None:
@@ -205,6 +229,18 @@ class SourceDistributionTests(unittest.TestCase):
         for step in ("test-matcher-v3", "test-db-safety", "test-config-safety"):
             self.assertIn(f'b.step("{step}"', build)
 
+    def test_target_policy_and_regression_module_closure(self):
+        self.assertEqual(self.provenance["build"]["targets"], {t: row[0] for t, row in builder.TARGETS.items()})
+        self.assertEqual(builder.TARGETS["windows-x86"], ("x86-windows-gnu", "olaf.exe"))
+        source = (ROOT / "vendor/olaf/build.zig").read_text()
+        self.assertIn("const target = b.standardTargetOptions(.{});", source)
+        for name in ("matcher_test", "writer_test", "db_helper", "db_tests", "config_test"):
+            block = source.split(f"const {name} = b.add", 1)[1].split("artifacts.append", 1)[0]
+            self.assertIn(".target = target", block)
+            self.assertNotIn("b.graph.host", block)
+            self.assertIn(f"b.addRunArtifact({name})", source) if name != "db_helper" else self.assertIn(
+                'db_options.addOptionPath("helper", db_helper.getEmittedBin())', source)
+
     def test_licenses_preserve_component_terms(self):
         self.assertIn("GNU AFFERO GENERAL PUBLIC LICENSE", (ROOT / "vendor/olaf/LICENSE").read_text())
         self.assertIn("any later version", (ROOT / "vendor/olaf/src/olaf_config.c").read_text())
@@ -213,6 +249,11 @@ class SourceDistributionTests(unittest.TestCase):
 
 
 class BuildInterfaceTests(unittest.TestCase):
+    def setUp(self):
+        self.addCleanup(mock.patch.stopall)
+        mock.patch.object(builder.subprocess, "run", side_effect=AssertionError("Unmocked tool execution")).start()
+        mock.patch.object(builder.policy.urllib.request, "urlopen", side_effect=AssertionError("No network")).start()
+
     def test_check_only_never_invokes_tools_or_creates_output(self):
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(builder.subprocess, "run") as run:
             output = Path(tmp) / "absent"
@@ -252,7 +293,7 @@ class BuildInterfaceTests(unittest.TestCase):
                     binary = prefix / "bin" / executable
                     self.assertFalse(binary.exists())
                     binary.parent.mkdir(parents=True)
-                    binary.write_bytes(b"mock newly compiled Olaf")
+                    binary.write_bytes(synthetic_binary(target))
                     return subprocess.CompletedProcess(command, 0)
 
                 with mock.patch.object(builder.shutil, "which", return_value="zig"), mock.patch.object(builder.subprocess, "run", side_effect=fake_run):
@@ -261,9 +302,25 @@ class BuildInterfaceTests(unittest.TestCase):
                 for name in (executable, "OLAF-LICENSE", "OLAF-NOTICES.txt", "PROVENANCE.json", "BUILD-INFO.json", "notices/Zigzag-LICENSE.txt", "notices/OpenLDAP-LICENSE.txt"):
                     self.assertTrue((runtime / name).is_file(), name)
                 info = json.loads((runtime / "BUILD-INFO.json").read_text())
-                self.assertEqual(info["executable_sha256"], builder.sha256(b"mock newly compiled Olaf"))
+                self.assertEqual(info["executable_sha256"], builder.sha256(synthetic_binary(target)))
                 self.assertEqual(info["target"], target)
                 self.assertEqual(len(calls), 2)
+
+    def test_wrong_architecture_or_malformed_output_never_publishes(self):
+        for data in (synthetic_binary("windows-x64"), b"mock not an executable",
+                     synthetic_binary("windows-x86")[:200]):
+            with self.subTest(size=len(data)), tempfile.TemporaryDirectory() as tmp:
+                def fake_run(command, **kwargs):
+                    prefix = Path(command[command.index("--prefix") + 1])
+                    path = prefix / "bin/olaf.exe"
+                    path.parent.mkdir(parents=True)
+                    path.write_bytes(data)
+                    return subprocess.CompletedProcess(command, 0)
+                with mock.patch.object(builder, "find_zig", return_value="zig"), \
+                        mock.patch.object(builder.subprocess, "run", side_effect=fake_run):
+                    with self.assertRaises((builder.BuildError, builder.policy.ReleaseError)):
+                        builder.build_runtime("windows-x86", Path(tmp))
+                self.assertFalse((Path(tmp) / "olaf-runtime").exists())
 
     def test_build_failure_and_missing_artifact_do_not_package_old_runtime(self):
         for effect in (subprocess.CalledProcessError(1, ["zig", "build"]), subprocess.CompletedProcess([], 0)):
