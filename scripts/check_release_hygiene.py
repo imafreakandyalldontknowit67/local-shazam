@@ -106,7 +106,7 @@ HOME_PATH = re.compile(
     r"[\\/]+([^\\/\s\"'`;,<>]+|<[^>]+>)", re.I
 )
 ROOT_HOME = re.compile(r"(?<![:/\w])/" r"root/(?![<>${])[^\s\"'`]+")
-WINDOWS_PATH = re.compile(r"\b[a-z]:[\\/]+([^\r\n\"'`|;,]+)", re.I)
+WINDOWS_PATH = re.compile(r"\b[a-z]:[\\/]+([^:\r\n\"'`|;,]+)", re.I)
 UNC_PATH = re.compile(r"(?<![\w\\])\\\\(?![?.]\\)([A-Za-z0-9_.-]+)\\([^\s\"'`]+)")
 UNC_FORWARD = re.compile(r"(?<![:/\w])//(?:\?/UNC/)?([A-Za-z0-9_.-]+)/([^\s\"'`]+)", re.I)
 MOUNT_PATH = re.compile(r"(?<![:/\w])/" r"(?:Volumes|media|mnt)/([^/\s\"'`]+)", re.I)
