@@ -1,5 +1,8 @@
 # Required release review â€” not a readiness certification
 
+> Historical multi-platform review. For the subsequently verified Windows-only
+> private release, see [current release status](../docs/PREVIEW_STATUS.md).
+
 ## Scope and factual closures (2026-10-30)
 
 This is a bounded reconciliation, not a new release, a replay of the completed

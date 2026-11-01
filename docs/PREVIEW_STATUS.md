@@ -1,6 +1,29 @@
-# Native preview status and recorded build history
+# Release status and recorded build history
 
 [Back to the user guide](../README.md)
+
+## Current Windows release ? 2026-11-01
+
+[Local Shazam 0.2.0 ? Windows](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.0)
+is published as **Latest inside the private repository**. Tag `v0.2.0` points to
+`d523a71c724c6710e60fdc00224757552f2d58d3`. The repository remains private.
+
+The fresh Windows build passed all 16 dataset-free release gates, package checks,
+and a menu/exit smoke test. The ZIP, matching app-source and Olaf-source archives,
+and SHA256SUMS were uploaded, downloaded, byte-compared and independently verified.
+The release includes the simplified menu and the [tutorial](QUICKSTART.md).
+See the scoped [Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md).
+No music indexing or new accuracy benchmark was run during release preparation.
+
+Linux/macOS remain pending. The earlier multi-platform draft is retained as
+historical work, not offered as current downloads. Unsigned-package, minimum-OS,
+clean-host and recognition-accuracy limitations still apply.
+
+## Historical records below
+
+The following notes describe earlier review stages and are superseded by the
+Windows release status above where they refer to an unpublished Windows build.
+
 
 Local Shazam is an **experimental native preview with no published native
 release**. Existing packages remain in a private draft; distribution and license

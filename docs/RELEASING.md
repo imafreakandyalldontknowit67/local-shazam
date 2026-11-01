@@ -1,5 +1,8 @@
 # Private native preview: release-readiness checklist
 
+> Historical multi-platform review. For the subsequently verified Windows-only
+> private release, see [current release status](PREVIEW_STATUS.md).
+
 ## Decision: not release-ready
 
 This reconciles the existing **Rust 0.2.0** preview, not a new release or legal
