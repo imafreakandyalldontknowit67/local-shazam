@@ -1,8 +1,14 @@
-# Public beta preparation: Windows 0.2.2-beta.1
+# Public beta released: Windows 0.2.2-beta.1
 
-The owner requested a **public beta**. Preparation stays private until the fresh
-0.2.2-beta.1 packages pass build, execution, upload/download and source verification.
-Clean-PC setup and native 32-bit Windows compatibility will be labeled unverified.
+The repository is public and [v0.2.2-beta.1](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.2-beta.1) is published as a prerelease.
+Both Windows packages passed build, execution, matching-source verification and
+anonymous download byte comparison for all seven assets. See the
+[release receipt](release-0.2.2-beta.1-verification.json) and
+[generated-audio smoke results](release-smoke-0.2.2-beta.1.json).
+The exact packaged commit is `d0f42a0904ad258de0ae5acdbe07d12569f1e73a`;
+later documentation commits do not change those binaries.
+Clean-PC setup and native 32-bit Windows compatibility remain unverified.
+The beta is linked directly from README; v0.2.1 remains the previous stable release.
 
 ## Completed baseline engineering checks (v0.2.1)
 
@@ -33,17 +39,15 @@ Clean-PC setup and native 32-bit Windows compatibility will be labeled unverifie
    Sandbox available. Merely restricting PATH does not remove installed DLLs.
 2. **Maintainer licensing/publication decision.** Review the scoped
    [Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md). Preserve
-   third-party grants and complete matching source access. The owner selected `badger` for the app's MIT copyright header. This
-   source-checkout update does not change the license files inside existing
-   v0.2.1 downloads; reflect it in the next packaged release. Technical checks are not blanket legal approval.
+   third-party grants and complete matching source access. The owner selected `badger` for the app's MIT copyright header. The new beta packages contain this notice; existing v0.2.1 downloads remain unchanged. Technical checks are not blanket legal approval.
 3. **Publish only verified beta artifacts.** The owner requested the public beta;
-   retain private visibility until the new packages and downloaded bytes pass.
+   the new packages and anonymously downloaded bytes have passed, and publication is complete.
    Preserve prior release tags/assets and never imply the beta passed clean-host
    or native 32-bit tests.
 
 ## Housekeeping, not a binary release blocker
 
-About 10 GiB of local disposable build/tool staging remains. Exact workspace
+About 13.4 GiB of local disposable build/tool staging remains after the beta builds. Exact workspace
 paths were checked for containment, reparse points and running executables.
 The deletion command was rejected by the execution policy; **no local cleanup is
 claimed**. Verified recovery archives and evidence must be kept. Local staging is

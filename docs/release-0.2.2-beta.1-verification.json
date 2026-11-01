@@ -1,0 +1,43 @@
+{
+  "release": "v0.2.2-beta.1",
+  "release_id": 430930582,
+  "built_commit": "d0f42a0904ad258de0ae5acdbe07d12569f1e73a",
+  "public": true,
+  "prerelease": true,
+  "anonymous_download_byte_comparison": "passed for all seven assets",
+  "independent_archive_verification": "passed for both targets",
+  "menu_and_audio_smoke": "passed for both targets on existing Windows 10 x64 PC",
+  "clean_host": false,
+  "native_32bit_host": false,
+  "previous_v021_assets": "seven assets unchanged by size and API digest",
+  "files": {
+    "Local-Shazam_0.2.2-beta.1_x64.zip": {
+      "size": 3734772,
+      "sha256": "3b00f85c80ae3a99f66a812bb1e56291c03a23a226065027680dc96688535b96"
+    },
+    "Local-Shazam_0.2.2-beta.1_x64_app-source.tar.gz": {
+      "size": 451084,
+      "sha256": "1ae288a336faa3e049c5024afb758a94d01e1e09ae4a80195c1dca3523348f07"
+    },
+    "Local-Shazam_0.2.2-beta.1_x64_olaf-source.tar.gz": {
+      "size": 1011367,
+      "sha256": "4ff4f647a5d515373fca758ab63fa7f80d89f47cb0a902b3f2e7d006a9f47985"
+    },
+    "Local-Shazam_0.2.2-beta.1_x86.zip": {
+      "size": 3526925,
+      "sha256": "bb8df77929159b6ed718948cb31fd31774ec9238639b3011e8e008f381b9b61c"
+    },
+    "Local-Shazam_0.2.2-beta.1_x86_app-source.tar.gz": {
+      "size": 451099,
+      "sha256": "94607689d42a78790326c08792dad4a56d62ba1f2693829982ae2e6b2b0d9557"
+    },
+    "Local-Shazam_0.2.2-beta.1_x86_olaf-source.tar.gz": {
+      "size": 1011385,
+      "sha256": "96674e5c352a10b925b997cef9f0e43cefb15494e7c299093f5c336ca3dcb379"
+    },
+    "SHA256SUMS.txt": {
+      "size": 658,
+      "sha256": "ff2518009df9743e613a1a55c23d7b643a921ddd86670475c0ee9c323c0bff36"
+    }
+  }
+}

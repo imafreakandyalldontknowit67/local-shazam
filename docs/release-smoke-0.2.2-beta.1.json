@@ -1,0 +1,29 @@
+{
+  "version": "0.2.2-beta.1",
+  "release_commit": "d0f42a0904ad258de0ae5acdbe07d12569f1e73a",
+  "host": "Windows 10 Home 22H2 x64 (19045), existing development PC",
+  "clean_host": false,
+  "scope": "Two generated 24-second WAV tracks; exact 7-second excerpt and independent generated non-library clip; two workers; system and FFmpeg-only PATH; no private audio or production index. Functional smoke test, not an accuracy benchmark.",
+  "targets": {
+    "x64": {
+      "execution": "native",
+      "indexed_tracks": 2,
+      "known_clip_seconds": 7,
+      "known_clip": "strong_match, correct track first",
+      "unknown_clip": "insufficient_evidence, no matches",
+      "reopen_songs": 2,
+      "incremental_skipped": 2,
+      "other_architecture_index": "rejected, marker unchanged"
+    },
+    "x86": {
+      "execution": "WOW64",
+      "indexed_tracks": 2,
+      "known_clip_seconds": 7,
+      "known_clip": "strong_match, correct track first",
+      "unknown_clip": "insufficient_evidence, no matches",
+      "reopen_songs": 2,
+      "incremental_skipped": 2,
+      "other_architecture_index": "rejected, marker unchanged"
+    }
+  }
+}
