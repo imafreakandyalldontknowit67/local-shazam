@@ -354,20 +354,9 @@ fn choose_workers() -> Result<Option<u16>> {
     }
 }
 fn menu(db: &Path, backend: Backend, olaf_index: &Path, olaf_bin: &Path) -> Result<()> {
-    println!(
-        "Local Shazam - {:?}\nIndex: {}",
-        backend,
-        if backend == Backend::Olaf {
-            olaf_index.display()
-        } else {
-            db.display()
-        }
-    );
-    if backend == Backend::Olaf {
-        println!("Experimental local verification; suggestions are not guaranteed matches. Rust fallback: --backend rust.");
-    }
+    println!("\n  Local Shazam");
     loop {
-        print!("\n[1] Index music folder\n[2] Match snippets\n[3] View database stats\n[4] Exit\n\nChoose an option: ");
+        print!("\n  [1] Add a music folder\n  [2] Identify audio clips\n  [3] View library stats\n  [4] Exit\n\n  Choose an option: ");
         io::stdout().flush()?;
         let mut choice = String::new();
         if io::stdin().read_line(&mut choice)? == 0 {
