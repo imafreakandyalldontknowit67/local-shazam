@@ -52,6 +52,12 @@ class HygieneTests(unittest.TestCase):
         self.assertNotIn(str(self.root), result.stdout + result.stderr)
         return result.stdout + result.stderr
 
+    def test_verbatim_rust_gpl_attribution_url(self):
+        self.write('LICENSE.txt', '<https: //www.gnu.org/licenses/why-not-lgpl.html>')
+        self.run_check()
+        self.write('LICENSE.txt', '<https: ' + '/' + '/private-host/private-share>')
+        self.run_check(expected=1)
+
     def test_reviewed_screenshot_requires_exact_path_and_bytes(self):
         name = 'assets/screenshots/windows-menu.png'
         data = (REPO / name).read_bytes()

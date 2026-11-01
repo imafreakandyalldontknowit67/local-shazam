@@ -84,7 +84,8 @@
       "assets/brand/*.svg",
       "assets/brand/tokens.json",
       "docs/*.md",
-      "docs/BRAND-PROMPT.txt"
+      "docs/BRAND-PROMPT.txt",
+      "assets/screenshots/windows-menu.png"
     ],
     "olaf": [
       "vendor/olaf/build.zig",

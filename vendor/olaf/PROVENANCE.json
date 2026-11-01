@@ -201,7 +201,7 @@
     },
     "scripts/check_release_hygiene.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "458338d8d8e1d53dbe25334f8921e4af5286e5442ea851c024659d0172481bf7"
+      "sha256": "6d391895150bf27b64700e3bf0ee92df9220c82f15e9212438d1993aa9508bbb"
     },
     "scripts/release.py": {
       "origin": "release build/privacy integration (2026-10-30)",

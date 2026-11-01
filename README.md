@@ -33,10 +33,13 @@ your computer.
 
 ## Download
 
-Downloads aren't public yet. We're preparing the next release.
-You can [build from source](docs/BUILDING.md) in the meantime.
+Get the **Windows x64 ZIP** from [Releases](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/latest).
+Downloads are currently available to people with access to this private repository.
+Linux and macOS packages aren't part of this release.
 
 ## Getting started
+
+New here? Follow the [step-by-step tutorial](docs/QUICKSTART.md).
 
 1. Install **FFmpeg and FFprobe** and make sure they're on your `PATH`.
 2. Extract the app and keep the included `olaf-runtime` folder beside it.
