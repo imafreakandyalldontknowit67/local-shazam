@@ -13,7 +13,18 @@
       "zig_sha256": "68659eb5f1e4eb1437a722f1dd889c5a322c9954607f5edcf337bc3684a75a7e",
       "rustup_sha256": "88d8258dcf6ae4f7a80c7d1088e1f36fa7025a1cfd1343731b4ee6f385121fc0",
       "status": "unverified",
-      "minimum_os": "unverified"
+      "minimum_os": "unverified",
+      "olaf": "x86_64-windows-gnu"
+    },
+    "windows-x86": {
+      "os": "Windows",
+      "arch": "x86",
+      "runner": "windows-2025",
+      "rust": "i686-pc-windows-msvc",
+      "host_tools": "windows-x64",
+      "status": "unverified",
+      "minimum_os": "unverified",
+      "olaf": "x86-windows-gnu"
     },
     "linux-x64": {
       "os": "Linux",
@@ -24,7 +35,8 @@
       "zig_sha256": "70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00",
       "rustup_sha256": "20a06e644b0d9bd2fbdbfd52d42540bdde820ea7df86e92e533c073da0cdd43c",
       "status": "unverified",
-      "minimum_os": "unverified; glibc minimum not established"
+      "minimum_os": "unverified; glibc minimum not established",
+      "olaf": "x86_64-linux-musl"
     },
     "macos-arm64": {
       "os": "Darwin",
@@ -35,7 +47,8 @@
       "zig_sha256": "b23d70deaa879b5c2d486ed3316f7eaa53e84acf6fc9cc747de152450d401489",
       "rustup_sha256": "20ef5516c31b1ac2290084199ba77dbbcaa1406c45c1d978ca68558ef5964ef5",
       "status": "unverified",
-      "minimum_os": "unverified"
+      "minimum_os": "unverified",
+      "olaf": "aarch64-macos.11.0.0-none"
     },
     "macos-x64": {
       "os": "Darwin",
@@ -46,7 +59,8 @@
       "zig_sha256": "0387557ed1877bc6a2e1802c8391953baddba76081876301c522f52977b52ba7",
       "rustup_sha256": "9c331076f62b4d0edeae63d9d1c9442d5fe39b37b05025ec8d41c5ed35486496",
       "status": "unverified",
-      "minimum_os": "unverified"
+      "minimum_os": "unverified",
+      "olaf": "x86_64-macos.11.0.0-none"
     }
   },
   "source_inventory": {

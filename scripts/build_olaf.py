@@ -26,6 +26,7 @@ _spec.loader.exec_module(policy)
 ZIG_VERSION = "0.16.0"
 TARGETS = {
     "windows-x64": ("x86_64-windows-gnu", "olaf.exe"),
+    "windows-x86": ("x86-windows-gnu", "olaf.exe"),
     "linux-x64": ("x86_64-linux-musl", "olaf"),
     "macos-arm64": ("aarch64-macos.11.0.0-none", "olaf"),
     "macos-x64": ("x86_64-macos.11.0.0-none", "olaf"),
@@ -77,6 +78,8 @@ def validate_sources(root: Path = ROOT) -> dict:
         records = provenance["files"]
         if provenance["schema_version"] != 1 or not isinstance(records, dict):
             raise BuildError("Unsupported Olaf provenance schema")
+        if provenance["build"]["targets"] != {name: row[0] for name, row in TARGETS.items()}:
+            raise BuildError("Olaf provenance target policy mismatch")
         missing = REQUIRED_FILES - records.keys()
         if missing:
             raise BuildError("Incomplete source inventory: " + ", ".join(sorted(missing)))
@@ -166,6 +169,10 @@ def build_runtime(target: str, out_dir: Path, root: Path = ROOT) -> Path:
         binary = prefix / "bin" / executable
         if not binary.is_file() or binary.is_symlink() or binary.stat().st_size == 0:
             raise BuildError(f"Zig did not produce the required fresh binary: bin/{executable}")
+        if policy.architecture(binary.read_bytes()) != target:
+            raise BuildError("Olaf output architecture mismatch")
+        if target in policy.WINDOWS_TARGETS:
+            policy.pe_imports(binary.read_bytes())
         policy.check_privacy(executable, binary.read_bytes(), forbidden_roots=(root, work, Path(zig).resolve().parent))
 
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -194,7 +201,7 @@ def build_runtime(target: str, out_dir: Path, root: Path = ROOT) -> Path:
                 "source_provenance_sha256": source_hash(root / "vendor/olaf/PROVENANCE.json"),
                 "build_arguments": ["build", "install", *flags],
                 "privacy_policy": policy.PRIVACY_POLICY,
-                "validation": "Source checks only; this helper does not run the runtime or tests.",
+                "validation": "Source, architecture and Windows import checks only; this helper does not run the runtime or tests.",
             }
             (package / "BUILD-INFO.json").write_text(json.dumps(build_info, indent=2) + "\n", encoding="utf-8", newline="\n")
             for member in package.rglob('*'):

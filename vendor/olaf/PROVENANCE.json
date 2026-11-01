@@ -165,7 +165,7 @@
   "files": {
     "docs/BUILD_PRIVACY.md": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "6c11da701181eff042eca321f4412c45216c3dcf11cc71e640c5e8c80142eaad"
+      "sha256": "77746accd8cb124221dfce97d08fa63b6b2f2be255c8630e847fc593aa6c6718"
     },
     "patches/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -197,7 +197,7 @@
     },
     "scripts/build_olaf.py": {
       "origin": "release integration",
-      "sha256": "26fb800c59e722cc52971756d3f62ea364dda7f205214239bf6904151d92ce55"
+      "sha256": "15ce85b4b49c39023de54fa3df31e702f42aaf1ecebdc3c0b121d672ea33157c"
     },
     "scripts/check_release_hygiene.py": {
       "origin": "release build/privacy integration (2026-10-30)",
@@ -205,15 +205,15 @@
     },
     "scripts/release.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "6381585c6d257dfab84939b8d9d54c6b654b3114b24ee5313ed1521f3f2656f7"
+      "sha256": "c1c03edc2ba1ac476acd3b89cceaeacb038c8effc587f039589b00c67b7b23a8"
     },
     "tests/release/test_build_privacy.py": {
       "origin": "release build/privacy integration (2026-10-30)",
-      "sha256": "69d60a1fb2446c2de58ec44fe2660506994bc3037b8acfe481b98bb6bd148640"
+      "sha256": "bf706ae7298a5f6e2bca4a76c85fc54b0a14892582fd24fd67f355cf1c79fae6"
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "14a2fdba01017d7367b560aa33930217658f4ab44d2aa0b2188693ea3acbc999"
+      "sha256": "620d1d9a36caddc8a594cbea3d52213e999e48e443ac5f13ba01ec4ed7a10ad7"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -1706,18 +1706,20 @@
     "jobs": 1,
     "targets": {
       "windows-x64": "x86_64-windows-gnu",
+      "windows-x86": "x86-windows-gnu",
       "linux-x64": "x86_64-linux-musl",
       "macos-arm64": "aarch64-macos.11.0.0-none",
       "macos-x64": "x86_64-macos.11.0.0-none"
     },
-    "native_validation": "Not compiled or executed during source vendoring; all four target builds unverified. Source-only tests and mocked output checks are not native test results.",
+    "native_validation": "No compilation or execution performed for dual-architecture packaging; all five output targets require fresh parent validation. Static/mocked tests are not native test results; x86 on x64 is WOW64, not native 32-bit Windows validation.",
     "privacy_policy": "compiler-paths-and-artifacts-v1",
-    "privacy_validation": "Static/mocked Python validation only; actual Zig/Rust/native C response-file handling and all four target rebuilds remain unverified.",
+    "privacy_validation": "Static/mocked Python validation only for this change; actual Zig/Rust/native C response-file handling and all five output target builds remain parent gates.",
     "privacy_compiler_source": {
       "url": "https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz",
       "sha256": "43186959edc87d5c7a1be7b7d2a25efffd22ce5807c7af99067f86f99641bfdf",
       "review": "Version-specific interfaces and file hashes documented in docs/BUILD_PRIVACY.md; source archive inspected without executing a compiler."
-    }
+    },
+    "windows_host_policy": "Windows x64 hosts build x64 or x86 outputs using the unchanged pinned x64 Rustup bootstrap and Zig tools. i686 Rust is an output component; x86 Olaf is x86-windows-gnu. No native x86 host/tool provisioning or fallback is claimed."
   },
   "hash_scope": "Final sha256 values cover UTF-8 text with CRLF normalized to LF, including source, notices, build helper, tests and ordered patches. PROVENANCE.json excludes itself to avoid recursive hashing. Runtime BUILD-INFO.json separately hashes the source manifest and actual binary.",
   "licensing_review_remaining": [
