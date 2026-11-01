@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Staging-only, native release builder. No third-party Python dependencies.
+"""Staging-only release builder with explicit host/target execution policy.
+
+No third-party Python dependencies.
 
 Archive verification is intentionally independent of compilers and of a checkout.
 Build/test commands are opt-in; importing this module never starts a build.
@@ -34,7 +36,16 @@ hygiene = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(hygiene)
 PRIVACY_POLICY = 'compiler-paths-and-artifacts-v1'
 PROVENANCE = "BUILD-PROVENANCE.json"
-TARGETS = ("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
+# Output identities are independent of the pinned host tool distributions.
+TARGET_DETAILS = {
+    "windows-x64": ("Windows", "x86_64", "x86_64-pc-windows-msvc", "x86_64-windows-gnu"),
+    "windows-x86": ("Windows", "x86", "i686-pc-windows-msvc", "x86-windows-gnu"),
+    "linux-x64": ("Linux", "x86_64", "x86_64-unknown-linux-gnu", "x86_64-linux-musl"),
+    "macos-arm64": ("Darwin", "aarch64", "aarch64-apple-darwin", "aarch64-macos.11.0.0-none"),
+    "macos-x64": ("Darwin", "x86_64", "x86_64-apple-darwin", "x86_64-macos.11.0.0-none"),
+}
+TARGETS = tuple(TARGET_DETAILS)
+WINDOWS_TARGETS = ("windows-x64", "windows-x86")
 FORBIDDEN_PARTS = {
     ".git", ".env", ".venv", ".claude", ".codex", "__pycache__", "node_modules",
     "benchmarks", "evidence", "diagnostics", "music", "audio", "dataset", "datasets",
@@ -225,11 +236,83 @@ def clean_commit(root):
     return commit
 
 
+def normalized_arch(machine):
+    return {"amd64": "x86_64", "x64": "x86_64", "arm64": "aarch64",
+            "i386": "x86", "i686": "x86"}.get(machine.lower(), machine.lower())
+
+
+def execution_policy(target, system, machine):
+    require(target in TARGETS, "Unsupported output target")
+    os_name, arch, _, _ = TARGET_DETAILS[target]
+    host_target = "windows-x64" if target == "windows-x86" else target
+    host_arch = normalized_arch(machine)
+    # Only reviewed native hosts, plus x64 Windows -> x86 via WOW64. In
+    # particular, there are no reviewed native x86 bootstrap/tool pins.
+    require(system == os_name and host_arch == TARGET_DETAILS[host_target][1],
+            "Unsupported host/target combination")
+    cross = arch != host_arch
+    return {"host_target": host_target, "output_target": target,
+            "cross_target": cross, "native": not cross,
+            "execution_mode": "wow64" if cross else "native"}
+
+
+def check_target_config(target, cfg):
+    row = cfg["targets"][target]
+    os_name, arch, rust, olaf = TARGET_DETAILS[target]
+    require((row["os"], row["arch"], row["rust"]) == (os_name, arch, rust),
+            "Output target policy mismatch")
+    require(row.get("olaf", olaf) == olaf, "Olaf target policy mismatch")
+    host = "windows-x64" if target == "windows-x86" else target
+    require(row.get("host_tools", host) == host, "Host tools policy mismatch")
+    return row
+
+
 def check_host(target, cfg):
-    t = cfg["targets"][target]
-    arch = {"AMD64": "x86_64", "arm64": "aarch64"}.get(platform.machine(), platform.machine())
-    require(platform.system() == t["os"] and arch == t["arch"],
-            f"Native {t['os']}/{t['arch']} required; refusing to relabel a cross-build")
+    check_target_config(target, cfg)
+    return execution_policy(target, platform.system(), platform.machine())
+
+
+def validate_execution(p, *, legacy=False):
+    host, build = p["host"], p["build"]
+    expected = execution_policy(p["target"], host["system"], host["machine"])
+    fields = (set(expected) - {"native"}) | {"regression_target", "regression_cpu"}
+    old = legacy and p["target"] != "windows-x86" and not fields.intersection(build)
+    require(type(build.get("native")) is bool and build["native"] == expected["native"],
+            "False native build claim")
+    if old:
+        require("execution_mode" not in p["gates"] and "target" not in p["gates"],
+                "Partial legacy execution provenance")
+    else:
+        require(all(build.get(k) == v and type(build.get(k)) is type(v) for k, v in expected.items()),
+                "Host/output execution provenance mismatch")
+        require(host.get("arch") == normalized_arch(host["machine"]), "Host architecture mismatch")
+        require(build.get("regression_target") == TARGET_DETAILS[p["target"]][3]
+                and build.get("regression_cpu") == "baseline", "Regression target policy mismatch")
+        require(p["gates"].get("execution_mode") == expected["execution_mode"]
+                and p["gates"].get("target") == p["target"], "Gate execution provenance mismatch")
+    if "arch" in host:
+        require(host["arch"] == normalized_arch(host["machine"]), "Host architecture mismatch")
+    require(p["rust_target"] == TARGET_DETAILS[p["target"]][2], "Rust output target mismatch")
+    require(p.get("support_status") == gate_status(expected), "Gate support status mismatch")
+    return expected
+
+
+def gate_status(execution):
+    return execution["execution_mode"] + " gates passed; minimum OS and broader compatibility unverified"
+
+
+def app_source_version(data):
+    try:
+        package = tomllib.loads(data.decode("utf-8-sig"))["package"]
+        version = package["version"]
+        require(package["name"] == "local-shazam" and isinstance(version, str)
+                and re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+                                 r"(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?"
+                                 r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?", version),
+                "Invalid application source version")
+        return version
+    except (KeyError, TypeError, ValueError, UnicodeError) as exc:
+        raise ReleaseError("Invalid application Cargo manifest") from exc
 
 
 def download(url, expected, destination):
@@ -373,7 +456,7 @@ def apply_compiler_privacy(env, out, snapshot, target, root=ROOT):
     maps = privacy_maps(out, snapshot, env, root)
     flags = [f'--remap-path-prefix={old}={new}' for old, new in maps]
     flags += ['-Cdebuginfo=0', '-Cstrip=debuginfo']
-    windows = target == 'windows-x64'
+    windows = target in WINDOWS_TARGETS
     if windows:
         flags += ['-Clink-arg=/DEBUG:NONE', '-Clink-arg=/INCREMENTAL:NO',
                   '-Clink-arg=/PDBALTPATH:local-shazam.pdb']
@@ -481,21 +564,23 @@ def check_cargo_configuration(cwd, env=None):
 
 
 def provision(target, out, cfg, env):
+    execution = check_host(target, cfg)
     t = cfg["targets"][target]
-    windows = t["os"] == "Windows"
+    host = cfg["targets"][execution["host_target"]]
+    windows = host["os"] == "Windows"
     tools = out / "work/tools"
     init = tools / ("rustup-init.exe" if windows else "rustup-init")
-    download(f"https://static.rust-lang.org/rustup/archive/{cfg['rustup']}/{t['rust']}/{init.name}",
-             t["rustup_sha256"], init)
+    download(f"https://static.rust-lang.org/rustup/archive/{cfg['rustup']}/{host['rust']}/{init.name}",
+             host["rustup_sha256"], init)
     init.chmod(0o755)
-    run([init, "-y", "--no-modify-path", "--default-toolchain", "none", "--profile", "minimal"], env=env)
+    run([init, "-y", "--no-modify-path", "--default-toolchain", "none", "--default-host", host["rust"], "--profile", "minimal"], env=env)
     rustup = Path(env["CARGO_HOME"]) / "bin" / ("rustup.exe" if windows else "rustup")
     run([rustup, "toolchain", "install", cfg["rust"], "--profile", "minimal", "--no-self-update",
          "--target", t["rust"]], env=env)
     extension = ".zip" if windows else ".tar.xz"
-    base = f"zig-{t['zig_platform']}-{cfg['zig']}"
+    base = f"zig-{host['zig_platform']}-{cfg['zig']}"
     archive = tools / (base + extension)
-    download(f"https://ziglang.org/download/{cfg['zig']}/{archive.name}", t["zig_sha256"], archive)
+    download(f"https://ziglang.org/download/{cfg['zig']}/{archive.name}", host["zig_sha256"], archive)
     extract_tool(archive, tools)
     zig = tools / base / ("zig.exe" if windows else "zig")
     env["PATH"] = str(zig.parent) + os.pathsep + str(rustup.parent) + os.pathsep + env.get("PATH", "")
@@ -505,13 +590,49 @@ def provision(target, out, cfg, env):
     return rustup, zig
 
 
+def pe_layout(data):
+    """Validate the supported PE headers and unambiguous file-backed sections."""
+    try:
+        require(len(data) >= 64 and data[:2] == b"MZ", "Truncated DOS header")
+        pe = struct.unpack_from("<I", data, 60)[0]
+        require(64 <= pe <= len(data) - 24 and data[pe:pe + 4] == b"PE\0\0", "Invalid PE signature")
+        machine, count = struct.unpack_from("<HH", data, pe + 4)
+        opt_size, characteristics = struct.unpack_from("<HH", data, pe + 20)
+        require(machine in (0x14C, 0x8664), "Unsupported PE machine")
+        require(characteristics & 2 and 0 < count <= 96, "Invalid PE executable/section count")
+        opt = pe + 24
+        base, magic, target, width = (96, 0x10B, "windows-x86", 4) if machine == 0x14C else (112, 0x20B, "windows-x64", 8)
+        end = opt + opt_size + count * 40
+        require(opt_size >= base and end <= len(data), "Truncated PE optional header/sections")
+        require(struct.unpack_from("<H", data, opt)[0] == magic, "PE machine/optional-header mismatch")
+        directory_count = struct.unpack_from("<I", data, opt + base - 4)[0]
+        require(directory_count <= 16 and base + directory_count * 8 <= opt_size, "Invalid PE data directories")
+        require(not any(data[opt + base + directory_count * 8:opt + opt_size]), "Undeclared PE data directories")
+        header_size = struct.unpack_from("<I", data, opt + 60)[0]
+        require(end <= header_size <= len(data), "Invalid PE header bounds")
+        sections = []
+        for i in range(count):
+            size, address, raw_size, raw = struct.unpack_from("<IIII", data, opt + opt_size + i * 40 + 8)
+            extent = max(size, raw_size)
+            require(extent and address >= header_size and address + extent <= 0x100000000,
+                    "Invalid PE section address")
+            require(not raw_size or header_size <= raw <= len(data) - raw_size, "Truncated PE file-backed section")
+            for other_size, other_address, other_raw_size, other_raw in sections:
+                require(address + extent <= other_address or other_address + max(other_size, other_raw_size) <= address,
+                        "Overlapping PE virtual sections")
+                require(not raw_size or not other_raw_size or raw + raw_size <= other_raw
+                        or other_raw + other_raw_size <= raw, "Overlapping PE raw sections")
+            sections.append((size, address, raw_size, raw))
+        directories = [struct.unpack_from("<II", data, opt + base + i * 8) for i in range(directory_count)]
+        return target, width, directories, sections
+    except struct.error as exc:
+        raise ReleaseError("Truncated PE header") from exc
+
+
 def architecture(data):
     try:
         if data[:2] == b"MZ":
-            pe = struct.unpack_from("<I", data, 60)[0]
-            require(data[pe:pe + 4] == b"PE\0\0", "Invalid PE signature")
-            machine = struct.unpack_from("<H", data, pe + 4)[0]
-            return {0x8664: "windows-x64"}.get(machine, "unsupported-pe")
+            return pe_layout(data)[0]
         if data[:4] == b"\x7fELF":
             require(data[4:6] == b"\x02\x01", "Expected little-endian ELF64")
             return {62: "linux-x64"}.get(struct.unpack_from("<H", data, 18)[0], "unsupported-elf")
@@ -524,43 +645,76 @@ def architecture(data):
 
 
 def pe_imports(data):
-    """Read normal AND delay imports without loading or executing the PE."""
-    require(architecture(data) == "windows-x64", "Expected PE x64")
+    """Read normal AND RVA-based delay imports, never load or execute the PE."""
+    _, width, directories, sections = pe_layout(data)
+
+    def span(rva, length=1):
+        require(rva and length > 0 and rva + length <= 0x100000000, "Invalid PE import range")
+        for size, address, raw_size, raw in sections:
+            if address <= rva < address + max(size, raw_size):
+                require(rva - address + length <= raw_size, "Import outside file-backed section")
+                return raw + rva - address, raw + raw_size
+        raise ReleaseError("Unmapped PE import RVA")
+
+    def string(rva, dll=False):
+        start, end = span(rva)
+        stop = data.find(b"\0", start, min(start + 512, end))
+        require(stop > start, "Invalid/unterminated PE import name")
+        name = data[start:stop].decode("ascii")
+        require(bool(re.fullmatch(r"[A-Za-z0-9_.-]+\.dll", name, re.I)) if dll
+                else all(33 <= ord(c) <= 126 for c in name), "Invalid PE import name")
+        return name.lower() if dll else name
+
+    def thunks(lookup, iat):
+        start, end = span(lookup, width)
+        ordinal = 1 << (width * 8 - 1)
+        fmt = "<I" if width == 4 else "<Q"
+        for cursor in range(start, end - width + 1, width):
+            value = struct.unpack_from(fmt, data, cursor)[0]
+            if not value:
+                count = (cursor - start) // width + 1
+                dest, _ = span(iat, count * width)
+                require(all(struct.unpack_from(fmt, data, dest + i * width)[0] for i in range(count - 1)),
+                        "Premature PE import address terminator")
+                require(not any(data[dest + (count - 1) * width:dest + count * width]),
+                        "Unterminated PE import address table")
+                return count * width
+            if value & ordinal:
+                require(value & ~(ordinal | 0xFFFF) == 0, "Invalid PE ordinal import")
+            else:
+                require(value <= 0xFFFFFFFF, "Invalid PE import-by-name RVA")
+                span(value, 3)  # two-byte hint, then a nonempty terminated name
+                string(value + 2)
+        raise ReleaseError("Unterminated PE import lookup table")
+
     try:
-        pe = struct.unpack_from("<I", data, 60)[0]
-        count, opt_size = struct.unpack_from("<H", data, pe + 6)[0], struct.unpack_from("<H", data, pe + 20)[0]
-        opt = pe + 24
-        require(struct.unpack_from("<H", data, opt)[0] == 0x20B and opt_size >= 240, "Expected PE32+")
-        sections = [struct.unpack_from("<IIII", data, opt + opt_size + i * 40 + 8) for i in range(count)]
-
-        def offset(rva):
-            for size, address, raw_size, raw in sections:
-                if address <= rva < address + max(size, raw_size):
-                    require(rva - address < raw_size, "Import outside file-backed section")
-                    return raw + rva - address
-            raise ReleaseError("Unmapped PE import RVA")
-
         imports = set()
-        for index, width, name_offset in ((1, 20, 12), (13, 32, 4)):
-            rva, size = struct.unpack_from("<II", data, opt + 112 + 8 * index)
+        for index, size_of_entry in ((1, 20), (13, 32)):
+            rva, size = directories[index] if index < len(directories) else (0, 0)
+            require(bool(rva) == bool(size), "Inconsistent PE import directory")
             if not rva:
                 continue
-            pos = offset(rva)
-            require(size >= width and pos + size <= len(data), "Truncated PE import directory")
+            require(size >= size_of_entry, "Truncated PE import directory")
+            pos, _ = span(rva, size)
             terminated = False
-            for cursor in range(pos, pos + size - width + 1, width):
-                entry = data[cursor:cursor + width]
+            for cursor in range(pos, pos + size - size_of_entry + 1, size_of_entry):
+                entry = struct.unpack_from("<5I" if index == 1 else "<8I", data, cursor)
                 if not any(entry):
                     terminated = True
                     break
-                if index == 13:
-                    require(struct.unpack_from("<I", entry)[0] == 1, "Unsupported VA-based delay imports")
-                name_rva = struct.unpack_from("<I", entry, name_offset)[0]
-                start = offset(name_rva)
-                end = data.index(b"\0", start, min(start + 512, len(data)))
-                name = data[start:end].decode("ascii")
-                require(re.fullmatch(r"[A-Za-z0-9_.-]+\.dll", name, re.I), "Invalid DLL import name")
-                imports.add(name.lower())
+                if index == 1:
+                    lookup, _, _, name_rva, iat = entry
+                    thunks(lookup or iat, iat)
+                else:
+                    attrs, name_rva, handle, iat, lookup, bound, unload, _ = entry
+                    require(attrs == 1, "Unsupported VA-based delay imports")
+                    length = thunks(lookup, iat)
+                    if handle:
+                        span(handle, width)
+                    for optional_table in (bound, unload):
+                        if optional_table:
+                            span(optional_table, length)
+                imports.add(string(name_rva, dll=True))
             require(terminated, "Unterminated PE import directory")
         return sorted(imports)
     except (struct.error, ValueError, UnicodeError) as exc:
@@ -572,7 +726,7 @@ def inspect_binary(path, target):
     check_privacy(path.name, data)
     require(architecture(data) == target, f"Architecture mismatch: {path.name}")
     result = {"architecture": target, "sha256": digest(data)}
-    if target == "windows-x64":
+    if target in WINDOWS_TARGETS:
         result["imports_and_delay_imports"] = pe_imports(data)
         result["unresolved_requirements"] = "DLLs must be provided by Windows or official runtime installers; availability not proven"
     else:
@@ -586,7 +740,7 @@ def inspect_binary(path, target):
 
 
 def runtime_files(directory, target):
-    executable = "olaf.exe" if target == "windows-x64" else "olaf"
+    executable = "olaf.exe" if target in WINDOWS_TARGETS else "olaf"
     require(directory.is_dir(), "Provider did not create olaf-runtime/")
     files = {}
     for p in sorted(directory.rglob("*")):
@@ -624,6 +778,29 @@ def check_runtime_metadata(files, executable):
                         and json.loads(files[n]) for n in candidates), "Missing structured runtime provenance")
 
 
+def check_runtime_source(binary, source, target, cfg):
+    """Bind the separately packaged provider metadata to its source and bytes."""
+    def runtime(name):
+        return binary["olaf-runtime/" + name][0]
+    require(runtime("PROVENANCE.json") == source["vendor/olaf/PROVENANCE.json"][0],
+            "Olaf runtime/source provenance mismatch")
+    info = json.loads(runtime("BUILD-INFO.json"))
+    executable = "olaf.exe" if target in WINDOWS_TARGETS else "olaf"
+    require(info["target"] == target and info["zig_target"] == TARGET_DETAILS[target][3]
+            and info["executable"] == executable, "Olaf runtime target mismatch")
+    require(info["executable_sha256"] == digest(runtime(executable)), "Olaf runtime binary hash mismatch")
+    require(info["source_provenance_sha256"] == digest(runtime("PROVENANCE.json").replace(b"\r\n", b"\n")),
+            "Olaf source provenance hash mismatch")
+    require(info["zig_version"] == cfg["zig"] and info["build_arguments"] == [
+        "build", "install", "-Dtarget=" + TARGET_DETAILS[target][3],
+        "-Dcpu=baseline", "-Doptimize=ReleaseFast", "-j1"], "Olaf recorded tool/arguments mismatch")
+    require(info["cpu"] == "baseline" and info["optimize"] == "ReleaseFast" and type(info["jobs"]) is int and info["jobs"] == 1
+            and info.get("privacy_policy") == PRIVACY_POLICY, "Olaf runtime build policy mismatch")
+    for runtime_name, source_name in (("OLAF-LICENSE", "vendor/olaf/LICENSE"),
+                                     ("OLAF-NOTICES.txt", "vendor/olaf/NOTICES.txt")):
+        require(runtime(runtime_name) == source[source_name][0], "Olaf legal source/runtime mismatch")
+
+
 def copy_file(src, dst, executable=False):
     regular(src)
     dst.parent.mkdir(parents=True, exist_ok=True)
@@ -651,7 +828,7 @@ def tree_records(directory):
 
 def build(target, out, root=ROOT):
     cfg = config(root)
-    check_host(target, cfg)
+    execution = check_host(target, cfg)
     source = inventory(root, cfg)
     commit = clean_commit(root)
     require(not out.exists(), "Build output already exists; use a fresh staging subdirectory (no destructive cleanup)")
@@ -664,13 +841,17 @@ def build(target, out, root=ROOT):
     check_cargo_configuration(snapshot, env)
     rust = [rustup, "run", cfg["rust"]]
     compiler = run([*rust, "rustc", "-vV"], env=env)
-    require(f"release: {cfg['rust']}" in compiler, "Wrong Rust compiler")
+    require(f"release: {cfg['rust']}" in compiler
+            and f"host: {TARGET_DETAILS[execution['host_target']][2]}" in compiler, "Wrong Rust compiler/host")
     # Rustup validates official distribution component hashes. Cargo validates
     # registry checksums and cannot rewrite the committed dependency resolution.
     cargo = [*rust, "cargo"]
     manifest = snapshot / "rust-app/Cargo.toml"
+    app_version = app_source_version(manifest.read_bytes())
     metadata = json.loads(run([*cargo, "metadata", "--locked", "--format-version", "1",
                                "--manifest-path", manifest], env=env, cwd=snapshot))
+    require([pkg["version"] for pkg in metadata["packages"] if pkg["name"] == "local-shazam"] == [app_version],
+            "Cargo metadata/source version mismatch")
     pinned = tuple(int(x) for x in cfg["rust"].split("."))
     for dependency in metadata["packages"]:
         msrv = dependency.get("rust_version")
@@ -683,7 +864,7 @@ def build(target, out, root=ROOT):
     run([sys.executable, snapshot / "scripts/build_olaf.py", "--target", target, "--out-dir", provider],
         env=env, cwd=snapshot)
     runtime = runtime_files(provider / "olaf-runtime", target)
-    exe = ".exe" if target == "windows-x64" else ""
+    exe = ".exe" if target in WINDOWS_TARGETS else ""
     app = Path(env["CARGO_TARGET_DIR"]) / cfg["targets"][target]["rust"] / "release" / ("local-shazam" + exe)
     inspections = {"app": inspect_binary(app, target), "olaf": inspect_binary(runtime["olaf" + exe], target)}
     for binary in (app, runtime['olaf' + exe]):
@@ -703,12 +884,15 @@ def build(target, out, root=ROOT):
         "source_inventory": source, "source_inventory_sha256": digest(encoded(source)),
         "toolchains": {"rustc": compiler, "cargo": run([*cargo, "--version"], env=env),
                        "zig": run([zig, "version"], env=env), "python": platform.python_version(),
-                       "rustup": cfg["rustup"], "downloads": cfg["targets"][target]},
+                       "rustup": cfg["rustup"], "downloads": cfg["targets"][execution["host_target"]]},
         "olaf_source_version": olaf_source_version((snapshot / "vendor/olaf/build.zig.zon").read_bytes()),
-        "build": {"cargo_locked": True, "jobs": 1, "native": True, "profile": "release",
+        "app_version": app_version,
+        "build": {"cargo_locked": True, "jobs": 1, **execution, "profile": "release",
+                  "regression_target": cfg["targets"][target]["olaf"], "regression_cpu": "baseline",
                   "privacy_policy": PRIVACY_POLICY,
                   "runtime_provider": "python scripts/build_olaf.py --target TARGET --out-dir DIRECTORY"},
-        "host": {"system": platform.system(), "release": platform.release(), "machine": platform.machine()},
+        "host": {"system": platform.system(), "release": platform.release(), "machine": platform.machine(),
+                 "arch": normalized_arch(platform.machine())},
         "binary_inspections": inspections, "payload": tree_records(payload),
         "gates": {"dataset_free_tests": "not-run"}, "support_status": "unverified",
         "distribution": {"publisher_signed": False, "notarized": False, "minimum_os": "unverified",
@@ -735,8 +919,16 @@ def check_stage(out, target, root):
 
 def test_build(target, out, root=ROOT):
     cfg = config(root)
-    check_host(target, cfg)
+    execution = check_host(target, cfg)
     p = check_stage(out, target, root)
+    require(all(p["build"].get(k) == v for k, v in execution.items())
+            and p["host"]["system"] == platform.system()
+            and normalized_arch(p["host"]["machine"]) == normalized_arch(platform.machine()),
+            "Gate host differs from build host")
+    # A failed/retried gate cannot retain a previous success record.
+    p["gates"] = {"dataset_free_tests": "not-run"}
+    p["support_status"] = "unverified"
+    (out / "build-manifest.json").write_bytes(encoded(p))
     snapshot = out / "work/build-source"
     check_snapshot(snapshot, p["source_inventory"])
     paths = json.loads((out / "tool-paths.json").read_bytes())
@@ -769,12 +961,14 @@ def test_build(target, out, root=ROOT):
     for step in cfg["olaf_regressions"]:
         require(step in ("test-matcher-v3", "test-db-safety", "test-config-safety"), "Unreviewed Zig step")
         privacy_args = olaf_privacy_arguments(regression, out / 'work', Path(paths['zig']))
-        run([paths["zig"], "build", step, "-j1", "-Doptimize=ReleaseSafe", *privacy_args,
+        run([paths["zig"], "build", step, "-j1", "-Doptimize=ReleaseSafe",
+             "-Dtarget=" + cfg["targets"][target]["olaf"], "-Dcpu=baseline", *privacy_args,
              "--cache-dir", out / "work/regression-cache", "--global-cache-dir", env["ZIG_GLOBAL_CACHE_DIR"]],
             cwd=regression / "vendor/olaf", env=env)
         completed.append(step)
-    exe = ".exe" if target == "windows-x64" else ""
-    app_version = tomllib.loads((snapshot / "rust-app/Cargo.toml").read_text(encoding="utf-8-sig"))["package"]["version"]
+    exe = ".exe" if target in WINDOWS_TARGETS else ""
+    app_version = app_source_version((snapshot / "rust-app/Cargo.toml").read_bytes())
+    require(app_version == p["app_version"], "Application version changed")
     for name, args in (("local-shazam" + exe, ["--help"]), ("local-shazam" + exe, ["--version"]),
                        ("olaf-runtime/olaf" + exe, ["--help"])):
         output = run([out / "payload" / name, *args], cwd=home, env=env)
@@ -784,9 +978,11 @@ def test_build(target, out, root=ROOT):
         completed.append(name + " " + args[0])
     p = check_stage(out, target, root)
     check_snapshot(snapshot, p["source_inventory"])
-    p["gates"] = {"dataset_free_tests": "passed", "completed": completed}
-    # This records only this native gate run, not general compatibility/accuracy.
-    p["support_status"] = "native gates passed; minimum OS and broader compatibility unverified"
+    p["gates"] = {"dataset_free_tests": "passed", "completed": completed,
+                  "execution_mode": execution["execution_mode"], "target": target}
+    # WOW64 execution is not native 32-bit Windows validation.
+    p["support_status"] = gate_status(execution)
+    validate_execution(p)
     (out / "build-manifest.json").write_bytes(encoded(p))
     print("Dataset-free release gates passed")
 
@@ -895,22 +1091,39 @@ def read_archive(path):
     return entries
 
 
+def archive_names(p, *, clean):
+    target = p["target"]
+    if clean:
+        require(target in WINDOWS_TARGETS, "Clean naming is Windows-only")
+        stem = f"Local-Shazam_{p['app_version']}_{target.removeprefix('windows-')}"
+        separator = "_"
+    else:
+        stem = f"local-shazam-{p['commit'][:12]}-{target}"
+        separator = "-"
+    extension = ".zip" if target in WINDOWS_TARGETS else ".tar.gz"
+    return {"binary": stem + extension,
+            **{group: f"{stem}{separator}{group}-source.tar.gz" for group in ("app", "olaf")}}
+
+
 def package(target, out, root=ROOT):
     p = check_stage(out, target, root)
-    require(p["gates"]["dataset_free_tests"] == "passed", "Dataset-free native gates have not passed")
+    require(p["gates"]["dataset_free_tests"] == "passed", "Dataset-free target gates have not passed")
+    version = app_source_version((root / "rust-app/Cargo.toml").read_bytes())
+    require(p.get("app_version") == version, "Application source version mismatch")
+    validate_execution(p)
+    names = archive_names(p, clean=target in WINDOWS_TARGETS)
     dist = out / "dist"
     require(not dist.exists(), "Distribution already exists; use a fresh staging directory")
     dist.mkdir()
     common = {PROVENANCE: (encoded(p), 0o644)}
     binary = {name: ((out / "payload" / name).read_bytes(), row["mode"]) for name, row in p["payload"].items()}
-    stem = f"local-shazam-{p['commit'][:12]}-{target}"
-    extension = ".zip" if target == "windows-x64" else ".tar.gz"
-    write_archive(dist / (stem + extension), binary | common)
+    write_archive(dist / names["binary"], binary | common)
     for group in ("app", "olaf"):
         files = {name: ((root / name).read_bytes(), 0o644) for name in p["source_inventory"][group]}
-        write_archive(dist / f"{stem}-{group}-source.tar.gz", files | common)
+        write_archive(dist / names[group], files | common)
     sums = "".join(f"{file_hash(path)}  {path.name}\n" for path in sorted(dist.iterdir()))
-    (dist / "SHA256SUMS").write_text(sums, encoding="ascii", newline="\n")
+    checksum = "SHA256SUMS.txt" if target in WINDOWS_TARGETS else "SHA256SUMS"
+    (dist / checksum).write_text(sums, encoding="ascii", newline="\n")
     verify(dist)
     print('Verified staged distribution')
 
@@ -918,17 +1131,21 @@ def package(target, out, root=ROOT):
 def verify(out):
     # Works on a downloaded artifact directory too; no external tools or execution.
     dist = out / "dist" if (out / "dist").is_dir() else out
-    regular(dist / "SHA256SUMS")
+    checksums = {name for name in ("SHA256SUMS", "SHA256SUMS.txt") if (dist / name).exists()}
+    require(len(checksums) == 1, "Missing or ambiguous checksum manifest")
+    checksum = checksums.pop()
+    clean = checksum == "SHA256SUMS.txt"
+    regular(dist / checksum)
     expected = {}
-    for line in (dist / "SHA256SUMS").read_text(encoding="ascii").splitlines():
-        match = re.fullmatch(r"([0-9a-f]{64})  ([A-Za-z0-9_.-]+)", line)
+    for line in (dist / checksum).read_text(encoding="ascii").splitlines():
+        match = re.fullmatch(r"([0-9a-f]{64})  ([A-Za-z0-9_+.\-]+)", line)
         require(match, "Malformed checksum line")
         sha, name = match.groups()
         require(name not in expected, "Duplicate checksum entry")
         expected[name] = sha
     require(len(expected) == 3, "Exactly one binary and both corresponding source archives are required")
     actual = {p.name for p in dist.iterdir()}
-    require(actual == set(expected) | {"SHA256SUMS"}, "Unchecksummed or missing distribution files")
+    require(actual == set(expected) | {checksum}, "Unchecksummed or missing distribution files")
     archives = {}
     for name, sha in expected.items():
         path = dist / name
@@ -937,33 +1154,46 @@ def verify(out):
         require(name.endswith((".tar.gz", ".zip")), "Unexpected distributable type")
         archives[name] = read_archive(path)
     manifests = [a.get(PROVENANCE) for a in archives.values()]
-    require(all(manifests) and all(m == manifests[0] for m in manifests), "Source/runtime provenance mismatch")
+    require(all(manifests) and manifests[0][1] == 0o644 and all(m == manifests[0] for m in manifests), "Source/runtime provenance mismatch")
     p = json.loads(manifests[0][0])
     require(p["schema"] == 1 and p["target"] in TARGETS, "Unknown provenance schema/target")
     require(re.fullmatch(r"[0-9a-f]{40}", p["commit"]), "Missing source commit")
     require(p["source_inventory_sha256"] == digest(encoded(p["source_inventory"])), "Source inventory hash mismatch")
-    require(p["gates"]["dataset_free_tests"] == "passed" and p["gates"].get("completed"), "Native gates incomplete")
-    require(p["build"]["cargo_locked"] and p["build"]["jobs"] == 1 and p["build"]["native"], "Build policy mismatch")
+    require(p["gates"]["dataset_free_tests"] == "passed" and p["gates"].get("completed"), "Target gates incomplete")
+    require(p["build"]["cargo_locked"] is True and type(p["build"]["jobs"]) is int
+            and p["build"]["jobs"] == 1, "Build policy mismatch")
+    execution = validate_execution(p, legacy=not clean)
     require(p['build'].get('privacy_policy') == PRIVACY_POLICY, 'Missing compiler privacy policy; rebuild required')
-    stem = f"local-shazam-{p['commit'][:12]}-{p['target']}"
-    binary_name = stem + (".zip" if p["target"] == "windows-x64" else ".tar.gz")
-    require(set(archives) == {binary_name, f"{stem}-app-source.tar.gz", f"{stem}-olaf-source.tar.gz"}, "Archive naming/target mismatch")
+    names = archive_names(p, clean=clean)
+    binary_name = names["binary"]
+    require(set(archives) == set(names.values()), "Archive naming/target mismatch")
     for group in ("app", "olaf"):
-        entries = archives[f"{stem}-{group}-source.tar.gz"]
+        entries = archives[names[group]]
         wanted = p["source_inventory"][group]
         require(set(entries) == set(wanted) | {PROVENANCE}, f"Incomplete or unexpected {group} source")
         for name, sha in wanted.items():
             require(entries[name] == (entries[name][0], 0o644) and digest(entries[name][0]) == sha, f"Source mismatch: {name}")
-    app_source = archives[f"{stem}-app-source.tar.gz"]
-    olaf_source = archives[f"{stem}-olaf-source.tar.gz"]
+    app_source = archives[names["app"]]
+    olaf_source = archives[names["olaf"]]
     require("release/targets.json" in app_source and "release/targets.json" in olaf_source, "Missing inventory policy")
+    version = app_source_version(app_source["rust-app/Cargo.toml"][0])
+    require((not clean and "app_version" not in p and "output_target" not in p["build"])
+            or p.get("app_version") == version, "Application source version mismatch")
     cfg = json.loads(app_source["release/targets.json"][0])
+    check_target_config(p["target"], cfg)
+    toolchains = p["toolchains"]
+    require(toolchains["downloads"] == cfg["targets"][execution["host_target"]]
+            and toolchains["rustup"] == cfg["rustup"] and toolchains["zig"] == cfg["zig"],
+            "Host tool provenance mismatch")
+    require("release: " + cfg["rust"] in toolchains["rustc"].splitlines()
+            and "host: " + TARGET_DETAILS[execution["host_target"]][2] in toolchains["rustc"].splitlines(),
+            "Rust compiler host provenance mismatch")
     require(app_source["release/targets.json"] == olaf_source["release/targets.json"], "Inventory policies differ")
     completed = [name for names in cfg["rust_tests"].values() for name in names] + cfg["olaf_regressions"]
-    suffix = ".exe" if p["target"] == "windows-x64" else ""
+    suffix = ".exe" if p["target"] in WINDOWS_TARGETS else ""
     completed += ["local-shazam" + suffix + " --help", "local-shazam" + suffix + " --version",
                   "olaf-runtime/olaf" + suffix + " --help"]
-    require(sorted(p["gates"]["completed"]) == sorted(completed), "Incomplete or unexpected native test gates")
+    require(sorted(p["gates"]["completed"]) == sorted(completed), "Incomplete or unexpected target test gates")
     require(p["olaf_source_version"] == olaf_source_version(olaf_source["vendor/olaf/build.zig.zon"][0]),
             "Olaf source version mismatch")
     for group, entries in (("app", app_source), ("olaf", olaf_source)):
@@ -971,19 +1201,25 @@ def verify(out):
                     for n in entries if n != PROVENANCE), "Source outside reviewed inventory")
     for pattern in cfg["source_inventory"]["required"]:
         require(matches_any(set(app_source) | set(olaf_source), pattern), f"Missing required source: {pattern}")
+    for name in set(app_source) & set(olaf_source):
+        require(app_source[name] == olaf_source[name], "Shared source archives differ")
     binary = archives[binary_name]
     require(set(binary) == set(p["payload"]) | {PROVENANCE}, "Unexpected/missing binary payload")
+    executable_names = {"local-shazam" + suffix, "olaf-runtime/olaf" + suffix}
     for name, row in p["payload"].items():
+        require(row["mode"] == (0o755 if name in executable_names else 0o644), "Noncanonical payload mode")
         require(digest(binary[name][0]) == row["sha256"] and binary[name][1] == row["mode"], f"Payload mismatch: {name}")
-    exe = ".exe" if p["target"] == "windows-x64" else ""
+    exe = ".exe" if p["target"] in WINDOWS_TARGETS else ""
     for name, key in (("local-shazam" + exe, "app"), ("olaf-runtime/olaf" + exe, "olaf")):
         require(name in binary and binary[name][1] == 0o755, f"Missing executable/mode: {name}")
         require(architecture(binary[name][0]) == p["target"], f"Wrong executable architecture: {name}")
+        require(p["binary_inspections"][key]["architecture"] == p["target"], "Inspection architecture mismatch")
         require(digest(binary[name][0]) == p["binary_inspections"][key]["sha256"], "Inspection hash mismatch")
         if exe:
             require(pe_imports(binary[name][0]) == p["binary_inspections"][key]["imports_and_delay_imports"], "DLL inspection mismatch")
     check_runtime_metadata({n.removeprefix("olaf-runtime/"): v[0] for n, v in binary.items()
                             if n.startswith("olaf-runtime/")}, "olaf" + exe)
+    check_runtime_source(binary, olaf_source, p["target"], cfg)
     require("SETUP.txt" in binary and b"FFmpeg" in binary["SETUP.txt"][0] and b"FFprobe" in binary["SETUP.txt"][0], "Missing dependency setup instructions")
     for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
         require(name in binary and binary[name][0].strip() and binary[name] == app_source[name] == olaf_source[name], "Missing/mismatched legal material")
@@ -993,7 +1229,7 @@ def verify(out):
     allowed = {PROVENANCE, "SETUP.txt", "LICENSE", "THIRD_PARTY_NOTICES.md", "local-shazam" + exe} | set(legal)
     require(all(n in allowed or n.startswith("olaf-runtime/") for n in binary), "Unreviewed binary payload")
     require(not any(PurePosixPath(n).name.lower() in ("ffmpeg", "ffmpeg.exe", "ffprobe", "ffprobe.exe") for n in binary), "FFmpeg/FFprobe must not be bundled")
-    print(f"Verified {p['target']} commit {p['commit']}: binary, matching sources, modes, notices, architecture and SHA256SUMS")
+    print(f"Verified {p['target']} commit {p['commit']}: binary, matching sources, modes, notices, architecture and {checksum}")
     return p
 
 
