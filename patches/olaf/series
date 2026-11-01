@@ -4,3 +4,4 @@
 0004-release-build-privacy.patch
 0005-release-install-debug-policy.patch
 0006-x86-database-width.patch
+0007-x86-cli-compatibility.patch

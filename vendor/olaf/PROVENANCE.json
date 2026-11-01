@@ -189,11 +189,11 @@
     },
     "patches/olaf/README.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "8c93c0529a27395c1c6e0fbc303d7298df9782923def6a58e0373b77c03a4936"
+      "sha256": "3c5e6d1815340233fc4422e8d4b987a4bdc7ed262f6d4e425629f27b7c590555"
     },
     "patches/olaf/series": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "f6ce1521baec425dcef7d6a5547acbd039a12281deba05c0f1f7142e8965a77c"
+      "sha256": "c72fdfc93d368ee89deee155b1a7e538c0c663077cab152e9fcf54e8b0eed5f8"
     },
     "scripts/build_olaf.py": {
       "origin": "release integration",
@@ -213,7 +213,7 @@
     },
     "tests/release/test_olaf_source.py": {
       "origin": "release integration",
-      "sha256": "6b8efe665baab3b287e56e1d8a6c9c9e6cbe4cbc48dc26fafa9681c0d417846c"
+      "sha256": "02789e0ff5d4f93b972fef5346523f1639503a447058d623748e75bda46db753"
     },
     "vendor/olaf/.gitattributes": {
       "origin": "release distribution metadata or component notice",
@@ -412,7 +412,7 @@
     "vendor/olaf/cli/olaf_cli_core.zig": {
       "captured_sha256": "767d15e09db599f4c620e67f3b4050863ff0e25d36b38c02c8d2a0aa4ea6e0d9",
       "source_lf_sha256": "da4b0653d71991de28608f79cb9620c31af4f2555e30606e7f391310dce3c20d",
-      "sha256": "da4b0653d71991de28608f79cb9620c31af4f2555e30606e7f391310dce3c20d",
+      "sha256": "4ea60842b5adbf5a2a33aab513383b7e2de3ad7eebd7887a71089b107ca05e98",
       "upstream_sha256": "accdb09dd4396dfda962eccdf38b1027992c67d2406e6a1c31ade088cce96aa0",
       "fork_head_sha256": "accdb09dd4396dfda962eccdf38b1027992c67d2406e6a1c31ade088cce96aa0"
     },
@@ -461,7 +461,7 @@
     "vendor/olaf/cli/olaf_cli_threading.zig": {
       "captured_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
       "source_lf_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
-      "sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
+      "sha256": "e2d5f8c70098aed233e18d75b47232e9c0d47218c40cfd56272c9951a0d26602",
       "upstream_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595",
       "fork_head_sha256": "6c8a9d0fdfe02182168afd2b470af36077cccd6f878ea007348cf429fc5d8595"
     },
@@ -552,7 +552,7 @@
     "vendor/olaf/cli/ui/olaf_ui.zig": {
       "captured_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
       "source_lf_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
-      "sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
+      "sha256": "d2a6bdea0832100204e1bcc587cea66ba26cbf4038e1b5fc8b625759ec00b901",
       "upstream_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf",
       "fork_head_sha256": "a78a655b53a433fa3b23f63dde946662df178dbf38bc22ff5abc136ed8c26aaf"
     },
@@ -1642,6 +1642,10 @@
     "patches/olaf/0006-x86-database-width.patch": {
       "origin": "32-bit database width and error handling correction (2026-11-01)",
       "sha256": "5a40fd4a29cc1af1292f6652d1bf902888898b63469f400cd711ec4def0043eb"
+    },
+    "patches/olaf/0007-x86-cli-compatibility.patch": {
+      "origin": "32-bit CLI compatibility correction (2026-11-01)",
+      "sha256": "1b7f601f5f662e0346797758127c1705b5c9f29f026514cc24d0400fd1eb2f53"
     }
   },
   "additional_notice_sources": {
@@ -1673,7 +1677,8 @@
     "patches/olaf/0003-release-local-source-build.patch",
     "patches/olaf/0004-release-build-privacy.patch",
     "patches/olaf/0005-release-install-debug-policy.patch",
-    "patches/olaf/0006-x86-database-width.patch"
+    "patches/olaf/0006-x86-database-width.patch",
+    "patches/olaf/0007-x86-cli-compatibility.patch"
   ],
   "release_modified_files": [
     "build.zig",
@@ -1682,7 +1687,10 @@
     "tests/dataset_download.zig",
     "tests/olaf_tests.c",
     "src/olaf_db.c",
-    "tests/olaf_db_concurrency_tests.c"
+    "tests/olaf_db_concurrency_tests.c",
+    "cli/olaf_cli_core.zig",
+    "cli/olaf_cli_threading.zig",
+    "cli/ui/olaf_ui.zig"
   ],
   "modifications": [
     {
@@ -1708,6 +1716,10 @@
     {
       "patch": "patches/olaf/0006-x86-database-width.patch",
       "summary": "32-bit 512 MiB map, full-width fingerprint comparators, alignment-safe reads, checked writes and synthetic persistence regression. x64 map and ordering unchanged."
+    },
+    {
+      "patch": "patches/olaf/0007-x86-cli-compatibility.patch",
+      "summary": "MinGW x86 translate-c macro and portable full-width temporary-file counters."
     }
   ],
   "build": {

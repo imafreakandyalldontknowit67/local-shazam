@@ -38,3 +38,5 @@ working-source hashes, and recover the public-base hashes for every retained
 Olaf source file. Nothing here claims native tests or target builds passed.
 Olaf changes retain AGPL-3.0-or-later terms; the LMDB patch retains its component
 terms. Do not label the combined Olaf runtime MIT.
+
+7. **0007-x86-cli-compatibility.patch** (2026-11-01): supply the missing MinGW x86 architecture macro in the Zig C import; retain full-width temporary-file counters using short mutex-protected increments on platforms without 64-bit atomic RMW. No fingerprint settings changed.

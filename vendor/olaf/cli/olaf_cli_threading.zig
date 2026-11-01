@@ -23,7 +23,9 @@ const debug = std.log.scoped(.olaf_cli_threading).debug;
 
 // Process-local counter so two workers never land on the same temp path; the
 // thread id in the name is only for debugging.
-var temp_path_counter: std.atomic.Value(u64) = std.atomic.Value(u64).init(0);
+// 2026-11-01: retain full-width IDs on targets without 64-bit atomic RMW.
+var temp_path_counter: u64 = 0;
+var temp_path_mutex: Io.Mutex = .init;
 
 // Directory under which temp raw audio is written; set once at startup from
 // $TMPDIR / $TEMP / $TMP (see olaf_cli.zig) before any worker runs.
@@ -50,7 +52,10 @@ pub fn createTempPath(io: Io, allocator: std.mem.Allocator, suffix: []const u8) 
     Io.Dir.cwd().createDirPath(io, dir) catch |e| {
         if (e != error.PathAlreadyExists) return e;
     };
-    const seq = temp_path_counter.fetchAdd(1, .monotonic);
+    temp_path_mutex.lockUncancelable(io);
+    const seq = temp_path_counter;
+    temp_path_counter +%= 1;
+    temp_path_mutex.unlock(io);
     return std.fmt.allocPrint(allocator, "{s}/olaf_audio_{d}_{d}{s}", .{ dir, std.Thread.getCurrentId(), seq, suffix });
 }
 

@@ -59,7 +59,9 @@ const Ui = struct {
     temp_dir: []const u8,
 };
 
-var upload_counter: std.atomic.Value(u64) = .init(0);
+// 2026-11-01: full-width IDs without requiring 64-bit atomic RMW.
+var upload_counter: u64 = 0;
+var upload_mutex: Io.Mutex = .init;
 
 /// The /ui extension for a server with `serve_opts`, answering queries with
 /// `backend` (allocated in `arena`, which must outlive the server).
@@ -192,7 +194,11 @@ fn visibleMatches(arena: std.mem.Allocator, value: Value) !Value {
 /// The whole upload as a clip (base64), or null when ffmpeg fails.
 fn uploadClip(self: *Ui, arena: std.mem.Allocator, io: Io, upload: []const u8, duration: f64) !Value {
     Io.Dir.cwd().createDirPath(io, self.temp_dir) catch |e| if (e != error.PathAlreadyExists) return e;
-    const path = try std.fmt.allocPrint(arena, "{s}/olaf_ui_{d}_{d}.upload", .{ self.temp_dir, std.Thread.getCurrentId(), upload_counter.fetchAdd(1, .monotonic) });
+    upload_mutex.lockUncancelable(io);
+    const seq = upload_counter;
+    upload_counter +%= 1;
+    upload_mutex.unlock(io);
+    const path = try std.fmt.allocPrint(arena, "{s}/olaf_ui_{d}_{d}.upload", .{ self.temp_dir, std.Thread.getCurrentId(), seq });
     defer Io.Dir.cwd().deleteFile(io, path) catch {};
     {
         const f = try Io.Dir.cwd().createFile(io, path, .{});

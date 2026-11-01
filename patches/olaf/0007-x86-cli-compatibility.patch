@@ -1,0 +1,70 @@
+diff --git a/cli/olaf_cli_core.zig b/cli/olaf_cli_core.zig
+index 2db87a4..b89c0d3 100644
+--- a/cli/olaf_cli_core.zig
++++ b/cli/olaf_cli_core.zig
+@@ -8,6 +8,10 @@ const olaf_cli_config = @import("olaf_cli_config.zig");
+ const olaf_cli_util = @import("olaf_cli_util.zig");
+ 
+ pub const c = @cImport({
++    // 2026-11-01: Zig 0.16 translate-c omits this MinGW architecture macro.
++    // malloc.h needs it to select the 32-bit stack-allocation marker layout.
++    if (@import("builtin").os.tag == .windows and @import("builtin").cpu.arch == .x86)
++        @cDefine("_X86_", "1");
+     @cInclude("stdio.h");
+     @cInclude("stdlib.h");
+ 
+diff --git a/cli/olaf_cli_threading.zig b/cli/olaf_cli_threading.zig
+index dfd9bc6..2e44169 100644
+--- a/cli/olaf_cli_threading.zig
++++ b/cli/olaf_cli_threading.zig
+@@ -23,7 +23,9 @@ const debug = std.log.scoped(.olaf_cli_threading).debug;
+ 
+ // Process-local counter so two workers never land on the same temp path; the
+ // thread id in the name is only for debugging.
+-var temp_path_counter: std.atomic.Value(u64) = std.atomic.Value(u64).init(0);
++// 2026-11-01: retain full-width IDs on targets without 64-bit atomic RMW.
++var temp_path_counter: u64 = 0;
++var temp_path_mutex: Io.Mutex = .init;
+ 
+ // Directory under which temp raw audio is written; set once at startup from
+ // $TMPDIR / $TEMP / $TMP (see olaf_cli.zig) before any worker runs.
+@@ -50,7 +52,10 @@ pub fn createTempPath(io: Io, allocator: std.mem.Allocator, suffix: []const u8)
+     Io.Dir.cwd().createDirPath(io, dir) catch |e| {
+         if (e != error.PathAlreadyExists) return e;
+     };
+-    const seq = temp_path_counter.fetchAdd(1, .monotonic);
++    temp_path_mutex.lockUncancelable(io);
++    const seq = temp_path_counter;
++    temp_path_counter +%= 1;
++    temp_path_mutex.unlock(io);
+     return std.fmt.allocPrint(allocator, "{s}/olaf_audio_{d}_{d}{s}", .{ dir, std.Thread.getCurrentId(), seq, suffix });
+ }
+ 
+diff --git a/cli/ui/olaf_ui.zig b/cli/ui/olaf_ui.zig
+index 987d9a7..5992a04 100644
+--- a/cli/ui/olaf_ui.zig
++++ b/cli/ui/olaf_ui.zig
+@@ -59,7 +59,9 @@ const Ui = struct {
+     temp_dir: []const u8,
+ };
+ 
+-var upload_counter: std.atomic.Value(u64) = .init(0);
++// 2026-11-01: full-width IDs without requiring 64-bit atomic RMW.
++var upload_counter: u64 = 0;
++var upload_mutex: Io.Mutex = .init;
+ 
+ /// The /ui extension for a server with `serve_opts`, answering queries with
+ /// `backend` (allocated in `arena`, which must outlive the server).
+@@ -192,7 +194,11 @@ fn visibleMatches(arena: std.mem.Allocator, value: Value) !Value {
+ /// The whole upload as a clip (base64), or null when ffmpeg fails.
+ fn uploadClip(self: *Ui, arena: std.mem.Allocator, io: Io, upload: []const u8, duration: f64) !Value {
+     Io.Dir.cwd().createDirPath(io, self.temp_dir) catch |e| if (e != error.PathAlreadyExists) return e;
+-    const path = try std.fmt.allocPrint(arena, "{s}/olaf_ui_{d}_{d}.upload", .{ self.temp_dir, std.Thread.getCurrentId(), upload_counter.fetchAdd(1, .monotonic) });
++    upload_mutex.lockUncancelable(io);
++    const seq = upload_counter;
++    upload_counter +%= 1;
++    upload_mutex.unlock(io);
++    const path = try std.fmt.allocPrint(arena, "{s}/olaf_ui_{d}_{d}.upload", .{ self.temp_dir, std.Thread.getCurrentId(), seq });
+     defer Io.Dir.cwd().deleteFile(io, path) catch {};
+     {
+         const f = try Io.Dir.cwd().createFile(io, path, .{});
