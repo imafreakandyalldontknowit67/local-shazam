@@ -4,8 +4,49 @@ Implemented policy: `compiler-paths-and-artifacts-v1`. This is a build-policy
 change, not a pipeline migration or a claim that previous binaries were cleaned.
 Both engines, application algorithms, copyright and license bytes are unchanged.
 Never edit strings in an executable or retrofit old archives. Rebuild from the
-reviewed commit on each matching host, then run the existing test/package/verify
+reviewed commit on each permitted host, then run the existing test/package/verify
 commands. Existing artifacts without this policy record are rejected.
+
+## Windows output targets and host tools
+
+Both `windows-x64` and `windows-x86` use the same privacy policy without
+exemptions. The Rust outputs are respectively `x86_64-pc-windows-msvc` and
+`i686-pc-windows-msvc`; Olaf outputs are `x86_64-windows-gnu` and
+`x86-windows-gnu`. Both executables have `.exe` suffixes and ship in ZIP files.
+The provider and every dataset-free Olaf regression explicitly pass the selected
+output target and `-Dcpu=baseline`; regression modules already consume that target
+in the unchanged vendored build script. No host-target regression substitution
+is permitted if a target cannot compile or execute.
+
+Both Windows outputs require a Windows **x64 host**. Rustup bootstrap and Zig
+remain the existing pinned, SHA-256-verified **x64 host distributions**; the i686
+Rust component is an output target, not a new bootstrap download. Native x86
+hosts, ARM Windows hosts and other unreviewed cross-host combinations are
+rejected. Provenance records the actual host architecture, output target,
+cross-target status and execution mode. An x86 gate run on x64 is labeled
+`wow64`, with `native: false`, never native 32-bit Windows validation. These
+records describe the selected execution path; only successful target gates can
+mark it passed. WOW64 availability and toolchain viability remain parent gates.
+
+Static PE inspection checks COFF machine and optional-header consistency
+(x86 `0x14c`/PE32 `0x10b`, x64 `0x8664`/PE32+ `0x20b`), section/file bounds,
+normal/delay import directories, DLL names and terminated lookup/address tables.
+It uses each layout's data-directory offsets and never loads either executable.
+VA-based delay imports remain unsupported and fail closed. The standalone Olaf
+provider also rejects wrong-architecture output before publishing its runtime.
+
+Windows filenames use the reviewed application's Cargo package version:
+`Local-Shazam_VERSION_x64.zip` or `Local-Shazam_VERSION_x86.zip`, matching
+`Local-Shazam_VERSION_ARCH_app-source.tar.gz` and
+`Local-Shazam_VERSION_ARCH_olaf-source.tar.gz`, and `SHA256SUMS.txt`.
+The full source commit remains in provenance. Unix names/checksum conventions
+are unchanged, retaining OS-qualified target names. Checkout-independent,
+compiler-free verification also accepts complete historical
+`local-shazam-COMMIT12-TARGET` sets with `SHA256SUMS` and their original native
+provenance fields. It does not rename artifacts or require new-only fields on
+those legacy sets. Mixed conventions, source versions, target architectures,
+partial provenance and ambiguous checksum files are rejected. Checksums do not
+authenticate either the publisher or the recorded execution claims.
 
 ## Rust and native dependencies
 
@@ -116,7 +157,7 @@ Checksums prove correspondence, **not authentication** of a publisher or build.
 
 ## Validation and remaining gates
 
-Local validation uses only standard-library Python/static checks: four-target
+Local validation uses only standard-library Python/static checks: five-target
 command construction, hostile inherited flags/config, spaces/overlapping paths,
 encoded binary strings, redaction, recomputed-checksum metadata tampering,
 source/payload correspondence and strict patch/hash replay. Run:
@@ -130,9 +171,9 @@ git diff --check
 
 No Cargo/rustc/Zig/MSVC compilation, application/audio/index execution, hosted CI
 dispatch, installer or artifact repair was performed for this change. Symlink
-tests can skip when Windows denies symlink creation. The parent must rebuild all
-four targets, verify actual native response-file handling (especially clang-cl
-and Zig's Clang subprocess), inspect binaries/linker outputs, run the selected
+tests can skip when Windows denies symlink creation. The parent must build all
+five targets (including x86 execution via WOW64, not a native x86 host), verify
+actual native response-file handling (especially clang-cl and Zig's Clang subprocess), inspect binaries/linker outputs, run the selected
 dataset-free tests and independently verify the downloaded archives. All target
 statuses remain unverified. Privacy heuristics cannot certify absence of all
 private data; review remaining findings without erasing legitimate attribution
