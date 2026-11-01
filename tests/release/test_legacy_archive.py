@@ -3,6 +3,7 @@
 Run from a full checkout with Python 3.11+. The archived indexing suite is not
 discovered or executed here. Inventory fixtures contain synthetic text only.
 """
+import hashlib
 import ast
 import copy
 import fnmatch
@@ -129,8 +130,11 @@ class LegacyArchiveTests(unittest.TestCase):
         })
 
     def test_license_is_a_complete_verbatim_copy(self):
-        original = (REPO / "LICENSE").read_bytes()
-        self.assertEqual((ARCHIVE / "LICENSE").read_bytes(), original)
+        # The archived Python grant stays byte-for-byte historical even when
+        # the current app's maintainer attribution changes.
+        original = (ARCHIVE / "LICENSE").read_bytes()
+        self.assertEqual(hashlib.sha256(original).hexdigest(),
+                         "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685")
         self.assertTrue(original.startswith(b"MIT License"))
         self.assertIn(b"Copyright (c) 2026", original)
         self.assertIn(b"Permission is hereby granted", original)

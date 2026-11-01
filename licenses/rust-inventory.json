@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "cargo_lock_sha256_lf": "aa4e5d9cff64a6b27fc5d10a1a2df37d88f261b32609f33aa4be8b92ded4b33f",
+  "cargo_lock_sha256_lf": "06313200a1c467eca1e6235eddf0e317d566ac6f6e6ba2db8e9fb76f1991fa1c",
   "packages": [
     {
       "name": "anstream",

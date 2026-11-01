@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2-beta.1
+
+- First public-beta candidate; Windows x64 and x86 packages.
+- Original app copyright now names badger.
+- Updated setup guidance, dated Olaf modification notices and x86 build instructions.
+- Recognition engine/settings unchanged from 0.2.1. Clean-PC installation and
+  native 32-bit Windows compatibility are not yet verified.
+
 ## 0.2.1
 
 - Versioned, readable Windows download filenames and separate x64/x86 packages.

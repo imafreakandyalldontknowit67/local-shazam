@@ -1,7 +1,7 @@
 # Native application guide
 
 Local Shazam recognizes snippets against **your own indexed files**, not the
-Shazam service or a global catalog. The native source version is `0.2.0`; Python
+Shazam service or a global catalog. The native source version is `0.2.2-beta.1`; Python
 `1.0.x` tags describe the older reference implementation.
 
 The executable is written in Rust and does not embed or invoke Python. **Olaf
@@ -18,14 +18,12 @@ The package places `local-shazam.exe` beside `olaf-runtime/olaf.exe`
 on Windows, or `local-shazam` beside `olaf-runtime/olaf` on Unix-like targets.
 Keep package notices and matching runtime source materials. Use
 [Building](../docs/BUILDING.md) for source prerequisites and
-[Releasing](../docs/RELEASING.md) for packaging. Windows x64, Linux x64 and macOS arm64/x64 passed the native
-build/package gates for preview commit `92a983a57ff9`. See the root README for
-the draft release; older OS versions and end-to-end snippet accuracy are not
-validated by these gates. Compiler-privacy changes need fresh parent-run hosted
-rebuilds and independent artifact/source verification; clean-host behavior,
-signing/notarization and bit-for-bit reproducibility remain unresolved.
-The Python reference is repository-only at the agreed `legacy/python/README.md`
-location, with relocation verification pending after integration.
+[Releasing](../docs/RELEASING.md) for packaging. The current private v0.2.1
+release includes Windows x64 and x86 packages. x64 passed native gates; x86
+passed under WOW64 on x64 Windows, not on a native 32-bit PC. See the root README
+for downloads and [release status](../docs/PREVIEW_STATUS.md) for exact build
+identities. Clean-host installation and minimum Windows versions remain unverified.
+The Python reference is archived under `legacy/python/` and is not required.
 
 Run the prepared executable without arguments for the menu:
 
@@ -33,10 +31,10 @@ Run the prepared executable without arguments for the menu:
 .\local-shazam.exe
 ```
 
-1. **Index music folder:** select a folder, then choose 1–64 workers, Enter for
+1. **Add a music folder:** select a folder, then choose 1–64 workers, Enter for
    the default, or `q` to cancel.
-2. **Match snippets:** select one or more existing audio files.
-3. **View database stats:** view the selected backend's index information.
+2. **Identify audio clips:** select one or more existing audio files.
+3. **View library stats:** view the selected backend's index information.
 4. **Exit**.
 
 No indexing starts merely by opening the app. The default is available parallelism
@@ -115,14 +113,14 @@ rather than editing the index metadata. Details: [Olaf guide](OLAF.md).
   extension list. Neither promises every codec, DRM input or malformed file.
 - Bounded queues are not a fixed total-memory guarantee. File-level landmarks,
   vote maps, scanner/manifest state, caches and temporary files can grow.
-  Development system crashes remain unresolved; a six-worker default is not a
-  proven stability remedy.
+  A six-worker default is not a hardware-stability guarantee. Start with two
+  workers and stop if the machine is unstable.
 
 Historical native build gates are not current-HEAD validation, privacy approval
 or a held-out accuracy result for the integrated pipeline. Related recordings
 are not automatically grouped. Short/noisy clips,
 quiet sections, speed/pitch edits, covers and live performances can fail.
-See the [root limitations](../README.md#limits-to-understand) and
+See the [root limitations](../README.md#good-to-know) and
 [changelog](../CHANGELOG.md) for release-evidence boundaries.
 
 ## License scope

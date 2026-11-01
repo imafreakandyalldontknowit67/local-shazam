@@ -1,0 +1,41 @@
+{
+  "remote_refs": [
+    "2f3e0f7a8d343e1e3483028797b7b0f947380090\trefs/heads/feature/release-native-app",
+    "b89b5eb93b3cc30c0781ed7bf11b60f4e664c7b7\trefs/heads/main",
+    "d523a71c724c6710e60fdc00224757552f2d58d3\trefs/tags/v0.2.0",
+    "d32716df0be1a5ea2d919d0b8ceb560de17bd77c\trefs/tags/v0.2.1",
+    "22c383ee0ccc518c0eaf0a7983a88646e42a560d\trefs/tags/v1.0.1",
+    "a6033cafc3019dbef92e72214817475a86a54cd2\trefs/tags/v1.0.1^{}"
+  ],
+  "unique_blobs": 631,
+  "commits": 117,
+  "scope": "All objects reachable from remote heads and tags; privacy heuristics, not proof of absence of every secret; draft assets excluded.",
+  "reviewed_findings": [
+    {
+      "oid": "9a571ef19cf694183d8639ac05b40bc7fc50fe47",
+      "path": "docs/RELEASE_CHECKLIST.md",
+      "disposition": "Generic demonstration directory, no personal account/data"
+    },
+    {
+      "oid": "43f9edf45be8e9606d5dc6e92ddebdc42dde8a55",
+      "path": "tests/release/test_build_privacy.py",
+      "disposition": "Synthetic repeated-Q token fixture assembled in a privacy unit test, not a live credential"
+    },
+    {
+      "oid": "14cae276984cf78fd1e1faa3f3dca190cd9aa23f",
+      "path": "tests/release/test_packaging.py",
+      "disposition": "Generic absolute-path archive rejection fixture, no personal account/data"
+    }
+  ],
+  "unresolved_findings": 0,
+  "github_publication_surface": {
+    "issues_and_pull_requests": 0,
+    "issue_comments": 0,
+    "pull_request_review_comments": 0,
+    "obsolete_ci_artifacts_removed": 4,
+    "remaining_ci_artifacts": 0,
+    "released_asset_sets": "v0.2.1 and v0.2.0 retained; v1.0.1 has no uploaded assets",
+    "old_multiplatform_draft": "still draft, not promoted",
+    "limits": "Not a forensic secret audit. GitHub workflow logs, external links, retained draft assets and inaccessible/deleted objects are not certified by the Git object scan."
+  }
+}

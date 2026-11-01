@@ -13,6 +13,7 @@ From the repository root, with Python **3.11+** and installed **Zig 0.16.0**:
 ```sh
 python scripts/build_olaf.py --check-only
 python scripts/build_olaf.py --target windows-x64 --out-dir dist/windows-x64
+python scripts/build_olaf.py --target windows-x86 --out-dir dist/windows-x86
 python scripts/build_olaf.py --target linux-x64 --out-dir dist/linux-x64
 python scripts/build_olaf.py --target macos-arm64 --out-dir dist/macos-arm64
 python scripts/build_olaf.py --target macos-x64 --out-dir dist/macos-x64
@@ -29,6 +30,7 @@ All targets use `ReleaseFast`, `-Dcpu=baseline`, and sequential `-j1` builds:
 | Integration target | Zig target | Runtime binary |
 | --- | --- | --- |
 | windows-x64 | x86_64-windows-gnu | olaf.exe |
+| windows-x86 | x86-windows-gnu | olaf.exe |
 | linux-x64 | x86_64-linux-musl | olaf |
 | macos-arm64 | aarch64-macos.11.0.0-none | olaf |
 | macos-x64 | x86_64-macos.11.0.0-none | olaf |
@@ -149,3 +151,13 @@ for actual emitted binaries, and any patent questions require release review;
 this document does not certify legal compliance or general accuracy.
 Upstream specifically calls attention to patents US7627477 B2 and US6990453;
 their applicability or current status was not assessed here.
+
+## Windows x86 integration update (2026-11-01)
+
+The x86 recipe emits a genuine 32-bit runtime using the pinned x64 Zig host tool.
+An x64 Windows host can execute its checks under WOW64; this is not a native
+32-bit OS validation. The x86 LMDB map is limited to 512 MiB. Use a fresh index
+when switching architectures; original x64 indexes and comparator rules are
+unchanged. Patches 0006/0007 record the full-width fingerprint comparisons,
+alignment-safe reads, checked writes, MinGW C-import macro and portable temporary
+counters. Matching fingerprint settings were not changed by these fixes.

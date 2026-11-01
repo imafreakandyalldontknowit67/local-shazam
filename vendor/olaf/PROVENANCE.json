@@ -228,7 +228,7 @@
     },
     "vendor/olaf/BUILDING.md": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "2c043d20db710aeb1612f3219353657a6dea17cea688106fca023c96a3a340db"
+      "sha256": "9b6794dbd2b98f5b37c922d918691822d6d3cd70a96bd6d563fa6c1513547c0f"
     },
     "vendor/olaf/LICENSE": {
       "captured_sha256": "d11d906d7e29af95d28b051cd89a064bb25ae27a5c407c9994626c47e13bdc8f",
@@ -246,7 +246,7 @@
     },
     "vendor/olaf/NOTICES.txt": {
       "origin": "release distribution metadata or component notice",
-      "sha256": "0071b5d92dba2ec80bebe6ac054881640cd57fa3223faa23a65783b0554b4052"
+      "sha256": "63ef017645eaf027a41f27884228a077c742851ffee42a1bf00e8fcc766b446f"
     },
     "vendor/olaf/build.zig": {
       "captured_sha256": "9a70bc664483b4601a6035c32b5f7c09dafc5c667f6137d808b12dfceaea9e2d",
@@ -1756,5 +1756,15 @@
     "Zigzag standalone examples/tests are absent from its original published package and are not part of the Olaf module dependency.",
     "The optional ALLOC_TESTING c-algorithms harness header alloc-testing.h is absent from original Olaf and is not enabled in supported builds.",
     "Audio/dataset and browser demo assets listed in exclusions are not source-only test passes; the full test suite is disabled by default."
+  ],
+  "distribution_metadata_updates": [
+    {
+      "date": "2026-11-01",
+      "files": [
+        "BUILDING.md",
+        "NOTICES.txt"
+      ],
+      "summary": "Added explicit Windows x86 recipe, compatibility bounds and dated release modification summary; no runtime source or third-party grant changes."
+    }
   ]
 }

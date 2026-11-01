@@ -64,3 +64,15 @@ distributor that chooses to bundle them.
 See BUILDING.md for source boundaries, omitted audio/test fixtures, and the
 unverified-target-build status. No user music, user indexes, prebuilt Olaf
 executables, credentials or machine-specific settings are part of this source.
+
+Additional Local Shazam distribution modifications (2026-11-01):
+- Release build privacy flags and install/debug policy (patches 0004 and 0005).
+- Windows x86: bounded 512 MiB LMDB map, explicit 64-bit fingerprint comparisons,
+  alignment-safe reads and checked writes, plus regression coverage (patch 0006).
+- Windows x86 CLI: MinGW architecture macro and mutex-protected 64-bit temporary
+  counters (patch 0007). These changes do not retune fingerprint extraction.
+- Updated x86 build instructions and this modification summary in the beta source
+  distribution. Original upstream authors, notices and licenses remain unchanged.
+See PROVENANCE.json, BUILDING.md and the seven ordered source patches for exact
+source correspondence. Local Shazam original application copyright: 2026 badger;
+this attribution does not claim ownership of Olaf or its third-party components.

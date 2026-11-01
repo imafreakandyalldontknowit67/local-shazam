@@ -33,8 +33,8 @@ your computer.
 
 ## Download
 
-Get the **Windows ZIP** from [Releases](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/latest).
-Downloads are currently available to people with access to this private repository.
+Get the **Windows beta ZIP** from [Releases](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.2-beta.1).
+This is an early beta: clean-PC setup and native 32-bit Windows compatibility are not yet verified.
 Choose **x64** for most PCs. Choose **x86** for 32-bit Windows; it is intended for smaller libraries.
 Linux and macOS packages aren't part of this release.
 
@@ -50,6 +50,9 @@ New here? Follow the [step-by-step tutorial](docs/QUICKSTART.md).
 
 You can choose how many files to index at once. Start with a few workers if you
 want to keep using your computer while it runs. No Python required.
+
+If Windows reports a missing `VCRUNTIME` DLL, install the matching x64 or x86
+[Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170).
 
 ## Good to know
 
