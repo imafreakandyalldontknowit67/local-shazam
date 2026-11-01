@@ -1,6 +1,6 @@
 # Building staged portable artifacts
 
-## Current status: recorded private v0.2.1 Windows release
+## Recorded baseline: private v0.2.1 Windows release
 
 The existing [release record](PREVIEW_STATUS.md) identifies **v0.2.1 as Latest
 inside the PRIVATE repository**, built at
@@ -353,3 +353,7 @@ test suites, menu/screenshot capture, audio/index access, CI dispatch, remote
 query, cleanup or release mutation were performed. Future procedures above are
 not completed-check claims. Parent/maintainers own clean-host feasibility, audio
 smoke tests, historical privacy review, retention and any authorized cleanup.
+
+The current candidate is `0.2.2-beta.1`; use the same locked build pipeline.
+See repository-root `docs/BUILD_PRIVACY.md` for the compiler/privacy policy.
+Candidate verification is recorded separately; do not relabel v0.2.1 evidence.

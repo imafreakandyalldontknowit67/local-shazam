@@ -172,8 +172,10 @@ WOW64 gates establish no native 32-bit Windows compatibility.
 
 ## Source delivery and unresolved rights questions
 
-The unchanged [MIT license](../LICENSE) governs original app code; its existing
-`Copyright (c) 2026` notice is not filled with an invented holder. Modified Olaf
+The inspected v0.2.1 archives contain the original app MIT notice
+`Copyright (c) 2026`. The owner subsequently selected **badger**, and the current
+[repository MIT license](../LICENSE) now names that holder; existing release
+archives were not silently modified. Modified Olaf
 remains **AGPL-3.0-or-later**, with component attribution intact. Confirm the
 original-app rights/attribution basis separately; manifest labels do not license
 the entire combined distribution.
@@ -219,3 +221,29 @@ permission or current patent-status conclusion is inferred.
 5. Parent owns prerequisite/compatibility work and final publication-surface,
    private-visibility and release checks. Record approval separately:
    **public-release approval remains pending**.
+
+## Parent follow-up for 0.2.2-beta.1 (2026-11-01)
+
+The preceding review and JSON are a frozen assessment of v0.2.1, not a claim
+that later source changes are inside those old archives. Subsequent engineering
+closures are recorded here without rewriting the historical evidence:
+
+- [Both target graphs](review/windows-0.2.1-target-graphs.json) were collected
+  with pinned Cargo, offline and locked, from each retained build snapshot.
+  x86 and x64 select the same app plus 72 dependency/feature records; the
+  Apple-only and sqlite-wasm-rs packages are absent. This closes the missing x86
+  resolved-graph evidence, not a full linker/SDK or legal analysis.
+- Current vendor/olaf/BUILDING.md now includes the x86 recipe and index limit.
+  NOTICES.txt adds dated modification summaries for patches 0004 through 0007;
+  all existing upstream notices remain unchanged. Final distribution hashes
+  were refreshed in PROVENANCE.json; the seven source patches are unchanged.
+- The owner selected badger for the original-app MIT copyright header. The beta
+  packages must include that updated notice and corresponding reviewed sources.
+- FFmpeg, FFprobe and Microsoft runtime installers/DLLs are still not bundled.
+  Official architecture-matched prerequisite guidance is provided; a clean-PC
+  test and native 32-bit Windows execution are explicitly unverified.
+- The owner requested a public beta, contingent on fresh package checks. This is
+  a publication decision, not a qualified legal opinion. No blanket AGPL
+  subprocess exemption, patent clearance, license relicensing, or closure of
+  every legal interpretation above is claimed. Keep original MIT/AGPL notices,
+  both matching source archives, and recipients' licensed rights intact.

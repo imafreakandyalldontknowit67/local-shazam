@@ -1,6 +1,6 @@
 # Private Windows release status and maintainer gates
 
-## Current status: recorded private v0.2.1 Latest
+## Recorded baseline: private v0.2.1 Latest
 
 The existing [release status](PREVIEW_STATUS.md) identifies **v0.2.1 as Latest
 inside the PRIVATE repository**, with tag/build commit
@@ -294,3 +294,8 @@ the [cleanup checklist](BUILD_CLEANUP.md) only for separately approved retention
 review. Parent owns historical privacy scanning, clean-host/audio work and
 cleanup. No directory is disposable merely because upload succeeded, and no
 deletion or public-release approval is granted here.
+
+The historical reconciliation kept publication approval outside this task; the
+owner has subsequently requested a public beta. See PUBLIC_RELEASE_READINESS.md
+for current candidate limitations and the separate publication record. This does
+not convert old audit evidence into current-HEAD validation or legal approval.

@@ -1,9 +1,10 @@
-# Public release readiness: Windows v0.2.1
+# Public beta preparation: Windows 0.2.2-beta.1
 
-The repository remains **private**. This record does not authorize a visibility
-change or claim a clean-host test has passed.
+The owner requested a **public beta**. Preparation stays private until the fresh
+0.2.2-beta.1 packages pass build, execution, upload/download and source verification.
+Clean-PC setup and native 32-bit Windows compatibility will be labeled unverified.
 
-## Completed engineering checks
+## Completed baseline engineering checks (v0.2.1)
 
 - Verified x64 and x86 release packages, matching app/Olaf source archives and
   checksums. Both downloaded sets passed independent verification; the seven
@@ -25,9 +26,9 @@ change or claim a clean-host test has passed.
   Apple-only or sqlite-wasm-rs package selected. See [target graphs](../licenses/review/windows-0.2.1-target-graphs.json).
   This is not a linker map or a legal conclusion.
 
-## Still required before calling the launch ready
+## Beta acceptance boundaries
 
-1. **Clean-PC setup check.** Follow [this checklist](CLEAN_WINDOWS_TEST.md) on
+1. **Clean-PC setup remains unverified.** Follow [this checklist](CLEAN_WINDOWS_TEST.md) on
    another Windows PC or existing fresh VM. The current host has no Windows
    Sandbox available. Merely restricting PATH does not remove installed DLLs.
 2. **Maintainer licensing/publication decision.** Review the scoped
@@ -35,8 +36,10 @@ change or claim a clean-host test has passed.
    third-party grants and complete matching source access. The owner selected `badger` for the app's MIT copyright header. This
    source-checkout update does not change the license files inside existing
    v0.2.1 downloads; reflect it in the next packaged release. Technical checks are not blanket legal approval.
-3. **Final explicit visibility approval.** Keep the repository private until the
-   owner approves the public launch after reviewing the remaining results.
+3. **Publish only verified beta artifacts.** The owner requested the public beta;
+   retain private visibility until the new packages and downloaded bytes pass.
+   Preserve prior release tags/assets and never imply the beta passed clean-host
+   or native 32-bit tests.
 
 ## Housekeeping, not a binary release blocker
 
