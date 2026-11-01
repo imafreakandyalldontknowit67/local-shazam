@@ -162,3 +162,13 @@ No comprehensive Python-binary compliance claim is made from package names.
 See [RELEASE_REVIEW.md](licenses/RELEASE_REVIEW.md) for the open blockers,
 manual review requirements, and the exact source-checker interface. A passing
 privacy test does not close licensing blockers or establish release readiness.
+
+## Windows 0.2.0 distribution scope
+
+For the current Windows-only package review and source delivery, see
+[Windows distribution review](licenses/WINDOWS_DISTRIBUTION.md). The exact Rust
+1.99.0 toolchain's [library copyright inventory](licenses/runtime/rust-1.99.0/COPYRIGHT-library.html)
+and associated license texts are included as broad runtime attribution evidence,
+not a claim that every listed component is linked. Existing third-party grants
+and the application's MIT license remain unchanged.
+

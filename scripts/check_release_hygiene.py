@@ -152,6 +152,10 @@ def personal_path(line: str, *, embedded: bool = False) -> bool:
         return False
     # URLs, including attribution URLs with /home/ segments, are not local paths.
     url_pattern = r"[a-z][a-z0-9+.-]+://[^\s<>\"']*" if embedded else r"\b(?:https?|ftp)://[^\s<>\"']+"
+    # Rust's verbatim GPL text contains this spaced public attribution URL.
+    # Normalize only that exact reference; other UNC/private paths still fail.
+    line = line.replace('<https: //www.gnu.org/licenses/why-not-lgpl.html>',
+                        '<https://www.gnu.org/licenses/why-not-lgpl.html>')
     local = re.sub(url_pattern, "", line, flags=re.I)
     local = re.sub(r"/" r"mnt/([a-z])/", lambda m: m[1] + ':/', local, flags=re.I)
     def matches(pattern):
