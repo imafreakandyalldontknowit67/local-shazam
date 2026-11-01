@@ -153,6 +153,18 @@ static int olaf_db_directory(const char *folder,struct Olaf_DB_Identity *identit
 #endif
 }
 
+// 2026-11-01: fingerprint keys and values remain uint64_t on 32-bit hosts.
+// LMDB's native INTEGER comparators are limited to unsigned int/size_t there.
+#if SIZE_MAX <= UINT32_MAX
+static int olaf_db_compare_u64(const MDB_val *a,const MDB_val *b){
+    uint64_t left, right;
+    assert(a->mv_size == sizeof(left) && b->mv_size == sizeof(right));
+    memcpy(&left,a->mv_data,sizeof(left));
+    memcpy(&right,b->mv_data,sizeof(right));
+    return (left > right) - (left < right);
+}
+#endif
+
 static int olaf_db_environment_init(struct Olaf_DB_Environment *shared,bool readonly){
 	//A readonly request must not create a missing database. The shared env is
 	//write-capable, but each reader uses a strictly readonly transaction. The
@@ -177,7 +189,13 @@ static int olaf_db_environment_init(struct Olaf_DB_Environment *shared,bool read
 	int status = mdb_env_create(&shared->env);
 	if(status) return status;
 	if((status = mdb_env_set_maxreaders(shared->env,1024))) return status;
-	size_t mapsize = (size_t)(1024*1024) * (size_t)(1024*1024);
+#if SIZE_MAX <= UINT32_MAX
+    // Bounded 32-bit virtual address reservation, not a 1 TiB multiplication
+    // which wraps to zero. Large libraries should use the x64 package.
+    size_t mapsize = (size_t)512 * 1024 * 1024;
+#else
+    size_t mapsize = (size_t)(1024*1024) * (size_t)(1024*1024);
+#endif
 	if((status = mdb_env_set_mapsize(shared->env,mapsize))) return status;
 	if((status = mdb_env_set_maxdbs(shared->env,2))) return status;
 	if((status = mdb_env_open(shared->env,shared->path,MDB_NOTLS,0664))) return status;
@@ -186,8 +204,15 @@ static int olaf_db_environment_init(struct Olaf_DB_Environment *shared,bool read
 	MDB_txn *txn = NULL;
 	status = mdb_txn_begin(shared->env,NULL,readonly ? MDB_RDONLY : 0,&txn);
 	unsigned int create = readonly ? 0 : MDB_CREATE;
-	if(!status) status = mdb_dbi_open(txn,"olaf_fingerprints",
-		MDB_INTEGERKEY | MDB_DUPSORT | MDB_DUPFIXED | MDB_INTEGERDUP | create,&shared->dbi_fps);
+#if SIZE_MAX <= UINT32_MAX
+    if(!status) status = mdb_dbi_open(txn,"olaf_fingerprints",
+        MDB_DUPSORT | MDB_DUPFIXED | create,&shared->dbi_fps);
+    if(!status) status = mdb_set_compare(txn,shared->dbi_fps,olaf_db_compare_u64);
+    if(!status) status = mdb_set_dupsort(txn,shared->dbi_fps,olaf_db_compare_u64);
+#else
+    if(!status) status = mdb_dbi_open(txn,"olaf_fingerprints",
+        MDB_INTEGERKEY | MDB_DUPSORT | MDB_DUPFIXED | MDB_INTEGERDUP | create,&shared->dbi_fps);
+#endif
 	if(!status) status = mdb_dbi_open(txn,"olaf_resource_map",MDB_INTEGERKEY | create,&shared->dbi_resource_map);
 	//Commit even the initial read transaction: this publishes DBI handles.
 	if(!status) status = mdb_txn_commit(txn);
@@ -327,7 +352,15 @@ void olaf_db_store_internal(Olaf_DB * olaf_db,uint64_t * keys,uint64_t * values,
 		mdb_value.mv_size = sizeof(uint64_t);
 		mdb_value.mv_data = &value;
 
-		mdb_put(olaf_db->txn, olaf_db->dbi_fps, &mdb_key, &mdb_value, flags);
+        int status = mdb_put(olaf_db->txn, olaf_db->dbi_fps, &mdb_key, &mdb_value, flags);
+        if(status && status != MDB_KEYEXIST){
+            pthread_mutex_unlock(&olaf_db->shared->snapshots);
+#if SIZE_MAX <= UINT32_MAX
+            if(status == MDB_MAP_FULL)
+                fputs("32-bit index capacity reached (512 MiB). Use x64 and rebuild the index.\n",stderr);
+#endif
+            e_ctx(status,"fingerprint write",olaf_db->mdb_folder);
+        }
 	}
 	pthread_mutex_unlock(&olaf_db->shared->snapshots);
 }
@@ -541,8 +574,10 @@ size_t olaf_db_find(Olaf_DB * olaf_db,uint64_t start_key,uint64_t stop_key, uint
 	// A failed seek has no valid key/value to dereference.
 	while (rc == 0) {
 
-		uint64_t keyInt = *((uint64_t *) (mdb_key.mv_data));
-		uint64_t valueInt = *((uint64_t *) (mdb_value.mv_data));
+        // LMDB pages do not promise uint64_t alignment (notably on x86).
+        uint64_t keyInt, valueInt;
+        memcpy(&keyInt,mdb_key.mv_data,sizeof(keyInt));
+        memcpy(&valueInt,mdb_value.mv_data,sizeof(valueInt));
 
 		if( keyInt > stop_key) break;
 

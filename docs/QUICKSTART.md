@@ -13,7 +13,8 @@ Opening the app does **not** automatically index your music.
 - Check the [root README](../README.md) for current download availability.
   If offered, choose `Local-Shazam_VERSION_x64.zip` for most Intel/AMD 64-bit
   Windows computers, or `Local-Shazam_VERSION_x86.zip` for 32-bit Windows.
-  When a Windows ZIP is available, extract the **complete ZIP** to a folder
+  Use x64 for large libraries: x86 indexes are limited to **512 MiB**.
+  Extract the **complete ZIP** to a folder
   you can write to. Preserve all its contents, including notices, and keep
   `olaf-runtime` beside `local-shazam.exe`. Do not run from inside the ZIP.
 - Downloads may be unsigned, and Windows may show security warnings. Check
@@ -65,7 +66,8 @@ song count and storage information.
 Keep original music files available at their indexed paths, and retain the
 default `local-olaf` index folder beside the executable. Moving, deleting, or
 changing source files can prevent verification. **The index does not replace
-your music.**
+your music.** When changing between x86 and x64, use a new index folder and
+index the music again; do not copy the old index across architectures.
 
 ## Troubleshooting
 

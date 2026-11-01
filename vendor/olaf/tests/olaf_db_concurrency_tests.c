@@ -52,6 +52,28 @@ static void check(Olaf_DB *db,uint32_t id,bool present){
 	}
 }
 
+// Exercise branch pages and duplicates whose low 32 bits are identical.
+// This catches native-word truncation in LMDB comparators on x86.
+static void wide_fingerprints(const char *path){
+    Olaf_DB *db = olaf_db_new(path,false);
+    for(uint64_t i = 1; i <= 2048; i++){
+        uint64_t key = (i << 32) | 17;
+        uint64_t values[2] = {(i << 32) | 5, ((i + 4096) << 32) | 5};
+        uint64_t keys[2] = {key,key};
+        olaf_db_store(db,keys,values,2);
+    }
+    olaf_db_destroy(db);
+    db = olaf_db_new(path,true);
+    for(uint64_t i = 1; i <= 2048; i++){
+        uint64_t key = (i << 32) | 17, values[3] = {0};
+        size_t count = olaf_db_find(db,key,key,values,3);
+        assert(count == 2);
+        assert(values[0] == ((i << 32) | 5));
+        assert(values[1] == (((i + 4096) << 32) | 5));
+    }
+    olaf_db_destroy(db);
+}
+
 static void seed(const char *path){
 	Olaf_DB *db = olaf_db_new(path,false);
     uint64_t result = 123;
@@ -174,6 +196,7 @@ static void all(const char *path,const char *other,const char *alias){
 }
 
 int main(int argc,char **argv){
+    setvbuf(stdout,NULL,_IONBF,0);
 	assert(argc >= 3);
 	pthread_t timeout;
 	assert(pthread_create(&timeout,NULL,watchdog,NULL) == 0);
@@ -182,6 +205,9 @@ int main(int argc,char **argv){
 	if(strcmp(mode,"all") == 0){
 		assert(argc == 5);
 		all(path,argv[3],argv[4]);
+        puts("testing wide fingerprints");
+        wide_fingerprints(path);
+        puts("wide fingerprint tests passed");
 	}else if(strcmp(mode,"seed") == 0){
 		seed(path);
 	}else if(strcmp(mode,"missing") == 0){

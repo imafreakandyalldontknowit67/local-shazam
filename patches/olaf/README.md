@@ -20,6 +20,11 @@ needed. Do not run the old setup helper over a working checkout.
    registers installation steps so Windows does not request a nonexistent PDB
    (2026-10-31). No engine source change.
 
+6. `0006-x86-database-width.patch`: bound the 32-bit database mapping to 512 MiB,
+   preserve full 64-bit fingerprint key/value comparisons and unaligned reads on x86, report failed
+   fingerprint writes instead of silently discarding them, and add wide-key/duplicate
+   regression coverage (2026-11-01). Existing 64-bit map sizing/comparators remain.
+
 After patching, select only the explicit source inventory in
 `vendor/olaf/PROVENANCE.json`; this source distribution intentionally omits
 upstream audio, binaries and other non-desktop material. Supply the unchanged

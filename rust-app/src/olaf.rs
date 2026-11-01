@@ -19,7 +19,11 @@ use std::{
     time::{Duration, Instant},
 };
 
+// LMDB files and runtime binaries must not be reused across pointer widths.
+#[cfg(target_pointer_width = "64")]
 const VERSION: &str = "olaf-local-app-v1-twopeak-time20-verifier1";
+#[cfg(target_pointer_width = "32")]
+const VERSION: &str = "olaf-local-app-v1-twopeak-time20-verifier1-x86-v1";
 const POLICY: &str = "candidate-window-v1-experimental";
 const MAX_QUERY: f64 = 30.0;
 const AUDIO: &str = "mp3 flac wav ogg opus m4a aac wma alac aiff aif ape wv mpc mp4 mkv webm 3gp 3g2 mov avi aifc caf au snd w64 rf64 oga mka ac3 eac3 dts dtshd amr awb m4b m4p mp2 mpa mpga tta tak shn dsf dff dsd aob vob mts m2ts";
@@ -742,10 +746,7 @@ mod tests {
         assert_eq!(saved["filter_size_time"], 20);
         assert_eq!(saved["skip_saturated_hashes"], true);
         assert_eq!(saved["independent_time_votes"], false);
-        assert_eq!(
-            engine.manifest.version,
-            "olaf-local-app-v1-twopeak-time20-verifier1"
-        );
+        assert_eq!(engine.manifest.version, VERSION);
         assert_eq!(POLICY, "candidate-window-v1-experimental");
         assert_eq!(MAX_QUERY, 30.0);
         let command = engine.command("store");
@@ -1039,5 +1040,23 @@ mod tests {
         )
         .unwrap();
         assert!(Backend::open(d.path(), Path::new("missing"), false).is_err());
+        let other_arch = if cfg!(target_pointer_width = "32") {
+            "olaf-local-app-v1-twopeak-time20-verifier1"
+        } else {
+            "olaf-local-app-v1-twopeak-time20-verifier1-x86-v1"
+        };
+        atomic_json(
+            &d.path().join("index-version.json"),
+            &Manifest {
+                version: other_arch.into(),
+                binary_sha256: "".into(),
+                files: BTreeMap::new(),
+            },
+        ).unwrap();
+        let before = fs::read(d.path().join("index-version.json")).unwrap();
+        let error = Backend::open(d.path(), Path::new("missing"), false)
+            .err().expect("other architecture must be rejected").to_string();
+        assert!(error.contains("Incompatible Olaf index version"));
+        assert_eq!(fs::read(d.path().join("index-version.json")).unwrap(), before);
     }
 }
