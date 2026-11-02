@@ -1,64 +1,35 @@
 # Release status: Windows 0.2.2
 
-The owner requested a regular production release, not a prerelease. Version 0.2.2
-is being rebuilt with stable version strings and filenames; the repository is public.
-Only verified packages will be published and marked Latest. Recognition code is unchanged.
+[Local Shazam v0.2.2](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.2)
+is published as the latest regular release. The repository is public.
 
-## Previous verification record
+- x64 and x86 executables report version `0.2.2`; download filenames have no prerelease suffix.
+- Both builds passed release gates and independent verification of binaries,
+  matching source archives, notices, architecture and checksums.
+- All seven uploaded assets were downloaded anonymously and byte-compared.
+- Generated-audio tests passed on both builds: index two tracks, identify a correct
+  seven-second excerpt, reject unrelated audio, reopen and skip unchanged files.
+- Cross-architecture index reuse was rejected without changing the index marker.
+- Original app copyright names **badger**; third-party notices remain intact.
 
-The repository is public and [v0.2.2-beta.1](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.2-beta.1) is published as a prerelease.
-Both Windows packages passed build, execution, matching-source verification and
-anonymous download byte comparison for all seven assets. See the
-[release receipt](release-0.2.2-beta.1-verification.json) and
-[generated-audio smoke results](release-smoke-0.2.2-beta.1.json).
-The exact packaged commit is `d0f42a0904ad258de0ae5acdbe07d12569f1e73a`;
-later documentation commits do not change those binaries.
-Clean-PC setup and native 32-bit Windows compatibility remain unverified.
-README links to the latest regular release. Earlier prerelease evidence below is historical.
+The exact packaged commit is `25ac6feafa961b51ac6574dd2d9860a1607b59df`.
+Recognition code and settings are unchanged from 0.2.1.
 
-## Completed baseline engineering checks (v0.2.1)
+See the [release receipt](release-0.2.2-verification.json),
+[smoke results](release-smoke-0.2.2.json),
+[history review](public-history-review.json), and
+[Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md).
+Historical verification records describe their original releases, not current status.
 
-- Verified x64 and x86 release packages, matching app/Olaf source archives and
-  checksums. Both downloaded sets passed independent verification; the seven
-  latest-release assets remain intact. Their built commit is
-  `d32716df0be1a5ea2d919d0b8ceb560de17bd77c`; attribution-only branch history
-  changes did not change their files, tags or recorded provenance.
-- Generated-audio end-to-end checks passed on the existing Windows 10 x64 PC:
-  index two tracks with two workers, match the correct track from seven seconds,
-  reject an unrelated clip, reopen, skip unchanged files and reject cross-arch
-  index reuse without changing its marker. See [scoped results](release-smoke-0.2.1.json).
-  This is not an accuracy benchmark, native 32-bit test or clean-PC validation.
-- Scanned 631 unique blobs and 117 commits reachable from remote branch/tag tips
-  at review time. Three findings were reviewed demo paths/test fixtures; no live
-  credential or personal path was found in that scope. See [review evidence](public-history-review.json).
-- Removed four obsolete pre-privacy CI artifacts. Historical releases and the
-  unpromoted multi-platform draft were not removed or relabeled.
-- Collected both target-filtered Cargo graphs offline from the retained build
-  snapshots: each selects the app and the same 72 dependencies/features, with no
-  Apple-only or sqlite-wasm-rs package selected. See [target graphs](../licenses/review/windows-0.2.1-target-graphs.json).
-  This is not a linker map or a legal conclusion.
+## Remaining verification
 
-## Verification boundaries
+Clean-PC setup and native 32-bit Windows testing remain unverified. x86 was tested
+through WOW64 on Windows 10 x64. The smoke tests are functional checks, not an
+accuracy benchmark. Follow the [clean Windows checklist](CLEAN_WINDOWS_TEST.md)
+on a separate PC or fresh VM. Downloads are unsigned.
 
-1. **Clean-PC setup remains unverified.** Follow [this checklist](CLEAN_WINDOWS_TEST.md) on
-   another Windows PC or existing fresh VM. The current host has no Windows
-   Sandbox available. Merely restricting PATH does not remove installed DLLs.
-2. **Maintainer licensing/publication decision.** Review the scoped
-   [Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md). Preserve
-   third-party grants and complete matching source access. The owner selected `badger` for the app's MIT copyright header. The new beta packages contain this notice; existing v0.2.1 downloads remain unchanged. Technical checks are not blanket legal approval.
-3. **Publish only verified artifacts.** The previous prerelease was verified;
-   the new packages and anonymously downloaded bytes have passed, and publication is complete.
-   Preserve prior release tags/assets and never imply the beta passed clean-host
-   or native 32-bit tests.
+## Local cleanup
 
-## Housekeeping, not a binary release blocker
-
-About 13.4 GiB of local disposable build/tool staging remains after the beta builds. Exact workspace
-paths were checked for containment, reparse points and running executables.
-The deletion command was rejected by the execution policy; **no local cleanup is
-claimed**. Verified recovery archives and evidence must be kept. Local staging is
-ignored by Git and is not included in the source or release ZIPs.
-
-Do not rebuild solely for documentation or attribution changes. A code, dependency
-or packaged-license change needs a new reviewed release snapshot and corresponding
-package verification, rather than changing existing provenance to a new commit.
+Disposable staging remains locally because earlier deletion commands were rejected
+by execution policy. No local cleanup is claimed. Staging is ignored by Git and
+not included in the release. Verified recovery archives and audit evidence are retained.
