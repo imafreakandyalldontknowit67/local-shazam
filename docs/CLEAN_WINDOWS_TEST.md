@@ -10,7 +10,7 @@ No VM, OS feature, system configuration or runtime installer was added.
 
 1. Record Windows edition/version/build and CPU architecture. Use a normal user,
    with no Rust, Zig, Visual Studio or Python installed. Do not disable security.
-2. Download the v0.2.2-beta.1 ZIP and `SHA256SUMS.txt` from the same release. Compare
+2. Download the v0.2.2 ZIP and `SHA256SUMS.txt` from the same release. Compare
    `Get-FileHash -Algorithm SHA256` with the ZIP entry before extracting.
 3. Extract the entire ZIP into a writable directory. Keep notices and
    `olaf-runtime` next to `local-shazam.exe`. Do not run inside the ZIP.

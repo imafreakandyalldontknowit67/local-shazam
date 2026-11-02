@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.2.2-beta.1
+## 0.2.2
 
-- First public-beta candidate; Windows x64 and x86 packages.
+- Public release with Windows x64 and x86 packages.
 - Original app copyright now names badger.
 - Updated setup guidance, dated Olaf modification notices and x86 build instructions.
 - Recognition engine/settings unchanged from 0.2.1. Clean-PC installation and

@@ -1,4 +1,10 @@
-# Public beta released: Windows 0.2.2-beta.1
+# Release status: Windows 0.2.2
+
+The owner requested a regular production release, not a prerelease. Version 0.2.2
+is being rebuilt with stable version strings and filenames; the repository is public.
+Only verified packages will be published and marked Latest. Recognition code is unchanged.
+
+## Previous verification record
 
 The repository is public and [v0.2.2-beta.1](https://github.com/imafreakandyalldontknowit67/local-shazam/releases/tag/v0.2.2-beta.1) is published as a prerelease.
 Both Windows packages passed build, execution, matching-source verification and
@@ -8,7 +14,7 @@ anonymous download byte comparison for all seven assets. See the
 The exact packaged commit is `d0f42a0904ad258de0ae5acdbe07d12569f1e73a`;
 later documentation commits do not change those binaries.
 Clean-PC setup and native 32-bit Windows compatibility remain unverified.
-The beta is linked directly from README; v0.2.1 remains the previous stable release.
+README links to the latest regular release. Earlier prerelease evidence below is historical.
 
 ## Completed baseline engineering checks (v0.2.1)
 
@@ -32,7 +38,7 @@ The beta is linked directly from README; v0.2.1 remains the previous stable rele
   Apple-only or sqlite-wasm-rs package selected. See [target graphs](../licenses/review/windows-0.2.1-target-graphs.json).
   This is not a linker map or a legal conclusion.
 
-## Beta acceptance boundaries
+## Verification boundaries
 
 1. **Clean-PC setup remains unverified.** Follow [this checklist](CLEAN_WINDOWS_TEST.md) on
    another Windows PC or existing fresh VM. The current host has no Windows
@@ -40,7 +46,7 @@ The beta is linked directly from README; v0.2.1 remains the previous stable rele
 2. **Maintainer licensing/publication decision.** Review the scoped
    [Windows distribution review](../licenses/WINDOWS_DISTRIBUTION.md). Preserve
    third-party grants and complete matching source access. The owner selected `badger` for the app's MIT copyright header. The new beta packages contain this notice; existing v0.2.1 downloads remain unchanged. Technical checks are not blanket legal approval.
-3. **Publish only verified beta artifacts.** The owner requested the public beta;
+3. **Publish only verified artifacts.** The previous prerelease was verified;
    the new packages and anonymously downloaded bytes have passed, and publication is complete.
    Preserve prior release tags/assets and never imply the beta passed clean-host
    or native 32-bit tests.
